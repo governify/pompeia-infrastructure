@@ -1,0 +1,128 @@
+version: '2.2'
+services:
+  {{SERVICES_PREFIX}}_reporter:
+    container_name: {{SERVICES_PREFIX}}-reporter-container
+    image: isagroup/governify-reporter-new:latest
+    environment:
+      - SERVICE_NAME={{SERVICES_PREFIX}}-reporter-container
+      - NODE_ENV=production
+      - PORT=80
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - reporter.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+    volumes:
+      - './logs/{{SERVICES_PREFIX}}-reporter:/opt/app/logs'
+      - './configurations/reporter:/opt/app/src/backend/configurations'
+      - './grafana-dashboards:/opt/app/src/backend/dashboards'
+    mem_limit: 400m
+    restart: 'unless-stopped'
+    ports:
+      - "8081:80"
+    depends_on:
+      - {{SERVICES_PREFIX}}_registry_db
+      - {{SERVICES_PREFIX}}_influxdb
+  {{SERVICES_PREFIX}}_grafana:
+    container_name: {{SERVICES_PREFIX}}-grafana-container
+    image: isagroup/governify-grafana:1.0.0
+    environment:
+      - SERVICE_NAME={{SERVICES_PREFIX}}-grafana-container
+      - NODE_ENV=production
+    networks:
+      - bouncer_bouncer_network
+    volumes:
+      - '{{SERVICES_PREFIX}}_grafana_volume:/var/lib/grafana'
+      - './grafana-provisioning:/etc/grafana/provisioning'
+    mem_limit: 400m
+    restart: 'unless-stopped'
+  {{SERVICES_PREFIX}}_render:
+    container_name: {{SERVICES_PREFIX}}-render-container
+    image: isagroup/governify-render:initialsetup
+    environment:
+      - SERVICE_NAME={{SERVICES_PREFIX}}-render-container
+      - NODE_ENV=production
+      - PORT=80      
+      - user=admin-01
+      - password=cabrales-admin
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - ui.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+    volumes:
+      - './logs/naos-render:/opt/app/logs'
+      - './renders/renders:/opt/app/src/frontend/renders'
+      - './renders/index:/opt/app/src/frontend/index'
+    mem_limit: 400m
+    restart: 'unless-stopped'
+  {{SERVICES_PREFIX}}_registry_db:
+    environment:
+      - SERVICE_NAME={{SERVICES_PREFIX}}-registry-db-container
+    container_name: {{SERVICES_PREFIX}}-registry-db-container
+    image: mongo
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - mongo_registry
+    volumes:
+      - '{{SERVICES_PREFIX}}_registry_db_volume:/data/db'
+      - './data2import:/data2import'
+    mem_limit: 1200m
+    restart: 'unless-stopped'
+  {{SERVICES_PREFIX}}_influxdb:
+    image: 'influxdb:latest'
+    container_name: {{SERVICES_PREFIX}}-influxdb-container
+    volumes:
+      - '{{SERVICES_PREFIX}}_influxdb_volume:/var/lib/influxdb'
+      - './influxdb:/etc/influxdb'
+      - './data2import/influxdb:/var/backups'
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - influxdb
+    mem_limit: 1200m
+    restart: 'unless-stopped'
+    ports:
+      - "8086:8086"
+  {{SERVICES_PREFIX}}_registry:
+    container_name: {{SERVICES_PREFIX}}-registry-container
+    image: 'isagroup/governify-registry:bluejay'
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+    environment:
+      - NODE_ENV=production
+      - PORT=80
+      - SERVICE_NAME={{SERVICES_PREFIX}}-registry-container
+    volumes:
+      - './logs/naos-registry:/opt/app/logs'
+      - './static:/opt/app/public/static'
+    depends_on:
+      - {{SERVICES_PREFIX}}_registry_db
+    mem_limit: 400m
+    restart: 'unless-stopped'
+    ports:
+      - "8082:80"
+  {{SERVICES_PREFIX}}_eventcollector:
+    container_name: {{SERVICES_PREFIX}}-eventcollector-container
+    image: 'isagroup/governify-collector-events:latest'
+    environment:
+      - SERVICE_NAME={{SERVICES_PREFIX}}-eventcollector-container
+      - NODE_ENV=e2e
+      - PORT=80
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - event.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+    volumes:
+      - './configurations/collector-events:/opt/app/configurations/scopeManager'
+      - './tests/eventCollectorMockups:/opt/app/tests/e2e'
+    mem_limit: 400m
+    restart: 'unless-stopped'
+volumes:
+  {{SERVICES_PREFIX}}_influxdb_volume: null
+  {{SERVICES_PREFIX}}_registry_db_volume: null
+  {{SERVICES_PREFIX}}_grafana_volume: null
+networks:
+  bouncer_bouncer_network:
+    external: true

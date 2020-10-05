@@ -1,0 +1,25 @@
+{
+  "name": "governify-project-bluejay-infrastructure",
+  "version": "1.0.0",
+  "description": "Infrastructure for deploying the ecosystem as described in the BLUEJAY project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 5000 --no-warnings ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isa-group/governify-project-bluejay-infrastructure.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isa-group/governify-project-bluejay-infrastructure/issues"
+  },
+  "homepage": "https://github.com/isa-group/governify-project-bluejay-infrastructure#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "influx": "^5.5.2",
+    "mocha": "^8.0.1"
+  }
+}
