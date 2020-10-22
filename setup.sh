@@ -14,6 +14,7 @@ SERVICES_PREFIX (optional): The prefix that will be used for every service name 
 fi
 
 SERVER_IP=""
+RANDOM_KEY=$(openssl rand -base64 12)
 
 if [ -z $2 ]
 then
@@ -75,6 +76,10 @@ sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/s
 #Replacement for letsencrypt file for certificate request
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" init-letsencrypt.sh
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" init-letsencrypt.sh
+
+#Replace scope manager key with the random Key
+sed -i "s/{{RANDOM_KEY}}/$RANDOM_KEY/g" configurations/scope-manager/authKeys.json
+sed -i "s/{{RANDOM_KEY}}/$RANDOM_KEY/g" configurations/collector-events/authKeys.json
 
 
 echo -e "\033[33m

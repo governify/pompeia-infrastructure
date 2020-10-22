@@ -10,16 +10,16 @@
                     "identities": [
                         {
                             "source": "github",
-                            "repository": "eagle-testing",
-                            "repoOwner": "cesgarpas"
+                            "repository": "repo01",
+                            "repoOwner": "owner01"
                         },
                         {
                             "source": "pivotal",
-                            "projectId": 2242320
+                            "projectId": 1
                         },
                         {
                             "source": "heroku",
-                            "projectId": "402043b5-c931-44fd-8850-4398d8e12287"
+                            "projectId": "id1"
                         },
                         {
                             "source": "travis"
@@ -29,58 +29,52 @@
                         }
                     ],
                     "credentials": [
-                      {
-                        "source": "github",
-                        "apiKey": ""
-                      },
-                      {
-                        "source": "pivotal",
-                        "apiKey": ""
-                      },
-                      {
-                        "source": "heroku",
-                        "apiKey": ""
-                      }
+                        {
+                          "source": "github",
+                          "apiKey": "githubToken"
+                        },
+                        {
+                          "source": "pivotal",
+                          "apiKey": "pivotalToken"
+                        },
+                        {
+                          "source": "heroku",
+                          "apiKey": "herokuToken"
+                        },
+                        {
+                          "source": "travis",
+                          "apiKey": "travisToken"
+                        },
+                        {
+                          "source": "codeclimate",
+                          "apiKey": "codeclimateToken"
+                        }
                     ],
                     "members": [
                         {
-                            "memberId": "cesar",
+                            "memberId": 1,
                             "identities": [
                                 {
                                     "source": "github",
-                                    "username": "cesgarpas"
+                                    "username": "githubName1"
                                 },
                                 {
                                     "source": "pivotal",
-                                    "username": "cgpcsjcmp@gmail.com"
+                                    "username": "pivotalName1"
                                 }
                             ],
                             "credentials": []
                         },
                         {
-                            "memberId": "alex",
+                            "memberId": 2,
                             "identities": [
                                 {
                                     "source": "github",
-                                    "username": "AlexGue"
+                                    "username": "githubName2"
                                 },
                                 {
                                     "source": "pivotal",
-                                    "username": "aleguedia@gmail.com"
-                                }
-                            ],
-                            "credentials": []
-                        },
-                        {
-                            "memberId": "auditor",
-                            "identities": [
-                                {
-                                    "source": "github",
-                                    "username": "governifyauditor"
-                                },
-                                {
-                                    "source": "pivotal",
-                                    "username": "governify.auditor@gmail.com"
+                                    "username": "pivotalName2"
                                 }
                             ],
                             "credentials": []
