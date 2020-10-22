@@ -54,11 +54,11 @@ docker-compose -f docker-compose.yaml up -d
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose-testing.yaml
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" docker-compose-testing.yaml
 
-find tests/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find tests/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+find 'tests/' -type f -name '*.json' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+find 'tests/' -type f -name '*.json' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
-find tests/eventCollectorMockups/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find tests/eventCollectorMockups/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+find 'tests/eventCollectorMockups/' -type f -name '*.json' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+find 'tests/eventCollectorMockups/' -type f -name '*.json' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
 #Nginx Services configuration replacement prefixes
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/dashboard.conf
