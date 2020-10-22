@@ -1,8 +1,4 @@
 node_modules
 logs/
-configurations/scope-manager/scopes.json
-configurations/scope-manager/authKeys.json
-configurations/collector-events/authKeys.json
-configurations/collector-events/gpgEncrypt.sh
 
 
