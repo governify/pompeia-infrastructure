@@ -36,31 +36,50 @@ declare -A SERVICES=([$SERVICES_PREFIX-scopemanager-container]=sm.$SERVICES_PREF
 
 docker network create bouncer_bouncer_network
 
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" governify-project-bluejay-infrastructure/docker-compose.yaml
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" governify-project-bluejay-infrastructure/docker-compose.yaml
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose.yaml
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" docker-compose.yaml
 
-find governify-project-bluejay-infrastructure/renders-bluejay-template/renders/tpa/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find governify-project-bluejay-infrastructure/renders-bluejay-template/renders/tpa/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+find renders-bluejay-template/renders/tpa/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+find renders-bluejay-template/renders/tpa/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
-mv governify-project-bluejay-infrastructure/renders-bluejay-template/ governify-project-bluejay-infrastructure/renders/
+mv renders-bluejay-template/ renders/
 
-find governify-project-bluejay-infrastructure/configurations -type f -name *.yaml -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find governify-project-bluejay-infrastructure/configurations -type f -name *.yaml -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+find configurations -type f -name *.yaml -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+find configurations -type f -name *.yaml -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
-docker-compose -f governify-project-bluejay-infrastructure/docker-compose.yaml up -d
+docker-compose -f docker-compose.yaml up -d
 
 rm -rf governify-bouncer-infrastructure/config/services-nginx-config/$SERVICES_PREFIX*
 
 
 # TESTS
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" governify-project-bluejay-infrastructure/docker-compose-testing.yaml
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" governify-project-bluejay-infrastructure/docker-compose-testing.yaml
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose-testing.yaml
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" docker-compose-testing.yaml
 
-find governify-project-bluejay-infrastructure/tests/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find governify-project-bluejay-infrastructure/tests/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+find tests/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+find tests/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
-find governify-project-bluejay-infrastructure/tests/eventCollectorMockups/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find governify-project-bluejay-infrastructure/tests/eventCollectorMockups/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+find tests/eventCollectorMockups/ -type f -name *.json -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+find tests/eventCollectorMockups/ -type f -name *.json -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+
+#Nginx Services configuration replacement prefixes
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/dashboard.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/dashboard.conf
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/registry.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/registry.conf
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/reporter.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/reporter.conf
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/ui.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/ui.conf
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/sm.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/sm.conf
+
+
+#Replacement for letsencrypt file for certificate request
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" init-letsencrypt.sh
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" init-letsencrypt.sh
+
+
 
 
 
@@ -110,7 +129,6 @@ rm -rf governify-project-bluejay-infrastructure/tmp
 
 echo "Certificate created. The last thing is to start the bouncer..."
 
-docker-compose -f governify-bouncer-infrastructure/docker-compose.yaml up -d
 
 echo -e "\033[33m
                  **************************************************************
@@ -129,3 +147,5 @@ for service in "${!SERVICES[@]}"; do
 
   echo $SERVER_IP $SERVICE_URL
 done
+
+./init-letsencrypt.sh

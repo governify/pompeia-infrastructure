@@ -1,42 +1,7 @@
 version: '2.2'
 services:
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-  nginx:
-    environment:
-      - SERVICE_NAME=bouncer-nginx-container
-    container_name: bouncer-nginx-container
-    image: nginx
-    ports:
-      - '443:443'
-      - '80:80'
-    ulimits:
-      nproc: 10240
-      nofile:
-        soft: 10240
-        hard: 10240
-    volumes:
-      - './config/nginx.conf:/etc/nginx/nginx.conf'
-      - ./data/certbot/conf:/etc/letsencrypt
-      - './config/static:/etc/nginx/static'
-      - './certs:/etc/nginx/certs'
-      - './config/services-nginx-config:/etc/nginx/conf.d'
-      - './logs/bouncer-nginx:/var/log/nginx'
-      - './data/certbot/www:/var/www/certbot'
-    command: >-
-      /bin/bash -c "nginx -g 'daemon off;' & while [ 1 ]; do nginx -s reload &>>
-      /tmp/reload.log; sleep 30; clear; done"
-    networks:
-      - bouncer_bouncer_network
-    mem_limit: 100m
-    restart: 'on-failure:5'
-  bluejay_reporter:
-    container_name: bluejay-reporter-container
+  {{SERVICES_PREFIX}}_reporter:
+    container_name: {{SERVICES_PREFIX}}-reporter-container
     image: isagroup/governify-reporter-new:latest
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-reporter-container
@@ -47,31 +12,29 @@ services:
         aliases:
           - reporter.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     volumes:
-      - './logs/bluejay-reporter:/opt/app/logs'
+      - './logs/{{SERVICES_PREFIX}}-reporter:/opt/app/logs'
       - './configurations/reporter:/opt/app/src/backend/configurations'
       - './grafana-dashboards:/opt/app/src/backend/dashboards'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
-      - bluejay_registry_db
-      - bluejay_influxdb
-  bluejay_grafana:
-    container_name: bluejay-grafana-container
+      - {{SERVICES_PREFIX}}_registry_db
+      - {{SERVICES_PREFIX}}_influxdb
+  {{SERVICES_PREFIX}}_grafana:
+    container_name: {{SERVICES_PREFIX}}-grafana-container
     image: isagroup/governify-grafana:1.0.0
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-grafana-container
       - NODE_ENV=production
     networks:
-      bouncer_bouncer_network:
-        aliases:
-          - dashboard{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+      - bouncer_bouncer_network
     volumes:
-      - 'bluejay_grafana_volume:/var/lib/grafana'
+      - '{{SERVICES_PREFIX}}_grafana_volume:/var/lib/grafana'
       - './grafana-provisioning:/etc/grafana/provisioning'
     mem_limit: 400m
     restart: 'unless-stopped'
-  bluejay_render:
-    container_name: bluejay-render-container
+  {{SERVICES_PREFIX}}_render:
+    container_name: {{SERVICES_PREFIX}}-render-container
     image: isagroup/governify-render:initialsetup
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-render-container
@@ -89,25 +52,25 @@ services:
       - './renders/index:/opt/app/src/frontend/index'
     mem_limit: 400m
     restart: 'unless-stopped'
-  bluejay_registry_db:
+  {{SERVICES_PREFIX}}_registry_db:
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-registry-db-container
-    container_name: bluejay-registry-db-container
+    container_name: {{SERVICES_PREFIX}}-registry-db-container
     image: mongo
     networks:
       bouncer_bouncer_network:
         aliases:
           - mongo_registry
     volumes:
-      - 'bluejay_registry_db_volume:/data/db'
+      - '{{SERVICES_PREFIX}}_registry_db_volume:/data/db'
       - './data2import:/data2import'
     mem_limit: 1200m
     restart: 'unless-stopped'
-  bluejay_influxdb:
+  {{SERVICES_PREFIX}}_influxdb:
     image: 'influxdb:latest'
-    container_name: bluejay-influxdb-container
+    container_name: {{SERVICES_PREFIX}}-influxdb-container
     volumes:
-      - 'bluejay_influxdb_volume:/var/lib/influxdb'
+      - '{{SERVICES_PREFIX}}_influxdb_volume:/var/lib/influxdb'
       - './influxdb:/etc/influxdb'
       - './data2import/influxdb:/var/backups'
     networks:
@@ -116,8 +79,8 @@ services:
           - influxdb
     mem_limit: 1200m
     restart: 'unless-stopped'
-  bluejay_registry:
-    container_name: bluejay-registry-container
+  {{SERVICES_PREFIX}}_registry:
+    container_name: {{SERVICES_PREFIX}}-registry-container
     image: 'isagroup/governify-registry:bluejay'
     networks:
       bouncer_bouncer_network:
@@ -131,11 +94,41 @@ services:
       - './logs/naos-registry:/opt/app/logs'
       - './static:/opt/app/public/static'
     depends_on:
-      - bluejay_registry_db
+      - {{SERVICES_PREFIX}}_registry_db
     mem_limit: 400m
     restart: 'unless-stopped'
-  bluejay_eventcollector:
-    container_name: bluejay-eventcollector-container
+#  {{SERVICES_PREFIX}}_ptcollector:
+#    container_name: {{SERVICES_PREFIX}}-ptcollector-container
+#    image: 'isagroup/governify-cabrales-computer:pagination'
+#    environment:
+#      - SERVICE_NAME={{SERVICES_PREFIX}}-ptcollector-container
+#      - NODE_ENV=production
+#      - PORT=80
+#    networks:
+#      bouncer_bouncer_network:
+#        aliases:
+#          - pt.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+#    volumes:
+#      - './logs/naos-computer:/opt/app/logs'
+#    mem_limit: 400m
+#    restart: 'unless-stopped'
+#  {{SERVICES_PREFIX}}_pt_connector:
+#    container_name: {{SERVICES_PREFIX}}-connector-container
+#    image: 'isagroup/governify-pt-connector:eagle'
+#    environment:
+#      - SERVICE_NAME={{SERVICES_PREFIX}}-connector-container
+#      - NODE_ENV=production
+#      - PORT=80
+#    networks:
+#      bouncer_bouncer_network:
+#        aliases:
+#          - pt.connector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+#    volumes:
+#      - './logs/pivotal-connector:/opt/app/logs'
+#    mem_limit: 400m
+#    restart: 'unless-stopped'
+  {{SERVICES_PREFIX}}_eventcollector:
+    container_name: {{SERVICES_PREFIX}}-eventcollector-container
     image: 'isagroup/governify-collector-events:latest'
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-eventcollector-container
@@ -149,8 +142,8 @@ services:
       - './configurations/collector-events:/opt/app/configurations/scopeManager'
     mem_limit: 400m
     restart: 'unless-stopped'
-  bluejay_scopemanager:
-    container_name: bluejay-scopemanager-container
+  {{SERVICES_PREFIX}}_scopemanager:
+    container_name: {{SERVICES_PREFIX}}-scopemanager-container
     image: 'isagroup/governify-scope-manager:latest'
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-scopemanager-container
@@ -165,9 +158,9 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
 volumes:
-  bluejay_influxdb_volume: null
-  bluejay_registry_db_volume: null
-  bluejay_grafana_volume: null
+  {{SERVICES_PREFIX}}_influxdb_volume: null
+  {{SERVICES_PREFIX}}_registry_db_volume: null
+  {{SERVICES_PREFIX}}_grafana_volume: null
 networks:
   bouncer_bouncer_network:
     external: true
