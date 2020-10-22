@@ -49,9 +49,6 @@ find configurations -type f -name *.yaml -exec sed -i "s/{{SERVICES_PREFIX}}/$SE
 
 docker-compose -f docker-compose.yaml up -d
 
-rm -rf governify-bouncer-infrastructure/config/services-nginx-config/$SERVICES_PREFIX*
-
-
 # TESTS
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose-testing.yaml
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" docker-compose-testing.yaml
@@ -78,56 +75,6 @@ sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/s
 #Replacement for letsencrypt file for certificate request
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" init-letsencrypt.sh
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" init-letsencrypt.sh
-
-
-
-
-
-for service in "${!SERVICES[@]}"; do
-  service_url=${SERVICES[$service]}
-  IFS=':' read -r -a splitted <<< "$service_url"
-  SERVICE_URL=${splitted[0]}$DNS_SUFFIX
-  SERVICE_PORT=${splitted[1]}
-
-  echo -e "server {
-    resolver consul valid=2s;
-
-    listen 443 ssl;
-
-    server_name $SERVICE_URL;
-    set \$proxied_url http://$service.service.consul;
-
-    location / {
-        proxy_pass \$proxied_url:$SERVICE_PORT;
-    }
-
-    proxy_set_header Host \"$SERVICE_URL\";
-}" >> governify-bouncer-infrastructure/config/services-nginx-config/$service.conf
-done
-
-echo ""
-echo "--------"
-echo "Generating a temporary SSL cert"
-echo ""
-
-rm governify-bouncer-infrastructure/certs/cert.pem
-rm governify-bouncer-infrastructure/certs/privkey.pem
-rm governify-bouncer-infrastructure/certs/fullchain.pem
-
-mkdir governify-project-bluejay-infrastructure/tmp
-
-docker run -it -v $(pwd)/governify-project-bluejay-infrastructure/tmp:/export frapsoft/openssl req -x509 -nodes -new -newkey rsa:4096 -sha256 -keyout /export/privkey.pem -out /export/cert.pem -days 365 -subj '/CN=localhost'
-docker run -it -v $(pwd)/governify-project-bluejay-infrastructure/tmp:/export frapsoft/openssl openssl dhparam -dsaparam -out /export/dhparam4096.pem 4096
-
-mv governify-project-bluejay-infrastructure/tmp/cert.pem governify-bouncer-infrastructure/certs/cert.pem
-mv governify-project-bluejay-infrastructure/tmp/privkey.pem governify-bouncer-infrastructure/certs/privkey.pem
-cp governify-bouncer-infrastructure/certs/cert.pem governify-bouncer-infrastructure/certs/fullchain.pem
-mv governify-project-bluejay-infrastructure/tmp/dhparam4096.pem governify-bouncer-infrastructure/certs/dhparam4096.pem
-
-
-rm -rf governify-project-bluejay-infrastructure/tmp
-
-echo "Certificate created. The last thing is to start the bouncer..."
 
 
 echo -e "\033[33m
