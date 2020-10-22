@@ -5,6 +5,6 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 sudo yum install git -y
-chmod +x setup.sh
-chmod +x init-letsencrypt.sh
+chmod +x ../setup.sh
+chmod +x ../init-letsencrypt.sh
 chmod +x createDNS.sh
