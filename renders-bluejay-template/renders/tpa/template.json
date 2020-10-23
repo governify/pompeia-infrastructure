@@ -1,4 +1,3 @@
- 
 {
     "id": "tpa-1010101010",
     "version": "1.0.0",
@@ -17,6 +16,13 @@
         },
         "definitions": {
             "schemas": {},
+            "dashboards": {
+                "tpa": {
+                    "base": "tpa/base.json",
+                    "modifier": "tpa/modifier.js",
+                    "overlay": "tpa/overlay.js"
+                }
+            },
             "scopes": {
                 "development": {
                     "project": {
@@ -241,7 +247,7 @@
                     },
                     "scope": {
                         "$ref": "#/context/definitions/scopes/development"
-                    }                    
+                    }
                 }
             }
         },
