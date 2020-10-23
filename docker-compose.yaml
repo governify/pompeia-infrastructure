@@ -64,7 +64,7 @@ services:
     networks:
       bouncer_bouncer_network:
         aliases:
-          - dashboard{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - dashboard.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
       - './grafana-provisioning:/etc/grafana/provisioning'
