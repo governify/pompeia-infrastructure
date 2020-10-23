@@ -100,4 +100,3 @@ for service in "${!SERVICES[@]}"; do
   echo $SERVER_IP $SERVICE_URL
 done
 
-./init-letsencrypt.sh
