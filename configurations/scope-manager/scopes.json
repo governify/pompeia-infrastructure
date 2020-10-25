@@ -28,20 +28,7 @@
                             "source": "codeclimate"
                         }
                     ],
-                    "credentials": [
-                      {
-                        "source": "github",
-                        "apiKey": ""
-                      },
-                      {
-                        "source": "pivotal",
-                        "apiKey": ""
-                      },
-                      {
-                        "source": "heroku",
-                        "apiKey": ""
-                      }
-                    ],
+                    "credentials": [],
                     "members": [
                         {
                             "memberId": "cesar",
