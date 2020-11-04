@@ -189,7 +189,7 @@ Released   : 20140228
 											class="btn btn-success" style="margin-left: 0.5em; padding: 0 5px; float: right;">
 											Dashboard
 										</a>
-										<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js"
+										<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=/tpa/default.html&ctrl=/renders/tpa/default.js"
 											target="_blank" class="btn btn-info" style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
 									</li>
 									<li ng-if="tpaprojects.length == 0"><strong>There are no audited projects for this course yet.</strong></li>
@@ -203,7 +203,7 @@ Released   : 20140228
 									<li ng-repeat="project in notpaprojects track by project.projectId"
 										style="padding: 0.5em; text-align: left;">
 										<strong>{{project.projectId}}</strong>
-										<a href="./render?model=http://registry.{{domain}}/api/v6/agreements/tpa-{{project.projectId}}&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js"
+										<a href="./render?model=http://registry.{{domain}}/api/v6/agreements/tpa-{{project.projectId}}&view=/tpa/default.html&ctrl=/renders/tpa/default.js"
 											target="_blank" ng-click="createTpa(project);" class="btn btn-success"
 											style="margin-left: 0.5em; padding: 0 5px; float:right">
 											Create TPA

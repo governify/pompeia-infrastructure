@@ -25,17 +25,13 @@ $scope.domain = '';
 /* Check if it is already set up */
 $http({
     method: 'GET',
-    url: './renders/tpa/template.json'
+    url: '{{URL_EXTERNAL_ASSETS_MANAGER}}/api/v1/public/renders/tpa/template.json'
 }).then(tparesponse => {
     scopeManagerURL = tparesponse.data.context.infrastructure.scopeManager;
-    if (tparesponse.data.context.infrastructure.registry !== 'http://registry.1212121212/api/v6') {
-        domain = tparesponse.data.context.infrastructure.registry.replace('http://registry.', '').replace('/api/v6', '');
-        $scope.domain = domain;
-        $scope.deftpa = JSON.stringify(tparesponse.data, null, 4);
-        loadProjects();
-    } else {
-        $scope.initialsetup = true;
-    }
+    domain = tparesponse.data.context.infrastructure.registry.replace('http://registry.', '').replace('/api/v6', '');
+    $scope.domain = domain;
+    $scope.deftpa = JSON.stringify(tparesponse.data, null, 4);
+    loadProjects();
 }).catch(err => {
     $scope.displayItems.statusMessage = "Template file could not be loaded.";
     $scope.displayItems.statusType = "error";

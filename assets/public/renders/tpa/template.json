@@ -12,15 +12,16 @@
             "reporter": "http://reporter.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v4",
             "render": "https://ui.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/render?model=https://registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v6/agreements/tpa-1010101010&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js",
             "dashboard": "http://dashboard.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}",
-            "scopeManager": "https://sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1"
+            "scopeManager": "https://sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1",
+            "assetsManager": "http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/tpa/base.json"
         },
         "definitions": {
             "schemas": {},
             "dashboards": {
                 "tpa": {
-                    "base": "tpa/base.json",
-                    "modifier": "tpa/modifier.js",
-                    "overlay": "tpa/overlay.js"
+                    "base": "http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/public/grafana-dashboards/tpa/base.json",
+                    "modifier": "http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/public/grafana-dashboards/tpa/modifier.js",
+                    "overlay": "http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/public/grafana-dashboards/tpa/overlay.js"
                 }
             },
             "scopes": {

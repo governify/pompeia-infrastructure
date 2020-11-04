@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/isa-group/governify-project-bluejay-infrastructure.git"
+    "url": "git+https://github.com/governify/governify-project-bluejay-infrastructure.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/isa-group/governify-project-bluejay-infrastructure/issues"
+    "url": "https://github.com/governify/governify-project-bluejay-infrastructure/issues"
   },
-  "homepage": "https://github.com/isa-group/governify-project-bluejay-infrastructure#readme",
+  "homepage": "https://github.com/governify/governify-project-bluejay-infrastructure#readme",
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",

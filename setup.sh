@@ -40,11 +40,6 @@ docker network create bouncer_bouncer_network
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose.yaml
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" docker-compose.yaml
 
-find 'renders-bluejay-template/renders/tpa/' -type f -name '*.json' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find 'renders-bluejay-template/renders/tpa/' -type f -name '*.json' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
-
-mv renders-bluejay-template/ renders/
-
 find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
 find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 

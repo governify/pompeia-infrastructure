@@ -49,7 +49,6 @@ services:
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
       - './configurations/reporter:/opt/app/src/backend/configurations'
-      - './grafana-dashboards:/opt/app/src/backend/dashboards'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
@@ -67,7 +66,6 @@ services:
           - dashboard.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
-      - './grafana-provisioning:/etc/grafana/provisioning'
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_render:
@@ -76,17 +74,18 @@ services:
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-render-container
       - NODE_ENV=production
-      - PORT=80      
-      - user=admin
-      - password=admin
+      - PORT=80
+      - LOGIN_USER=governify-admin
+      - LOGIN_PASSWORD=governify-project
+      - DEFAULT_VIEW=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/public/renders/index/view.html
+      - DEFAULT_CONTROLLER=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/public/renders/index/controller.js
+      - DEFAULT_MODEL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/public/renders/index/model.json
     networks:
       bouncer_bouncer_network:
         aliases:
           - ui.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     volumes:
-      - './logs/naos-render:/opt/app/logs'
-      - './renders/renders:/opt/app/src/frontend/renders'
-      - './renders/index:/opt/app/src/frontend/index'
+      - './logs/render:/opt/app/logs'
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_registry_db:
@@ -128,7 +127,7 @@ services:
       - PORT=80
       - SERVICE_NAME={{SERVICES_PREFIX}}-registry-container
     volumes:
-      - './logs/naos-registry:/opt/app/logs'
+      - './logs/registry:/opt/app/logs'
       - './static:/opt/app/public/static'
     depends_on:
       - bluejay_registry_db
@@ -136,7 +135,7 @@ services:
     restart: 'unless-stopped'
   bluejay_eventcollector:
     container_name: bluejay-eventcollector-container
-    image: 'isagroup/governify-collector-events:latest'
+    image: 'isagroup/governify-collector-events:dev'
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-eventcollector-container
       - NODE_ENV=production
@@ -145,23 +144,43 @@ services:
       bouncer_bouncer_network:
         aliases:
           - event.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
-    volumes:
-      - './configurations/collector-events:/opt/app/configurations/scopeManager'
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_scopemanager:
     container_name: bluejay-scopemanager-container
-    image: 'isagroup/governify-scope-manager:latest'
+    image: 'isagroup/governify-scope-manager:dev'
     environment:
       - SERVICE_NAME={{SERVICES_PREFIX}}-scopemanager-container
       - NODE_ENV=production
       - PORT=80
+      - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+      - AUTHORIZED_KEY=
     networks:
       bouncer_bouncer_network:
         aliases:
           - sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+    mem_limit: 400m
+    restart: 'unless-stopped'
+  bluejay_assetsmanager:
+    container_name: bluejay-assetsmanager-container
+    image: 'isagroup/governify-assets-manager:latest'
+    environment:
+      - SERVICE_NAME={{SERVICES_PREFIX}}-assetsmanager-container
+      - NODE_ENV=production
+      - PORT=80
+      - LOGIN_USER=governify-admin
+      - LOGIN_PASSWORD=governify-project
+      - URL_EXT_ASSETS_MANAGER=https://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+      - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+      - SERVICES_PREFIX={{SERVICES_PREFIX}}
+      - DNS_SUFFIX={{DNS_SUFFIX}}
+    networks:
+      bouncer_bouncer_network:
+        aliases:
+          - assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     volumes:
-      - './configurations/scope-manager:/opt/app/configurations'
+      - './assets/public:/opt/app/files/public'
+      - './assets/private:/opt/app/files/private'
     mem_limit: 400m
     restart: 'unless-stopped'
 volumes:
