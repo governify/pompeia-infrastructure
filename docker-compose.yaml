@@ -140,6 +140,12 @@ services:
       - SERVICE_NAME={{SERVICES_PREFIX}}-eventcollector-container
       - NODE_ENV=production
       - PORT=80
+      - KEY_SCOPEMANAGER=
+      - KEY_GITHUB=
+      - KEY_PIVOTAL=
+      - KEY_TRAVIS=
+      - KEY_HEROKU=
+      - KEY_CODECLIMATE=
     networks:
       bouncer_bouncer_network:
         aliases:
@@ -154,11 +160,12 @@ services:
       - NODE_ENV=production
       - PORT=80
       - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
-      - AUTHORIZED_KEY=
+      - KEY_SCOPEMANAGER=
+      - KEY_ASSETSMANAGER=
     networks:
       bouncer_bouncer_network:
         aliases:
-          - sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - scopes.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_assetsmanager:
@@ -170,10 +177,10 @@ services:
       - PORT=80
       - LOGIN_USER=governify-admin
       - LOGIN_PASSWORD=governify-project
-      - URL_EXT_ASSETS_MANAGER=https://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
-      - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
       - SERVICES_PREFIX={{SERVICES_PREFIX}}
       - DNS_SUFFIX={{DNS_SUFFIX}}
+      - URL_EXT_ASSETS_MANAGER=https://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+      - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
     networks:
       bouncer_bouncer_network:
         aliases:

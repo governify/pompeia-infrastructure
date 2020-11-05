@@ -33,7 +33,7 @@ fi
 
 DNS_SUFFIX=$1
 
-declare -A SERVICES=([$SERVICES_PREFIX-scopemanager-container]=sm.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-eventcollector-container]=event.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-ptcollector-container]=pt.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-grafana-container]=dashboard.$SERVICES_PREFIX:3000 [$SERVICES_PREFIX-registry-container]=registry.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-render-container]=ui.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-connector-container]=pt.connector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-reporter-container]=reporter.$SERVICES_PREFIX:80)
+declare -A SERVICES=([$SERVICES_PREFIX-assetsmanager-container]=assets.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-scopemanager-container]=scopes.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-eventcollector-container]=event.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-ptcollector-container]=pt.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-grafana-container]=dashboard.$SERVICES_PREFIX:3000 [$SERVICES_PREFIX-registry-container]=registry.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-render-container]=ui.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-connector-container]=pt.connector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-reporter-container]=reporter.$SERVICES_PREFIX:80)
 
 docker network create bouncer_bouncer_network
 
