@@ -6,7 +6,9 @@
             "credentials": [],
             "projects": [
                 {
+                    "name": "projectName01",
                     "projectId": "project01",
+                    "owner": "owner",
                     "identities": [
                         {
                             "source": "github",
@@ -19,7 +21,7 @@
                         },
                         {
                             "source": "heroku",
-                            "projectId": "id1"
+                            "projectId": "id01"
                         },
                         {
                             "source": "travis"
