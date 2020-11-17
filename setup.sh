@@ -14,7 +14,8 @@ SERVICES_PREFIX (optional): The prefix that will be used for every service name 
 fi
 
 SERVER_IP=""
-RANDOM_KEY=$(openssl rand -base64 12)
+RANDOM_KEY1=$(openssl rand -base64 12)
+RANDOM_KEY2=$(openssl rand -base64 12)
 
 if [ -z $2 ]
 then
@@ -43,7 +44,11 @@ docker network create bouncer_bouncer_network
 find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
 find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
-docker-compose -f docker-compose.yaml up -d
+# Replace scope manager and assets manager key with random keys
+sed -i "s/{{RANDOM_KEY1}}/$RANDOM_KEY1/g" ./.env
+sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
+
+docker-compose -f docker-compose.yaml --env-file ./.env up -d
 
 # TESTS
 #sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose-testing.yaml
@@ -71,10 +76,6 @@ sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/s
 #Replacement for letsencrypt file for certificate request
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" init-letsencrypt.sh
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" init-letsencrypt.sh
-
-#Replace scope manager key with the random Key
-sed -i "s/{{RANDOM_KEY}}/$RANDOM_KEY/g" configurations/scope-manager/authKeys.json
-sed -i "s/{{RANDOM_KEY}}/$RANDOM_KEY/g" configurations/collector-events/authKeys.json
 
 
 echo -e "\033[33m
