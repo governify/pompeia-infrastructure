@@ -25,7 +25,7 @@ $scope.domain = '';
 /* Check if it is already set up */
 $http({
     method: 'GET',
-    url: '{{URL_EXTERNAL_ASSETS_MANAGER}}/api/v1/public/renders/tpa/template.json'
+    url: '$_[URL_EXTERNAL_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
 }).then(tparesponse => {
     scopeManagerURL = tparesponse.data.context.infrastructure.scopeManager;
     domain = tparesponse.data.context.infrastructure.registry.replace('http://registry.', '').replace('/api/v6', '');
