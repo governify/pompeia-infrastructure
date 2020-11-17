@@ -39,13 +39,13 @@ services:
     container_name: bluejay-reporter-container
     image: isagroup/governify-reporter-new:latest
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-reporter-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-reporter-container
       - NODE_ENV=production
       - PORT=80
     networks:
       bouncer_bouncer_network:
         aliases:
-          - reporter.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - reporter.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
       - './configurations/reporter:/opt/app/src/backend/configurations'
@@ -58,12 +58,12 @@ services:
     container_name: bluejay-grafana-container
     image: isagroup/governify-grafana:1.0.0
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-grafana-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-grafana-container
       - NODE_ENV=production
     networks:
       bouncer_bouncer_network:
         aliases:
-          - dashboard.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - dashboard.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
     mem_limit: 400m
@@ -72,25 +72,25 @@ services:
     container_name: bluejay-render-container
     image: isagroup/governify-render:initialsetup
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-render-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-render-container
       - NODE_ENV=production
       - PORT=80
       - LOGIN_USER=governify-admin
       - LOGIN_PASSWORD=governify-project
-      - DEFAULT_VIEW=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/public/renders/index/view.html
-      - DEFAULT_CONTROLLER=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/public/renders/index/controller.js
-      - DEFAULT_MODEL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/public/renders/index/model.json
+      - DEFAULT_VIEW=http://assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}/api/v1/public/renders/index/view.html
+      - DEFAULT_CONTROLLER=http://assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}/api/v1/public/renders/index/controller.js
+      - DEFAULT_MODEL=http://assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}/api/v1/public/renders/index/model.json
     networks:
       bouncer_bouncer_network:
         aliases:
-          - ui.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - ui.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     volumes:
       - './logs/render:/opt/app/logs'
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_registry_db:
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-registry-db-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-registry-db-container
     container_name: bluejay-registry-db-container
     image: mongo
     networks:
@@ -121,11 +121,11 @@ services:
     networks:
       bouncer_bouncer_network:
         aliases:
-          - registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - registry.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     environment:
       - NODE_ENV=production
       - PORT=80
-      - SERVICE_NAME={{SERVICES_PREFIX}}-registry-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-registry-container
     volumes:
       - './logs/registry:/opt/app/logs'
       - './static:/opt/app/public/static'
@@ -137,54 +137,54 @@ services:
     container_name: bluejay-eventcollector-container
     image: 'isagroup/governify-collector-events:dev'
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-eventcollector-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-eventcollector-container
       - NODE_ENV=production
       - PORT=80
-      - KEY_SCOPEMANAGER=
-      - KEY_GITHUB=
-      - KEY_PIVOTAL=
-      - KEY_TRAVIS=
-      - KEY_HEROKU=
-      - KEY_CODECLIMATE=
+      - KEY_SCOPEMANAGER=${KEY_SCOPEMANAGER}
+      - KEY_GITHUB=${KEY_GITHUB}
+      - KEY_PIVOTAL=${KEY_PIVOTAL}
+      - KEY_TRAVIS=${KEY_TRAVIS}
+      - KEY_HEROKU=${KEY_HEROKU}
+      - KEY_CODECLIMATE=${KEY_CODECLIMATE}
     networks:
       bouncer_bouncer_network:
         aliases:
-          - event.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - event.collector.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_scopemanager:
     container_name: bluejay-scopemanager-container
     image: 'isagroup/governify-scope-manager:dev'
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-scopemanager-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-scopemanager-container
       - NODE_ENV=production
       - PORT=80
-      - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
-      - KEY_SCOPEMANAGER=
-      - KEY_ASSETSMANAGER=
+      - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
+      - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
+      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
     networks:
       bouncer_bouncer_network:
         aliases:
-          - scopes.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - scopes.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_assetsmanager:
     container_name: bluejay-assetsmanager-container
     image: 'isagroup/governify-assets-manager:latest'
     environment:
-      - SERVICE_NAME={{SERVICES_PREFIX}}-assetsmanager-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-assetsmanager-container
       - NODE_ENV=production
       - PORT=80
       - LOGIN_USER=governify-admin
       - LOGIN_PASSWORD=governify-project
-      - SERVICES_PREFIX={{SERVICES_PREFIX}}
-      - DNS_SUFFIX={{DNS_SUFFIX}}
-      - URL_EXT_ASSETS_MANAGER=https://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
-      - URL_INT_ASSETS_MANAGER_URL=http://assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+      - SERVICES_PREFIX=${SERVICES_PREFIX:?SERVICES_PREFIX env var}
+      - DNS_SUFFIX=${DNS_SUFFIX:?DNS_SUFFIX env var}
+      - URL_EXT_ASSETS_MANAGER=https://assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
+      - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     networks:
       bouncer_bouncer_network:
         aliases:
-          - assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}
+          - assets.${SERVICES_PREFIX:?SERVICES_PREFIX env var}${DNS_SUFFIX:?DNS_SUFFIX env var}
     volumes:
       - './assets/public:/opt/app/files/public'
       - './assets/private:/opt/app/files/private'
