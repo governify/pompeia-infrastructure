@@ -140,7 +140,7 @@ services:
       - SERVICE_NAME=${SERVICES_PREFIX:?SERVICES_PREFIX env var}-eventcollector-container
       - NODE_ENV=production
       - PORT=80
-      - KEY_SCOPEMANAGER=${KEY_SCOPEMANAGER}
+      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
       - KEY_GITHUB=${KEY_GITHUB}
       - KEY_PIVOTAL=${KEY_PIVOTAL}
       - KEY_TRAVIS=${KEY_TRAVIS}
