@@ -42,6 +42,8 @@ services:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-reporter-container
       - NODE_ENV=production
       - PORT=80
+      - SERVICES_PREFIX=${SERVICES_PREFIX:?}
+      - DNS_SUFFIX=${DNS_SUFFIX:?}
     networks:
       bouncer_bouncer_network:
         aliases:
