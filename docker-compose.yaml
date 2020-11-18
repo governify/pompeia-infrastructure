@@ -37,7 +37,7 @@ services:
     restart: 'on-failure:5'
   bluejay_reporter:
     container_name: bluejay-reporter-container
-    image: isagroup/governify-reporter-new:latest
+    image: governify/reporter:dev
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-reporter-container
       - NODE_ENV=production
@@ -56,7 +56,7 @@ services:
       - bluejay_influxdb
   bluejay_grafana:
     container_name: bluejay-grafana-container
-    image: isagroup/governify-grafana:1.0.0
+    image: governify/dashboard:dev
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-grafana-container
       - NODE_ENV=production
@@ -70,11 +70,12 @@ services:
     restart: 'unless-stopped'
   bluejay_render:
     container_name: bluejay-render-container
-    image: isagroup/governify-render:initialsetup
+    image: governify/render:dev
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-render-container
       - NODE_ENV=production
       - PORT=80
+      - LAYOUT=bootstrap3.html
       - LOGIN_USER=governify-admin
       - LOGIN_PASSWORD=governify-project
       - DEFAULT_VIEW=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}/api/v1/public/renders/index/view.html
@@ -135,7 +136,7 @@ services:
     restart: 'unless-stopped'
   bluejay_eventcollector:
     container_name: bluejay-eventcollector-container
-    image: 'isagroup/governify-collector-events:dev'
+    image: 'governify/collector-events:dev'
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-eventcollector-container
       - NODE_ENV=production
@@ -154,7 +155,7 @@ services:
     restart: 'unless-stopped'
   bluejay_scopemanager:
     container_name: bluejay-scopemanager-container
-    image: 'isagroup/governify-scope-manager:dev'
+    image: 'governify/scope-manager:dev'
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-scopemanager-container
       - NODE_ENV=production
@@ -170,7 +171,7 @@ services:
     restart: 'unless-stopped'
   bluejay_assetsmanager:
     container_name: bluejay-assetsmanager-container
-    image: 'isagroup/governify-assets-manager:latest'
+    image: 'governify/assets-manager:dev'
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager-container
       - NODE_ENV=production
