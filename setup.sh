@@ -69,8 +69,10 @@ sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/reporter.co
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/reporter.conf
 sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/ui.conf
 sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/ui.conf
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/sm.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/sm.conf
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/scopes.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/scopes.conf
+sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/assets.conf
+sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/assets.conf
 
 
 #Replacement for letsencrypt file for certificate request
