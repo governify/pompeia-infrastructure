@@ -184,13 +184,13 @@ services:
       - DNS_SUFFIX=${DNS_SUFFIX:?}
       - URL_EXT_ASSETS_MANAGER=https://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
       - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+      - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
     networks:
       bouncer_bouncer_network:
         aliases:
           - assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     volumes:
-      - './assets/public:/opt/app/files/public'
-      - './assets/private:/opt/app/files/private'
+      - './assets:/home/theia/src-gen/backend/files'
     mem_limit: 400m
     restart: 'unless-stopped'
 volumes:

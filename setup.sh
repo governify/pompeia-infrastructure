@@ -41,8 +41,8 @@ docker network create bouncer_bouncer_network
 #sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" docker-compose.yaml
 #sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" docker-compose.yaml
 
-find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
-find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
+#find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
+#find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
 # Replace scope manager and assets manager key with random keys
 sed -i "s/{{RANDOM_KEY1}}/$RANDOM_KEY1/g" ./.env
