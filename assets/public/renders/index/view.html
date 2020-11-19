@@ -17,8 +17,8 @@ Released   : 20140228
 		<meta name="keywords" content="" />
 		<meta name="description" content="" />
 		<link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
-		<link href="./index/default.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="./index/fonts.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/default.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css" media="all" />
 
 		<!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
 
@@ -26,7 +26,7 @@ Released   : 20140228
 
 	<style>
 		body{
-			background: url("./index/images/blue_mountains_1.jpg") !important;
+			background: url("$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
 			background-size: auto !important;
 			background-attachment: fixed !important;	
 		}
@@ -38,14 +38,10 @@ Released   : 20140228
 
 				<!-- ---------------- Buttons ---------------- -->
 				<span ng-if="!initialsetup && !setupdomain && !setuptpa && !edittpa" class="col-xs-offset-9" style="position:absolute; top:10px; right:10px; margin:0;">
-					<a href="https://dashboard.bluejay.governify.io/d/Zeeff8kMd/class-dashboard?orgId=1" target="_blank"
-						class="btn btn-success">
-						General Dashboard
-					</a>
 					<button class="btn btn-info" ng-click="editDefaultTPA()">
 						Edit default TPA
 					</button>
-					<a href="./render?model=/index/model.json&view=/index/adminview.html&ctrl=/index/admincontroller.js"
+					<a href="./render?model=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/model.json&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/adminview.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/admincontroller.js"
 						class="btn btn-primary disabled">
 						Admin UI
 					</a>
@@ -189,7 +185,7 @@ Released   : 20140228
 											class="btn btn-success" style="margin-left: 0.5em; padding: 0 5px; float: right;">
 											Dashboard
 										</a>
-										<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=/tpa/default.html&ctrl=/renders/tpa/default.js"
+										<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
 											target="_blank" class="btn btn-info" style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
 									</li>
 									<li ng-if="tpaprojects.length == 0"><strong>There are no audited projects for this course yet.</strong></li>
@@ -203,7 +199,7 @@ Released   : 20140228
 									<li ng-repeat="project in notpaprojects track by project.projectId"
 										style="padding: 0.5em; text-align: left;">
 										<strong>{{project.projectId}}</strong>
-										<a href="./render?model=http://registry.{{domain}}/api/v6/agreements/tpa-{{project.projectId}}&view=/tpa/default.html&ctrl=/renders/tpa/default.js"
+										<a href="./render?model=http://registry.{{domain}}/api/v6/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
 											target="_blank" ng-click="createTpa(project);" class="btn btn-success"
 											style="margin-left: 0.5em; padding: 0 5px; float:right">
 											Create TPA

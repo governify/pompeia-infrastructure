@@ -25,7 +25,7 @@ $scope.domain = '';
 /* Check if it is already set up */
 $http({
     method: 'GET',
-    url: '$_[URL_EXTERNAL_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
+    url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
 }).then(tparesponse => {
     scopeManagerURL = tparesponse.data.context.infrastructure.scopeManager;
     domain = tparesponse.data.context.infrastructure.registry.replace('http://registry.', '').replace('/api/v6', '');
@@ -128,7 +128,7 @@ $scope.reloadProjects = function () {
 $scope.createTpa = function (project) {
     $http({
         method: 'GET',
-        url: './renders/tpa/template.json'
+        url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
     }).then((tparesponse) => {
         try {
             const projectIdNumber = project.projectId;
@@ -185,7 +185,7 @@ $scope.setDomain = function (domn) {
     domain = domn;
     $http({
         method: 'GET',
-        url: './renders/tpa/template.json'
+        url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
     }).then(tparesponse => {
         $scope.deftpa = JSON.stringify(tparesponse.data, null, 4).replace(/1212121212/g, domain);
         $scope.setupdomain = false;
