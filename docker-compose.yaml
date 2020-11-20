@@ -50,7 +50,6 @@ services:
           - reporter.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
-      - './configurations/reporter:/opt/app/src/backend/configurations'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
