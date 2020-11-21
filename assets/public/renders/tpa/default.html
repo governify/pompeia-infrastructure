@@ -106,68 +106,11 @@
     }
 
     body {
-        background: url("./index/images/blue_mountains_1.jpg") !important;
+        background: url("$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
         background-size: auto !important;
         background-attachment: fixed !important;
     }
 </style>
-
-<script>
-    var timer = null;
-
-    function getQueryVariable(variable) {
-        var query = document.location.search.substring(1);
-        var vars = query.split('&');
-        for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split('=');
-            if (decodeURIComponent(pair[0]) == variable) {
-                return decodeURIComponent(pair[1]);
-            }
-        }
-        console.log('Query variable %s not found', variable);
-    }
-
-    function refresh() {
-        var redirect = Number(getQueryVariable("r")) || 0;
-
-        console.log("redirect (" + redirect + ")...");
-
-        if (redirect <= 3) {
-            var currentLocation = document.location.href;
-
-            if (redirect == 0)
-                var charRemoved = 0;
-            else
-                var charRemoved = 4;
-
-            var requestURL = currentLocation.substr(0, currentLocation.length - charRemoved) + "&r=" + (redirect + 1);
-
-            console.log("redirecting to <" + requestURL + ">...");
-            document.location = requestURL;
-
-        } else {
-            window.alert("There is a problem creating the TPA. Please contact administrator");
-            console.log("permanent problem!");
-            document.location = "/";
-            clearInterval(timer);
-        }
-    };
-
-    var model = getQueryVariable("model");
-    if (!model.startsWith("https") && model.startsWith("http"))
-        model = model.replace("http", "https");
-
-
-    console.log("Retrieving model: <" + model + ">...");
-    var jqxhr = $.get(model)
-        .done(function () {
-            console.log("Success.");
-        })
-        .fail(function () {
-            timer = setInterval(refresh, 2000);
-            console.log("Error.");
-        });
-</script>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -175,8 +118,8 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
-    <link href="./renders/tpa/tpa.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="./index/fonts.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/tpa.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 
 <body>
@@ -386,6 +329,3 @@
         </div>
     </div>
 </body>
-
-<script src="https://momentjs.com/downloads/moment.js"></script>
-<script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
