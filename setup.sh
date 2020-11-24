@@ -14,8 +14,8 @@ SERVICES_PREFIX (optional): The prefix that will be used for every service name 
 fi
 
 SERVER_IP=""
-RANDOM_KEY1=$(openssl rand -base64 12)
-RANDOM_KEY2=$(openssl rand -base64 12)
+RANDOM_KEY1=$(openssl rand -hex 16)
+RANDOM_KEY2=$(openssl rand -hex 16)
 
 if [ -z $2 ]
 then
