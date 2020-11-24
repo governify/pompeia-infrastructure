@@ -2,12 +2,8 @@
     "development": [
       {
         "classId": "class01",
-        "identities": [
-          
-        ],
-        "credentials": [
-          
-        ],
+        "identities": [],
+        "credentials": [],
         "projects": [
           {
             "projectId": "project01",
@@ -20,59 +16,10 @@
               {
                 "source": "pivotal",
                 "projectId": 2242320
-              },
-              {
-                "source": "heroku",
-                "projectId": "402043b5-c931-44fd-8850-4398d8e12287"
-              },
-              {
-                "source": "travis"
-              },
-              {
-                "source": "codeclimate"
               }
             ],
-            "credentials": [
-              
-            ],
-            "members": [
-              {
-                "memberId": "cesar",
-                "identities": [
-                  {
-                    "source": "github",
-                    "username": "cesgarpas"
-                  }
-                ],
-                "credentials": [
-                  
-                ]
-              },
-              {
-                "memberId": "alex",
-                "identities": [
-                  {
-                    "source": "github",
-                    "username": "AlexGue"
-                  }
-                ],
-                "credentials": [
-                  
-                ]
-              },
-              {
-                "memberId": "auditor",
-                "identities": [
-                  {
-                    "source": "github",
-                    "username": "governifyauditor"
-                  }
-                ],
-                "credentials": [
-                  
-                ]
-              }
-            ]
+            "credentials": [],
+            "members": []
           }
         ]
       }
