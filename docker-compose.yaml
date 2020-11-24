@@ -53,6 +53,7 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
+      - bluejay_assetsmanager
       - bluejay_registry_db
       - bluejay_influxdb
   bluejay_grafana:
@@ -69,6 +70,8 @@ services:
       - 'bluejay_grafana_volume:/var/lib/grafana'
     mem_limit: 400m
     restart: 'unless-stopped'
+    depends_on:
+      - bluejay_reporter
   bluejay_render:
     container_name: bluejay-render-container
     image: governify/render:dev
@@ -170,6 +173,8 @@ services:
           - scopes.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     mem_limit: 400m
     restart: 'unless-stopped'
+    depends_on:
+      - bluejay_assetsmanager
   bluejay_assetsmanager:
     container_name: bluejay-assetsmanager-container
     image: 'governify/assets-manager:dev'
