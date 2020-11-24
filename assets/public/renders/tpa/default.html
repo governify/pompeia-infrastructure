@@ -188,13 +188,7 @@
                             <input type="datetime-local" ng-model="calculateMetrics.to" value="{{calculateMetrics.to}}"
                                 min="2016-01-01T00:00" max="{{dateNowISO}}" class="form-control"><br />
 
-                            <label>Periodicity:</label><br />
-                            <select ng-model="calculateMetrics.periodicity" id="select" class="form-control">
-                                <option ng-repeat="periodType in calculateMetrics.periodTypes" value="{{periodType}}">
-                                    {{periodType}}</option>
-                            </select>
-
-                            <div class="form-check" style="margin-top: 25px;">
+                            <div class="form-check">
                                 <span>
                                     <input type="checkbox" ng-model="calculateMetrics.agree" id="agreeCheck">
                                     <label class="form-check-label" for="agreeCheck" style="margin-left: 3px;">I agree

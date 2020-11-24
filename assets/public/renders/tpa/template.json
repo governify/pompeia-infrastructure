@@ -13,7 +13,7 @@
             "render": "https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=https://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/tpa-1010101010&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js",
             "dashboard": "http://dashboard.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]",
             "scopeManager": "https://scopes.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1",
-            "assetsManager": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/tpa/base.json"
+            "assetsManager": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1"
         },
         "definitions": {
             "schemas": {},

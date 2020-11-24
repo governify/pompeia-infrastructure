@@ -19,8 +19,6 @@ $scope.dateNowISO = new Date().toISOString().match(/\d{4}-[01]\d-[0-3]\dT[0-2]\d
 $scope.calculateMetrics = {
     "from": new Date(Date.parse("2019-03-15T00:00")),
     "to": new Date(Date.parse($scope.dateNowISO)),
-    "periodicity": "daily",
-    "periodTypes": ["minutely", "hourly", "daily", "weekly", "biweekly", "monthly", "yearly"],
     "agree": false,
     "message": "",
     "error": false
@@ -244,17 +242,7 @@ $scope.calculateEventsMetrics = function (id) {
 
     try {
         setModalAlert("");
-
-        var periodMinutesTypes = {
-            "minutely": 1,
-            "hourly": 1 * 60,
-            "daily": 24 * 60,
-            "weekly": 7 * 24 * 60,
-            "biweekly": 14 * 24 * 60,
-            "monthly": 30 * 24 * 60,
-            "yearly": 365 * 24 * 60
-        }
-
+        
         if ($scope.calculateMetrics.agree) {
 
             if (!$scope.calculateMetrics.from || !$scope.calculateMetrics.to) {
