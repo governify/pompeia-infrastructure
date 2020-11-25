@@ -9,6 +9,7 @@ $scope.displayItems = {
     "statusType": undefined,
     "creatingTPA": false
 };
+var firstLoad = true;
 
 
 $scope.developmentScopeJSON = {};
@@ -34,17 +35,18 @@ $http({
 
 function loadProjects() {
     try {
-        var scopeTpaprojects = [];
-        var scopeNotpaprojects = [];
+        var scopeTpaprojects = {};
+        var scopeNotpaprojects = {};
 
-        if ($scope.displayItems.course == "") {
+        if (firstLoad) {
             $http({
                 method: 'GET',
                 url: scopeManagerURL + '/scopes/development/courses'
             }).then((coursesResponse) => {
                 $scope.developmentScopeJSON = coursesResponse.data.scope;
-                $scope.displayItems.course = coursesResponse.data.scope[0].classId;
+                $scope.displayItems.course = $scope.displayItems.course ? $scope.displayItems.course : coursesResponse.data.scope[0].classId;
                 $scope.displayItems.loadedCourses = true;
+                firstLoad = false;
                 loadProjects();
             }, (err) => {
                 $scope.displayItems.statusMessage = "Scope Manager courses could not be loaded.";
@@ -65,7 +67,8 @@ function loadProjects() {
                         var projects = projectresponse.data.scope.projects;
                         var agreements = regresponse.data;
                         projects.forEach(project => {
-                            var found = agreements.find(agreement => agreement.id === 'tpa-' + project.projectId);
+                            const projectAgreementId = project.agreementId ? project.agreementId : 'tpa-' + project.projectId;
+                            var found = agreements.find(agreement => agreement.id === projectAgreementId);
                             if (found) {
                                 project.registryagreement = found;
                                 project.urlReporterHttps = found.context.infrastructure.reporter;
@@ -76,15 +79,23 @@ function loadProjects() {
                                 if (!project.urlRegistryHttps.startsWith("https") && project.urlRegistryHttps.startsWith("http")) {
                                     project.urlRegistryHttps = project.urlRegistryHttps.replace("http", "http");
                                 }
-                                scopeTpaprojects.push(project);
+
+                                // Clasify by owner
+                                scopeTpaprojects = clasifyProject(project, scopeTpaprojects);
                             } else {
-                                scopeNotpaprojects.push(project);
+                                scopeNotpaprojects = clasifyProject(project, scopeNotpaprojects);
                             }
                         });
 
                         // This assign is for interval projects updating
-                        $scope.tpaprojects = [...scopeTpaprojects];
-                        $scope.notpaprojects = [...scopeNotpaprojects];
+                        $scope.tpaprojects = {...scopeTpaprojects};
+                        $scope.tpaprojectskeys = Object.keys(scopeTpaprojects);
+                        $scope.tpaprojectskeys = $scope.tpaprojectskeys.filter(item => item !== "Projects w/o owner");
+                        $scope.tpaprojectskeys.push(Object.keys(scopeTpaprojects).filter(item => item === "Projects w/o owner")[0]);
+                        $scope.notpaprojects = {...scopeNotpaprojects};
+                        $scope.notpaprojectskeys = Object.keys(scopeNotpaprojects);
+                        $scope.notpaprojectskeys = $scope.notpaprojectskeys.filter(item => item !== "Projects w/o owner");
+                        $scope.notpaprojectskeys.push(Object.keys(scopeNotpaprojects).filter(item => item === "Projects w/o owner")[0]);
                         $scope.finishloading = true;
                     } catch (err) {
                         $scope.displayItems.statusMessage = "Comparing registry projects failed.";
@@ -113,6 +124,26 @@ function loadProjects() {
     }
 }
 
+const clasifyProject = (project, container) => {
+    if (project.owner === undefined || project.owner === "") {
+        if (Object.keys(container).includes("Projects w/o owner")) {
+            container["Projects w/o owner"].push(project);
+        } else {
+            container["Projects w/o owner"] = [];
+            container["Projects w/o owner"].push(project);
+        }
+    } else {
+        if (Object.keys(container).includes(project.owner)){
+            container[project.owner].push(project);
+        } else {
+            container[project.owner] = [];
+            container[project.owner].push(project);
+        }
+    }
+
+    return container;
+}
+
 // For load course button
 $scope.reloadProjects = function () {
     $scope.finishloading = false;
@@ -129,10 +160,10 @@ $scope.createTpa = function (project) {
             const projectIdNumber = project.projectId;
             var tpa = JSON.parse(JSON.stringify(tparesponse.data).replace(/1010101010/g, projectIdNumber).replace(/2020202020/g, $scope.displayItems.course));
 
-            tpa.id = 'tpa-' + projectIdNumber;
+            tpa.id = project.agreementId ? project.agreementId : 'tpa-' + projectIdNumber;
 
             tpa.context.validity.initial = '2019-01-01';
-            tpa.context.infrastructure.render = 'https://ui.' + domain + '/render?model=https://registry.' + domain + '/api/v6/agreements/tpa-' + projectIdNumber + '&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js';
+            tpa.context.infrastructure.render = 'https://ui.' + domain + '/render?model=https://registry.' + domain + '/api/v6/agreements/' + tpa.id + '&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js';
             tpa.context.definitions.scopes.development.project.default = projectIdNumber;
 
             $http({
@@ -144,7 +175,7 @@ $scope.createTpa = function (project) {
                 $scope.displayItems.statusType = "success";
                 $scope.displayItems.creatingTPA = false;
                 loadProjects();
-                window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/tpa-" + projectIdNumber + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
+                window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
                 $scope.finishloading = true;
             }, (err) => {
                 $scope.displayItems.statusMessage = "There was a problem when sending TPA to registry.";
