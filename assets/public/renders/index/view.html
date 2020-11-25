@@ -199,8 +199,7 @@ Released   : 20140228
 									<li ng-repeat="project in notpaprojects track by project.projectId"
 										style="padding: 0.5em; text-align: left;">
 										<strong>{{project.projectId}}</strong>
-										<a href="./render?model=http://registry.{{domain}}/api/v6/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
-											target="_blank" ng-click="createTpa(project);" class="btn btn-success"
+										<a ng-click="createTpa(project);" class="btn btn-success"
 											style="margin-left: 0.5em; padding: 0 5px; float:right">
 											Create TPA
 										</a>

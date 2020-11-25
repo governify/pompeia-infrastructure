@@ -145,9 +145,10 @@ $scope.createTpa = function (project) {
                 url: 'https://registry.' + domain + '/api/v6/agreements',
                 data: tpa
             }).then(() => {
-                $scope.displayItems.statusMessage = "TPA created.";
+                $scope.displayItems.statusMessage = "TPA created successfully.";
                 $scope.displayItems.statusType = "success";
                 loadProjects();
+                window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/tpa-" + projectIdNumber +"&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
                 $scope.finishloading = true;
             }, (err) => {
                 $scope.displayItems.statusMessage = "There was a problem when sending TPA to registry.";
