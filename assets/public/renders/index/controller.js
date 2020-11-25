@@ -1,12 +1,6 @@
 $scope.tpaprojects = [];
 $scope.notpaprojects = [];
 $scope.finishloading = false;
-$scope.initialsetup = false;
-$scope.setupdomain = false;
-$scope.setuptoken = false;
-$scope.setuptpa = false;
-$scope.edittpa = false;
-$scope.deftpa = '';
 
 $scope.displayItems = {
     "course": "",
@@ -31,7 +25,6 @@ $http({
     scopeManagerURL = tparesponse.data.context.infrastructure.scopeManager;
     domain = tparesponse.data.context.infrastructure.registry.replace('http://registry.', '').replace('/api/v6', '');
     $scope.domain = domain;
-    $scope.deftpa = JSON.stringify(tparesponse.data, null, 4);
     loadProjects();
 }).catch(err => {
     $scope.displayItems.statusMessage = "Template file could not be loaded.";
@@ -172,56 +165,3 @@ $scope.createTpa = function (project) {
         console.log(err);
     });
 }
-
-// Edit default TPA button
-$scope.editDefaultTPA = function () {
-    $scope.finishloading = false;
-    $scope.edittpa = true;
-}
-
-// Initial setup functions
-$scope.acceptDomain = function () {
-    $scope.domn = $location.host().replace('ui.', '');
-    $scope.setupdomain = true;
-}
-
-$scope.setDomain = function (domn) {
-    domain = domn;
-    $http({
-        method: 'GET',
-        url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
-    }).then(tparesponse => {
-        $scope.deftpa = JSON.stringify(tparesponse.data, null, 4).replace(/1212121212/g, domain);
-        $scope.setupdomain = false;
-        $scope.setuptoken = true;
-    });
-}
-
-$scope.updateDefaultTPA = function (deftpa) {
-    try {
-        $scope.deftpa = deftpa;
-        domain = JSON.parse(deftpa).context.infrastructure.registry.replace('http://registry.', '');
-        domain = domain.replace('/api/v6', '');
-        $http({
-            method: 'POST',
-            url: './updateDefaultTPA',
-            data: JSON.parse(deftpa)
-        }).then(() => {
-            $scope.setuptpa = false;
-            $scope.edittpa = false;
-            $scope.initialsetup = false;
-            loadProjects();
-        }).catch(err => {
-            console.log(err);
-            alert(err);
-        });
-    } catch {
-        alert('There is a syntax error in your JSON definition.');
-    }
-}
-
-
-
-
-
-
