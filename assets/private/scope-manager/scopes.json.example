@@ -8,7 +8,7 @@
                 {
                     "name": "projectName01",
                     "projectId": "project01",
-                    "owner": "owner",
+                    "owner": "owner01",
                     "identities": [
                         {
                             "source": "github",
@@ -58,11 +58,11 @@
                             "identities": [
                                 {
                                     "source": "github",
-                                    "username": "githubName1"
+                                    "username": "githubName01"
                                 },
                                 {
                                     "source": "pivotal",
-                                    "username": "pivotalName1"
+                                    "username": "pivotalName01"
                                 }
                             ],
                             "credentials": []
@@ -72,11 +72,11 @@
                             "identities": [
                                 {
                                     "source": "github",
-                                    "username": "githubName2"
+                                    "username": "githubName02"
                                 },
                                 {
                                     "source": "pivotal",
-                                    "username": "pivotalName2"
+                                    "username": "pivotalName02"
                                 }
                             ],
                             "credentials": []

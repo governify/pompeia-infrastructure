@@ -6,6 +6,8 @@
         "credentials": [],
         "projects": [
           {
+            "name": "Bluejay Test Project",
+            "owner": "Isa-Group", 
             "projectId": "project01",
             "identities": [
               {
