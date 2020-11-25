@@ -11,61 +11,81 @@ Released   : 20140228
 
 -->
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title></title>
-		<meta name="keywords" content="" />
-		<meta name="description" content="" />
-		<link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
-		<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/default.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css" media="all" />
 
-		<!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
+	<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/default.css" rel="stylesheet" type="text/css"
+		media="all" />
+	<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css"
+		media="all" />
 
-	</head>
+	<!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
 
-	<style>
-		body{
-			background: url("$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
-			background-size: auto !important;
-			background-attachment: fixed !important;	
-		}
-	</style>
+</head>
 
-	<body>
-		<div id="wrapper" style="padding: 0 0 40px 0; margin: 5vh 0; min-height: 90vh;">
-			<div id="three-column" class="container" style="margin: 0; padding: 0; width: 100%;">
+<style>
+	body {
+		background: url("$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
+		background-size: auto !important;
+		background-attachment: fixed !important;
+	}
+</style>
 
-				<!-- ---------------- Buttons ---------------- -->
-				<span ng-if="!initialsetup && !setupdomain && !setuptpa && !edittpa" class="col-xs-offset-9" style="position:absolute; top:10px; right:10px; margin:0;">
-					<button class="btn btn-info" ng-click="editDefaultTPA()">
-						Edit default TPA
-					</button>
-					<a href="./render?model=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/model.json&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/adminview.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/admincontroller.js"
-						class="btn btn-primary disabled">
-						Admin UI
-					</a>
-				</span>
+<body>
+	<div id="wrapper" style="padding: 0 0 40px 0; margin: 5vh 0; min-height: 90vh;">
+		<div id="three-column" class="container" style="margin: 0; padding: 0; width: 100%;">
+
+			<!-- ---------------- Buttons ---------------- -->
+			<span ng-if="!initialsetup && !setupdomain && !setuptpa && !edittpa" class="col-xs-offset-9"
+				style="position:absolute; top:10px; left:10px; margin:0;">
+				<button class="btn btn-info" ng-click="editDefaultTPA()">
+					Edit default TPA
+				</button>
+				<a href="./render?model=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/model.json&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/adminview.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/admincontroller.js"
+					class="btn btn-primary disabled">
+					Admin UI
+				</a>
+			</span>
+
+			<span ng-if="!initialsetup && !setupdomain && !setuptpa && !edittpa" class="col-xs-offset-9"
+				style="position:absolute; top:10px; right:10px; margin:0;">
+				<a href="https://github.com/isa-group/governify-examples/tree/master/metrics/event-collector" target="_blank"
+					class="btn btn-primary">
+					Metrics library
+				</a>
+				<a href=""
+					target="_blank" class="btn btn-success disabled">
+					General Dashboard
+				</a>
+			</span>
 
 
-				<!-- ---------------- Top introduction ---------------- -->
-				<div class="title" style="padding: 55px 0; margin: 0">
-					<h2>{{model.SERVICES_PREFIX}} BLUEJAY</h2>
-					<span class="byline">Best Practices Auditor</span>
-				</div>				
-				<hr style="margin-top: 0;" />
+			<!-- ---------------- Top introduction ---------------- -->
+			<div class="title" style="padding: 55px 0; margin: 0">
+				<h2>{{model.SERVICES_PREFIX}} BLUEJAY</h2>
+				<span class="byline">Best Practices Auditor</span>
+			</div>
+			<hr style="margin-top: 0;" />
 
-				<!-- ---------------- Alerts (FIXED to top)---------------- -->
-				<div ng-if="displayItems.statusType !== undefined" class="alert alert-dismissible {{displayItems.statusType === 'error' ? 'alert-danger' : 'alert-success'}}" 
-				  role="alert" style="position: absolute; width: 100%; z-index: 1;top: 150px;">
-					<button type="button" class="close" aria-label="Close" ng-click="displayItems.statusType = undefined"><span aria-hidden="true"></span>&times;</span></button>
-					<strong>{{displayItems.statusType === 'error' ? 'Error!' : 'Success!'}}</strong> {{displayItems.statusMessage}}
-				</div>				
-				
+			<!-- ---------------- Alerts (FIXED to top)---------------- -->
+			<div ng-if="displayItems.statusType !== undefined"
+				class="alert alert-dismissible {{displayItems.statusType === 'error' ? 'alert-danger' : 'alert-success'}}"
+				role="alert" style="position: absolute; width: 100%; z-index: 1;top: 150px;">
+				<button type="button" class="close" aria-label="Close"
+					ng-click="displayItems.statusType = undefined"><span
+						aria-hidden="true"></span>&times;</span></button>
+				<strong>{{displayItems.statusType === 'error' ? 'Error!' : 'Success!'}}</strong>
+				{{displayItems.statusMessage}}
+			</div>
 
 
-				<!-- ---------------- Initial Setup - REMAKE? ---------------- -->				
-				<!-- <span ng-if="initialsetup">
+
+			<!-- ---------------- Initial Setup - REMAKE? ---------------- -->
+			<!-- <span ng-if="initialsetup">
 					<h3>Initial setup</h3><br>
 					<span style="font-size: 18px">
 						<span ng-if="setupdomain" style="font-weight: bold; color: darkslategray">1. Root domain</span>
@@ -125,95 +145,105 @@ Released   : 20140228
 					</div>
 				</span> -->
 
-				<!-- ---------------- Courses selection and projects ---------------- -->
-				<span ng-if="setuptpa || edittpa" class="col-xs-10 col-xs-offset-1">
-					<span ng-if="!edittpa">
-						<p>Finally, please set up the following TPA. This TPA will be set as a default template. You may
-							edit
-							the different metrics and objectives. You will also be able to modify the TPA later, by clicking
-							on the 'Edit default TPA' button that will appear on the lower right corner of this page.</p>
-						<p>Please note that any occurrence of '1010101010' inside the TPA will be replaced by a project ID
-							when a TPA for said project is created. Do not use that pattern unless you want it to be
-							replaced</p>
-					</span>
-					<div class="form-group">
-						<label for="deftpa">Default TPA:</label>
-						<div class="input-group col-xs-10 col-xs-offset-1">
-							<textarea class="form-control" rows="20" id="deftpa" ng-model="deftpa"
-								style="font-family: monospace"></textarea>
-							<button class="btn btn-success" type="submit" ng-click="updateDefaultTPA(deftpa)">
-								<span ng-if="setuptpa">Create</span>
-								<span ng-if="edittpa">Update</span>
-							</button>
-						</div>
-					</div>
+			<!-- ---------------- Courses selection and projects ---------------- -->
+			<span ng-if="setuptpa || edittpa" class="col-xs-10 col-xs-offset-1">
+				<span ng-if="!edittpa">
+					<p>Finally, please set up the following TPA. This TPA will be set as a default template. You may
+						edit
+						the different metrics and objectives. You will also be able to modify the TPA later, by clicking
+						on the 'Edit default TPA' button that will appear on the lower right corner of this page.</p>
+					<p>Please note that any occurrence of '1010101010' inside the TPA will be replaced by a project ID
+						when a TPA for said project is created. Do not use that pattern unless you want it to be
+						replaced</p>
 				</span>
-
-				<!-- ---------------- Courses selection and projects ---------------- -->
-
-				<div style="padding: 15px 0 50px 0">
-					<div ng-if="displayItems.loadedCourses" class="form-group col-sm-10 col-sm-offset-1" style="margin-bottom: 40px; padding: 0;">
-						<label style="float: left; margin: 5px 8px 0 0">Course</label>
-						<select ng-model="displayItems.course" class="form-control" id="metricType"
-							style="width: 56em; float: left; margin: 0 1em;">
-							<option ng-repeat="course in developmentScopeJSON">{{course.classId}}</option>
-						</select>
-						<button ng-if="finishloading" class="btn btn-success btn-success" ng-click="reloadProjects()" style="margin-left: 6px;">
-							Load Course
-						</button>
-						<button ng-if="!finishloading" class="btn btn-success btn-danger disabled" style="margin-left: 6px; padding: 6px 19px">
-							Loading ...
+				<div class="form-group">
+					<label for="deftpa">Default TPA:</label>
+					<div class="input-group col-xs-10 col-xs-offset-1">
+						<textarea class="form-control" rows="20" id="deftpa" ng-model="deftpa"
+							style="font-family: monospace"></textarea>
+						<button class="btn btn-success" type="submit" ng-click="updateDefaultTPA(deftpa)">
+							<span ng-if="setuptpa">Create</span>
+							<span ng-if="edittpa">Update</span>
 						</button>
 					</div>
-					<div ng-if="!finishloading && !initialsetup && !setupdomain && !setuptpa && !edittpa" style="position:absolute; left:50%; top:60%; margin-left: -171px; margin-top: -72px;">
-						<img src="./utils/img/loading1_big_lgbg.gif" style="height: 100px;" />
-						<span style="font-size: 25px; margin-top: 10px;" class="col-sm-12">
-							{{displayItems.loadedCourses ? 'Retrieving projects...' : 'Retrieving courses...'}}					
-						</span>				
-					</div>
-					
-					<div class="row" ng-if="finishloading" style="width: 100%; margin: 0;">
-						<div class="col-sm-5 col-sm-offset-1" style="padding: 0;">
-							<div class="well" style="margin-right: 50px">
-								<h3 style="padding-bottom: 20px;">Audited projects</h3>
-								<ul>
-									<li ng-repeat="project in tpaprojects track by project.projectId"
-										style="padding: 0.5em; text-align: left;">
-											<strong>{{project.projectId}}</strong>
-										<a target="_blank"
-											href="{{project.registryagreement.context.infrastructure.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{project.urlReporterHttps}}/dashboards/{{project.registryagreement.id}}/tpa"
-											class="btn btn-success" style="margin-left: 0.5em; padding: 0 5px; float: right;">
-											Dashboard
-										</a>
-										<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
-											target="_blank" class="btn btn-info" style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
-									</li>
-									<li ng-if="tpaprojects.length == 0"><strong>There are no audited projects for this course yet.</strong></li>
-								</ul>
-							</div>
+				</div>
+			</span>
+
+			<!-- ---------------- Courses selection and projects ---------------- -->
+
+			<div style="padding: 15px 0 50px 0">
+				<div ng-if="displayItems.loadedCourses" class="form-group col-sm-10 col-sm-offset-1"
+					style="margin-bottom: 40px; padding: 0;">
+					<label style="float: left; margin: 5px 8px 0 0">Course</label>
+					<select ng-model="displayItems.course" class="form-control" id="metricType"
+						style="width: 56em; float: left; margin: 0 1em;">
+						<option ng-repeat="course in developmentScopeJSON">{{course.classId}}</option>
+					</select>
+					<button ng-if="finishloading" class="btn btn-success btn-success" ng-click="reloadProjects()"
+						style="margin-left: 6px;">
+						Load Course
+					</button>
+					<button ng-if="!finishloading" class="btn btn-success btn-danger disabled"
+						style="margin-left: 6px; padding: 6px 19px">
+						Loading ...
+					</button>
+				</div>
+				<div ng-if="!finishloading && !initialsetup && !setupdomain && !setuptpa && !edittpa"
+					style="position:absolute; left:50%; top:60%; margin-left: -171px; margin-top: -72px;">
+					<img src="./utils/img/loading1_big_lgbg.gif" style="height: 100px;" />
+					<span style="font-size: 25px; margin-top: 10px;" class="col-sm-12">
+						{{displayItems.loadedCourses ? 'Retrieving projects...' : 'Retrieving courses...'}}
+					</span>
+				</div>
+
+				<div class="row" ng-if="finishloading" style="width: 100%; margin: 0;">
+					<div class="col-sm-5 col-sm-offset-1" style="padding: 0;">
+						<div class="well" style="margin-right: 50px">
+							<h3 style="padding-bottom: 20px;">Audited projects</h3>
+							<ul>
+								<li ng-repeat="project in tpaprojects track by project.projectId"
+									style="padding: 0.5em; text-align: left;">
+									<strong>{{project.projectId}}</strong>
+									<a target="_blank"
+										href="{{project.registryagreement.context.infrastructure.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{project.urlReporterHttps}}/dashboards/{{project.registryagreement.id}}/tpa"
+										class="btn btn-success"
+										style="margin-left: 0.5em; padding: 0 5px; float: right;">
+										Dashboard
+									</a>
+									<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
+										target="_blank" class="btn btn-info"
+										style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
+								</li>
+								<li ng-if="tpaprojects.length == 0"><strong>There are no audited projects for this
+										course yet.</strong></li>
+							</ul>
 						</div>
-						<div class="col-sm-5" style="padding: 0;" >
-							<div class="well" style="margin-left: 50px">
-								<h3 style="padding-bottom: 20px;">Other projects</h3>
-								<ul>
-									<li ng-repeat="project in notpaprojects track by project.projectId"
-										style="padding: 0.5em; text-align: left;">
-										<strong>{{project.projectId}}</strong>
-										<a ng-click="createTpa(project);" class="btn {{displayItems.creatingTPA ? 'btn-warning disabled' : 'btn-success'}}"
-											style="margin-left: 0.5em; padding: 0 5px; float:right">
-											{{displayItems.creatingTPA ? 'In progress' : 'Create TPA'}}
-										</a>
-									</li>
-									<li ng-if="notpaprojects.length == 0"><strong>There are no more projects to audit.</strong></li>
-								</ul>
-							</div>
+					</div>
+					<div class="col-sm-5" style="padding: 0;">
+						<div class="well" style="margin-left: 50px">
+							<h3 style="padding-bottom: 20px;">Other projects</h3>
+							<ul>
+								<li ng-repeat="project in notpaprojects track by project.projectId"
+									style="padding: 0.5em; text-align: left;">
+									<strong>{{project.projectId}}</strong>
+									<a ng-click="createTpa(project);"
+										class="btn {{displayItems.creatingTPA ? 'btn-warning disabled' : 'btn-success'}}"
+										style="margin-left: 0.5em; padding: 0 5px; float:right">
+										{{displayItems.creatingTPA ? 'In progress' : 'Create TPA'}}
+									</a>
+								</li>
+								<li ng-if="notpaprojects.length == 0"><strong>There are no more projects to
+										audit.</strong></li>
+							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="version" style="position: absolute; bottom: 10px; right:10px; color:black">
-				{{model.version}}
-			</div>
 		</div>
-	</body>
+		<div id="version" style="position: absolute; bottom: 10px; right:10px; color:black">
+			{{model.version}}
+		</div>
+	</div>
+</body>
+
 </html>
