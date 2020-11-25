@@ -199,9 +199,9 @@ Released   : 20140228
 									<li ng-repeat="project in notpaprojects track by project.projectId"
 										style="padding: 0.5em; text-align: left;">
 										<strong>{{project.projectId}}</strong>
-										<a ng-click="createTpa(project);" class="btn btn-success"
+										<a ng-click="createTpa(project);" class="btn {{displayItems.creatingTPA ? 'btn-warning disabled' : 'btn-success'}}"
 											style="margin-left: 0.5em; padding: 0 5px; float:right">
-											Create TPA
+											{{displayItems.creatingTPA ? 'In progress' : 'Create TPA'}}
 										</a>
 									</li>
 									<li ng-if="notpaprojects.length == 0"><strong>There are no more projects to audit.</strong></li>

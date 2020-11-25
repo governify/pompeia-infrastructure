@@ -12,7 +12,8 @@ $scope.displayItems = {
     "course": "",
     "loadedCourses": false,
     "statusMessage": '',
-    "statusType": undefined
+    "statusType": undefined,
+    "creatingTPA": false
 };
 
 
@@ -126,6 +127,7 @@ $scope.reloadProjects = function () {
 }
 
 $scope.createTpa = function (project) {
+    $scope.displayItems.creatingTPA = true;
     $http({
         method: 'GET',
         url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
@@ -147,25 +149,26 @@ $scope.createTpa = function (project) {
             }).then(() => {
                 $scope.displayItems.statusMessage = "TPA created successfully.";
                 $scope.displayItems.statusType = "success";
+                $scope.displayItems.creatingTPA = false;
                 loadProjects();
                 window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/tpa-" + projectIdNumber +"&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
                 $scope.finishloading = true;
             }, (err) => {
                 $scope.displayItems.statusMessage = "There was a problem when sending TPA to registry.";
                 $scope.displayItems.statusType = "error";
-                $scope.finishloading = true;
+                $scope.displayItems.creatingTPA = false;
                 console.log(err);
             });
         } catch (err) {
             $scope.displayItems.statusMessage = "Problem when creating TPA.";
             $scope.displayItems.statusType = "error";
-            $scope.finishloading = true;
+            $scope.displayItems.creatingTPA = false;
             console.log(err);
         }
     }, (err) => {
         $scope.displayItems.statusMessage = "Problem when creating TPA.";
         $scope.displayItems.statusType = "error";
-        $scope.finishloading = true;
+        $scope.displayItems.creatingTPA = false;
         console.log(err);
     });
 }
