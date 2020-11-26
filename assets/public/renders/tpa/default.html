@@ -118,53 +118,41 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
-    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/tpa.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/tpa.css" rel="stylesheet" type="text/css"
+        media="all" />
+    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css"
+        media="all" />
 </head>
 
 <body>
     <div id="wrapper" style="padding: 0 0 40px 0; margin: 5vh 0; min-height: 90vh;">
         <div id="three-column" class="container" style="margin: 0; padding: 0; width: 100%;">
 
-            <!-- Buttons -->
-            <span ng-if="modelLoaded" class="col-xs-offset-9" style="position:absolute; top:10px; left:10px; margin:0;">
-                <button ng-disabled="!allowModify" class="btn btn-primary"
-                    ng-click="monitoring.registry.update.agreement()">
-                    Update TPA
-                    <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
-                </button>
-            </span>
-            <span ng-if="modelLoaded" class="col-xs-offset-9"
-                style="position:absolute; top:10px; right:10px; margin:0;">
-                <a target="_blank"
-                    href="{{model.context.infrastructure.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{urlReporterHttps}}/dashboards/{{model.id}}/tpa"
-                    class="btn btn-success">
-                    Dashboard
-                </a>
-                <a href="{{urlRegistryHttps}}/agreements/{{model.id}}" target="_blank" class="btn btn-info">
-                    View source
-                </a>                
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#metricsModal">Calculate
-                    Metrics</button>
-                <!--<a ng-click="createFullHistory(model.id)" class="btn btn-primary disabled">
-                    Create full history
-                </a>-->
+            <!-- ---------------- Buttons ---------------- -->
+            <!-- Left -->
+            <div ng-if="modelLoaded" style="padding: 0; margin: 0;">
+                <span class="col-xs-offset-9" style="position:absolute; top:10px; left:10px; margin:0;">
+                    <a href="{{urlRegistryHttps}}/agreements/{{model.id}}" target="_blank" class="btn btn-info">
+                        View source
+                    </a>
+                    <button class="btn btn-primary disabled">
+                        Modify TPA
+                    </button>
+                </span>
 
-                <!-- STATUS -->
-                <!-- <div ng-hide="!fullSt" style="margin-top: 25px;">
-                    <p>Full story process status:</p>
+                <!-- Right -->
+                <span class="col-xs-offset-9" style="position:absolute; top:10px; right:10px; margin:0;">
+                    <a target="_blank"
+                        href="{{model.context.infrastructure.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{urlReporterHttps}}/dashboards/{{model.id}}/tpa"
+                        class="btn btn-success">
+                        Dashboard
+                    </a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#metricsModal">Calculate Metrics</button>
+                </span>
+            </div>
 
-                    <div class="progress">
-                        <div class="progress-bar" id="progressFullStory" role="progressbar" aria-valuenow="{{fullSt}}"
-                            aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                            {{fullSt}}%
-                        </div>
-                    </div>
-                </div> -->
-            </span>
-
-
-            <!-- Calculate metrics Modal -->
+            <!-- ---------------- Calculate metrics Modal ---------------- -->
             <div id="metricsModal" class="modal fade" role="dialog">
                 <div class="modal-dialog" style="max-width: 400px;">
                     <!-- Modal content-->
@@ -217,8 +205,7 @@
                 </div>
             </div>
 
-
-            <!-- Bluejay hero -->
+            <!-- ---------------- Top Bluejay Hero ---------------- -->
             <div class="title" style="padding: 55px 0; margin: 0">
                 <h2>{{model.SERVICES_PREFIX}} BLUEJAY</h2>
                 <span class="byline">Best Practices Auditor</span>
@@ -226,21 +213,26 @@
             <hr style="margin-top: 0;" />
 
             <!-- ---------------- Alerts (FIXED to top)---------------- -->
-				<div ng-if="displayItems.statusType !== undefined" class="alert alert-dismissible {{displayItems.statusType === 'error' ? 'alert-danger' : 'alert-warning'}}" 
+            <div ng-if="displayItems.statusType !== undefined"
+                class="alert alert-dismissible {{displayItems.statusType === 'error' ? 'alert-danger' : 'alert-warning'}}"
                 role="alert" style="position: absolute; width: 100%; z-index: 1;top: 150px;">
-                  <button type="button" class="close" aria-label="Close" ng-click="displayItems.statusType = undefined"><span aria-hidden="true"></span>&times;</span></button>
-                  <strong>{{displayItems.statusType === 'error' ? 'Error!' : 'Warning!'}}</strong> {{displayItems.statusMessage}}
-              </div>
+                <button type="button" class="close" aria-label="Close"
+                    ng-click="displayItems.statusType = undefined"><span
+                        aria-hidden="true"></span>&times;</span></button>
+                <strong>{{displayItems.statusType === 'error' ? 'Error!' : 'Warning!'}}</strong>
+                {{displayItems.statusMessage}}
+            </div>
 
-
-            <!-- TPA Information -->
-
+            <!-- ---------------- Project Loader ---------------- -->
             <div ng-if="!modelLoaded"
                 style="position:absolute; left:50%; top:60%; margin-left: -171px; margin-top: -72px;">
                 <img src="./utils/img/loading1_big_lgbg.gif" style="height: 100px;" />
                 <span style="font-size: 25px; margin-top: 10px;" class="col-sm-12">Loading TPA information...</span>
             </div>
+
+            <!-- ---------------- TPA Info ---------------- -->
             <div nghide ng-show="modelLoaded && model" style="padding: 20px 20px;">
+                <!-- Scope Manager info -->
                 <div id="sco-header" class="row">
                     <div class="col-xs-12 col-md-5" style="zoom: 0.75;text-align: left;">
                         <div>
@@ -274,6 +266,7 @@
 
                 <p class="separator"></p>
 
+                <!-- Terms info -->
                 <div id="sco-tabs-container">
                     <!-- Guarantees -->
                     <h2 style="background-color: lightgray; margin: 10px -20px">Team practices</h2>
@@ -314,10 +307,12 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Version -->
         <div id="version" style="position: absolute; bottom: 10px; right:10px; color:black">
             {{model.version}}
         </div>
