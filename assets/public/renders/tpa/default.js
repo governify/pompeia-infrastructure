@@ -1,5 +1,3 @@
-$scope.allowModify = false;
-
 // Display items and error alert
 $scope.displayItems = {
     "statusMessage": '',
@@ -25,29 +23,16 @@ $scope.calculateMetrics = {
 }
 
 // Urls
-var getLogsUrl = () => $scope.model.context.infrastructure.logs;
-var getReporterUrl = () => $scope.model.context.infrastructure.reporter;
-var getRegistryUrl = () => $scope.model.context.infrastructure.registry;
-var getScopeManagerUrl = () => $scope.model.context.infrastructure.scopeManager;
+$scope.urlReporter = "https://reporter.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v4";
+$scope.urlRegistry = "https://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6";
+$scope.urlScopeManager = "https://scopes.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
 
 // This function is called at the end of the code
 const init = () => {
     try {
-
-        $scope.urlReporterHttps = getReporterUrl();
-        $scope.urlRegistryHttps = getRegistryUrl();
-
-        if (!$scope.urlReporterHttps.startsWith("https") && $scope.urlReporterHttps.startsWith("http")) {
-            $scope.urlReporterHttps = $scope.urlReporterHttps.replace("http", "https");
-        }
-
-        if (!$scope.urlRegistryHttps.startsWith("https") && $scope.urlRegistryHttps.startsWith("http")) {
-            $scope.urlRegistryHttps = $scope.urlRegistryHttps.replace("http", "https");
-        }
-
         //Get project Info from scopeManager
         getUrl(
-            getScopeManagerUrl() + "/scopes/development/" + $scope.model.context.definitions.scopes.development.class.default + "/" + $scope.model.context.definitions.scopes.development.project.default,
+            $scope.urlScopeManager + "/scopes/development/" + $scope.model.context.definitions.scopes.development.class.default + "/" + $scope.model.context.definitions.scopes.development.project.default,
             (err, data) => {
                 if (data) {
                     if (data.code == 200) {
@@ -66,14 +51,13 @@ const init = () => {
 
         //Get existing agreement from mongo
         getUrl(
-            getRegistryUrl() + "/agreements/" + $scope.model.id,
+            $scope.urlRegistry + "/agreements/" + $scope.model.id,
             (err, data) => {
                 if (data) {
                     console.info("Loaded agreement from mongo.")
                     $scope.model = data;
                     $scope.computersUsed = Object.keys($scope.model.context.definitions.computers);
-                }
-                else {
+                } else {
                     setPageAlert("No agreement found in mongo.", "error");
                     console.info("No agreement found in mongo, loaded default.");
                 }
@@ -81,32 +65,6 @@ const init = () => {
                 $scope.$apply();
             }
         );
-
-        /* setTimeout(function () {
-            $("#mapCompensations").hide();
-            $("#opGrouperContainer").hide();
-        }, 150); */
-
-        /* STATUS */
-        /* setInterval(function () {
-            getUrl(getReporterUrl() + "/contracts/" + $scope.model.id + "/createPointsFromList", (err, data) => {
-                if (data) {
-                    $scope.fullSt = Math.floor(data["current"] / data["total"] * 100)
-                    document.getElementById("progressFullStory").style.width = $scope.fullSt + "%"
-                }
-                else {
-                    $scope.fullSt = false;
-                }
-    
-                if (err) {
-                    console.log("No full history being generated at this time.")
-                } else {
-                    console.log($scope.fullSt)
-                }
-                $scope.$apply();
-            })
-    
-        }, 10000); */
     } catch (err) {
         $scope.modelLoaded = true;
         console.log(err);
@@ -119,21 +77,71 @@ const init = () => {
     }
 }
 
+$scope.beautifyMetric = (metric) => { return JSON.stringify(metric, null, 1); }
+
+$scope.calculateEventsMetrics = function (id) {
+    //Helper alert function
+    const setModalAlert = (message, error = true) => { $scope.calculateMetrics.message = message; $scope.calculateMetrics.error = error; }
+
+    try {
+        setModalAlert("");
+        
+        if ($scope.calculateMetrics.agree) {
+
+            if (!$scope.calculateMetrics.from || !$scope.calculateMetrics.to) {
+                setModalAlert("Invalid date.");
+            } else {                
+                // Periods generation
+                var firstDateOffset = new Date(Date.parse($scope.calculateMetrics.from.toISOString())).getTimezoneOffset();
+                var firstDate = Date.parse($scope.calculateMetrics.from.toISOString()) - firstDateOffset * 60 * 1000;
+                
+                var lastDateOffset = new Date(Date.parse($scope.calculateMetrics.to.toISOString())).getTimezoneOffset();
+                var lastDate = Date.parse($scope.calculateMetrics.to.toISOString()) - lastDateOffset * 60 * 1000;
+
+                var periodDifference = lastDate - firstDate;
+
+                if (periodDifference <= 0) {
+                    setModalAlert("End date must be higher than start date.");
+                } else {
+                    var periods = [{ "from": new Date(firstDate).toISOString(), "to": new Date(lastDate - 1000).toISOString() }];
+
+                    // POST
+                    postUrl($scope.urlReporter + '/contracts/' + id + '/createPointsFromPeriods', { "periods": periods }, (err, data) => {
+                        // Reporter not answering properly
+                        /* if (err) {
+                            console.log(err)
+                            setModalAlert("Failed when creating points.");
+                        } else {
+                            setModalAlert("points created successfully!", false);
+                        } */
+                        setModalAlert("Points creation ended!", false);
+                        $scope.$apply();
+                    });
+
+                    // Alert time estimation
+                    setModalAlert("TPA data is being generated for the period.", false);
+                }
+            }
+        } else {
+            setModalAlert("You must agree to delete old information.");
+        }
+    } catch (err) {
+        console.log(err)
+        setModalAlert("Undefined error.");
+    }
+}
+
 /**
  * GET request for https URLs
  * @param url 
  * @param callback 
  */
 var getUrl = (url, callback) => {
-    if (!url.startsWith("https") && url.startsWith("http")) {
-        url = url.replace("http", "https");
-    }
     $.get(url, function (data) {
         if (callback) {
             callback(null, data);
         }
     }).fail(function (err) {
-        //console.error(err);
         if (callback) {
             callback(err, null);
         }
@@ -148,9 +156,6 @@ var getUrl = (url, callback) => {
 var postUrl = (url, data, callback) => {
     if (!callback && data) {
         callback = data;
-    }
-    if (!url.startsWith("https") && url.startsWith("http")) {
-        url = url.replace("http", "https");
     }
 
     var body = {
@@ -192,9 +197,7 @@ var deleteUrl = (url, data, callback) => {
     if (!callback && data) {
         callback = data;
     }
-    if (!url.startsWith("https") && url.startsWith("http")) {
-        url = url.replace("http", "https");
-    }
+    
     $.ajax({
         url: url,
         type: "DELETE",
@@ -211,85 +214,7 @@ var deleteUrl = (url, data, callback) => {
     });
 };
 
-$scope.beautifyMetric = (metric) => { return JSON.stringify(metric, null, 1); }
+init();
 
-/*var fetchAllActivity = (url, options, offset) => {
-    var offsetUrl = url + "&offset=" + offset;
-
-    return fetch(offsetUrl, options).then(x => {
-        return x.json().then(data => {
-            if (data.length != 0) {
-                return fetchAllActivity(url, options, offset + data.length).then(newData => {
-                    return data.concat(newData);
-                });
-            } else {
-                return data;
-            }
-
-        });
-
-    });
-}
-
-
-}*/
-
-
-
-$scope.calculateEventsMetrics = function (id) {
-    //Helper alert function
-    const setModalAlert = (message, error = true) => { $scope.calculateMetrics.message = message; $scope.calculateMetrics.error = error; }
-
-    try {
-        setModalAlert("");
-        
-        if ($scope.calculateMetrics.agree) {
-
-            if (!$scope.calculateMetrics.from || !$scope.calculateMetrics.to) {
-                setModalAlert("Invalid date. They cannot exceed current time.");
-            } else {                
-                // Periods generation
-                var firstDateOffset = new Date(Date.parse($scope.calculateMetrics.from.toISOString())).getTimezoneOffset();
-                var firstDate = Date.parse($scope.calculateMetrics.from.toISOString()) - firstDateOffset * 60 * 1000;
-                
-                var lastDateOffset = new Date(Date.parse($scope.calculateMetrics.to.toISOString())).getTimezoneOffset();
-                var lastDate = Date.parse($scope.calculateMetrics.to.toISOString()) - lastDateOffset * 60 * 1000;
-
-                var periodDifference = lastDate - firstDate;
-
-                if (periodDifference <= 0) {
-                    setModalAlert("End date must be higher than start date.");
-                } else {
-                    var periods = [{ "from": new Date(firstDate).toISOString(), "to": new Date(lastDate - 1000).toISOString() }];
-
-                    // POST
-                    postUrl(getReporterUrl() + '/contracts/' + id + '/createPointsFromPeriods', { "periods": periods }, (err, data) => {
-                        // Reporter not answering properly
-                        /* if (err) {
-                            console.log(err)
-                            setModalAlert("Failed when creating points.");
-                        } else {
-                            setModalAlert("points created successfully!", false);
-                        } */
-                        setModalAlert("Points creation ended!", false);
-                        $scope.$apply();
-                    });
-
-                    // Alert time estimation
-                    setModalAlert("TPA data is being generated for the period.", false);
-                }
-            }
-        } else {
-            setModalAlert("You must agree to delete old information.");
-        }
-    } catch (err) {
-        console.log(err)
-        setModalAlert("Undefined error.");
-    }
-}
-
-setTimeout(() => {
-    init();
-}, 300);
 
 
