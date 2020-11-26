@@ -238,8 +238,6 @@
                         <div>
                             <h3>
                                 TPA: {{model.id}}
-                                <sup style="color:red" ng-if="!allowModify">Read only</sup>
-                                <sup style="color:green" ng-if="allowModify">Modifiable</sup>
                             </h3>
                         </div>
                         <div>
@@ -259,7 +257,7 @@
                             <span>
                                 <strong>Start date:</strong>
                             </span>
-                            <span contenteditable="{{allowModify}}" ng-model="model.context.validity.initial"></span>
+                            <span>{{model.context.validity.initial}}</span>
                         </div>
                     </div>
                 </div>
@@ -275,16 +273,13 @@
                             style="padding: 2px;">
                             <div class="panel panel-success" style="padding: 0;">
                                 <div class="panel-heading">
-                                    <h5 contenteditable="{{allowModify}}" ng-model="g.id"
-                                        style="margin: 5px 0;text-align: center"></h5>
+                                    <h5 style="margin: 5px 0;text-align: center">{{g.id}}</h5>
                                 </div>
                                 <div class="panel-body" style="font-size: 10pt;">
-                                    <b>Objective</b>: <span contenteditable="{{allowModify}}"
-                                        ng-model="g.of[0].objective" style="font-size: 9pt;"></span>
+                                    <b>Objective</b>: <span style="font-size: 9pt;">{{g.of[0].objective}}</span>
                                 </div>
                                 <div class="panel-footer" style="font-size: 10pt;">
-                                    <b>Description</b>: <span contenteditable="{{allowModify}}"
-                                        ng-model="g.description"></span>
+                                    <b>Description</b>: <span>{{g.description}}</span>
                                 </div>
                             </div>
                         </div>
@@ -297,9 +292,7 @@
                             style="padding: 2px;">
                             <div class="panel panel-info" style="padding: 0;">
                                 <div class="panel-heading">
-                                    <h5 contenteditable="{{allowModify}}" ng-init="prevName=key;targetName=key;"
-                                        ng-change="renameMetric(prevName, targetName)" ng-model="targetName"
-                                        style="margin: 5px 0;text-align: center;"></h5>
+                                    <h5 style="margin: 5px 0;text-align: center;">{{key}}</h5>
                                 </div>
                                 <div class="panel-body" style="height: 280px; font-family: monospace; padding:0">
                                     <textarea
