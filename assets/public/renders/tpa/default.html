@@ -147,6 +147,7 @@
                         class="btn btn-success">
                         Dashboard
                     </a>
+                    <button type="button" class="btn {{displayItems.automaticComputation ? 'btn-info' : 'btn-danger'}}">Automatic Computation: {{displayItems.automaticComputation ? 'Yes' : 'No'}}</button>           
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                         data-target="#metricsModal">Calculate Metrics</button>
                 </span>
@@ -164,17 +165,20 @@
 
                         <!-- Form -->
                         <div class="modal-body" style="text-align: left;">
-                            <label>Actual UTC hour:</label><br />
-                            <p>{{dateNowISO}}</p><br />
+                            <label>Timezone offset:</label><br />
+                            <select ng-model="calculateMetrics.timezone" class="form-control">
+                                <option ng-repeat="timezone in calculateMetrics.timezones" value="{{timezone}}">
+                                    {{timezone}}
+                                </option>
+                            </select>
+                            <br />
 
                             <label>Period starting date:</label><br />
                             <input type="datetime-local" ng-model="calculateMetrics.from"
-                                value="{{calculateMetrics.from}}" min="2016-01-01T00:00" max="{{dateNowISO}}"
-                                class="form-control"><br />
+                                value="{{calculateMetrics.from}}" class="form-control"><br />
 
                             <label>Period end date:</label><br />
-                            <input type="datetime-local" ng-model="calculateMetrics.to" value="{{calculateMetrics.to}}"
-                                min="2016-01-01T00:00" max="{{dateNowISO}}" class="form-control"><br />
+                            <input type="datetime-local" ng-model="calculateMetrics.to" value="{{calculateMetrics.to}}" class="form-control"><br />
 
                             <div class="form-check">
                                 <span>
@@ -236,9 +240,12 @@
                 <div id="sco-header" class="row">
                     <div class="col-xs-12 col-md-5" style="zoom: 0.75;text-align: left;">
                         <div>
+                            <h2>
+                                Project name: {{displayItems.scopeManagerInfo.scope.name ? displayItems.scopeManagerInfo.scope.name : displayItems.scopeManagerInfo.scope.projectId}}
+                            </h2>
                             <h3>
                                 TPA: {{model.id}}
-                            </h3>
+                            </h3>                            
                         </div>
                         <div>
                             <span>

@@ -2,7 +2,9 @@
 $scope.displayItems = {
     "statusMessage": '',
     "statusType": undefined,
-    "scopeManagerInfo": {}
+    "scopeManagerInfo": {},
+    "automaticComputation": false,
+    "automaticComputationInfo": {}
 };
 
 const setPageAlert = (message, type) => {
@@ -15,7 +17,9 @@ const setPageAlert = (message, type) => {
 //Calculate Metrics button modal
 $scope.dateNowISO = new Date().toISOString().match(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d/g)[0];
 $scope.calculateMetrics = {
-    "from": new Date(Date.parse("2019-03-15T00:00")),
+    "timezone": "GMT+0:00",
+    "timezones": [],
+    "from": new Date(Date.parse("2020-01-01T00:00")),
     "to": new Date(Date.parse($scope.dateNowISO)),
     "agree": false,
     "message": "",
@@ -30,6 +34,10 @@ $scope.urlScopeManager = "https://scopes.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v
 // This function is called at the end of the code
 const init = () => {
     try {
+        for (let i = -11; i<15; i++) {
+            $scope.calculateMetrics.timezones.push("GMT" + (i<0 ? "-" : "+") + Math.abs(i) + ":00")
+        }
+
         //Get project Info from scopeManager
         getUrl(
             $scope.urlScopeManager + "/scopes/development/" + $scope.model.context.definitions.scopes.development.class.default + "/" + $scope.model.context.definitions.scopes.development.project.default,
@@ -65,6 +73,21 @@ const init = () => {
                 $scope.$apply();
             }
         );
+
+        //Get computation information from director
+        /*getUrl(
+            getDirectorUrl() + "/executions?config.tpa=" + $scope.model.id,
+            (err, data) => {
+                if (data) {
+                    console.info("Loaded execution from director.");
+                    $scope.displayItems.automaticComputationInfo = data;
+                }
+                else {
+                    console.info("No execution active on director.");
+                }
+                $scope.$apply();
+            }
+        );*/
     } catch (err) {
         $scope.modelLoaded = true;
         console.log(err);
@@ -97,14 +120,19 @@ $scope.calculateEventsMetrics = function (id) {
                 
                 var lastDateOffset = new Date(Date.parse($scope.calculateMetrics.to.toISOString())).getTimezoneOffset();
                 var lastDate = Date.parse($scope.calculateMetrics.to.toISOString()) - lastDateOffset * 60 * 1000;
+                console.log("Input", $scope.calculateMetrics.to.toISOString());
+                console.log("UTC", new Date(lastDate).toISOString());
 
                 var periodDifference = lastDate - firstDate;
+
+                var timezoneOffset = $scope.calculateMetrics.timezone.split("T")[1].split(":")[0] * 60 * 60 * 1000;
 
                 if (periodDifference <= 0) {
                     setModalAlert("End date must be higher than start date.");
                 } else {
-                    var periods = [{ "from": new Date(firstDate).toISOString(), "to": new Date(lastDate - 1000).toISOString() }];
+                    var periods = [{ "from": new Date(firstDate - timezoneOffset).toISOString(), "to": new Date(lastDate - timezoneOffset - 1000).toISOString() }];
 
+                    console.log("Final UTC input:", new Date(lastDate - timezoneOffset).toISOString());
                     // POST
                     postUrl($scope.urlReporter + '/contracts/' + id + '/createPointsFromPeriods', { "periods": periods }, (err, data) => {
                         // Reporter not answering properly
