@@ -8,39 +8,6 @@ sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
 
 export $(grep -v '^#' .env | xargs)
 
-if [ -z $1 ]
-  then 
-  echo -e "Usage: governify-project-bluejay-infrastructure/setup.up DNS_SUFFIX [SERVER_IP] [SERVICES_PREFIX]
-
-DNS_SUFFIX: Your domain suffix (if any). If you don't have a domain suffix, just provide .com, .es, or your domain type. Example: .suffix.com for having dashboard.suffix.com
-
-SERVER_IP (optional): The server IP in which you will deploy the system. This is just for generating a domain list in hosts file format, pointing to that IP, so you don't need to have the domain names registered. If this is not provided, just a list with the services added will be prompted.
-
-SERVICES_PREFIX (optional): The prefix that will be used for every service name (default: ceap).
-"
-  exit 0
-fi
-
-SERVER_IP=""
-
-
-if [ -z $2 ]
-then
-  echo -e "\033[33mWARNING: No SERVER_IP provided. No hosts file list will be promted\033[0m\n"
-else
-  SERVER_IP=$2
-fi
-
-SERVICES_PREFIX="ceap"
-if [ -z $3 ]
-then
-  echo -e "\033[33mWARNING: No SERVICES_PREFIX provided, ceap will be used\033[0m\n"
-else
-  SERVICES_PREFIX=$3
-fi
-
-DNS_SUFFIX=$1
-
 declare -A SERVICES=([$SERVICES_PREFIX-assetsmanager-container]=assets.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-scopemanager-container]=scopes.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-eventcollector-container]=event.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-ptcollector-container]=pt.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-grafana-container]=dashboard.$SERVICES_PREFIX:3000 [$SERVICES_PREFIX-registry-container]=registry.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-render-container]=ui.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-connector-container]=pt.connector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-reporter-container]=reporter.$SERVICES_PREFIX:80)
 
 docker network create bouncer_bouncer_network
