@@ -62,9 +62,9 @@ Released   : 20140228
 			<!-- ---------------- Top Bluejay Hero ---------------- -->
 			<div class="title" style="padding: 55px 0; margin: 0">
 				<a href="/">
-          <h2>{{model.SERVICES_PREFIX}} BLUEJAY</h2>
-				  <span class="byline">Best Practices Auditor</span>
-        </a>
+					<h2>{{model.SERVICES_PREFIX}} BLUEJAY</h2>
+					<span class="byline">Best Practices Auditor</span>
+				</a>
 			</div>
 			<hr style="margin-top: 0;" />
 
@@ -116,22 +116,23 @@ Released   : 20140228
 							<h3 style="padding-bottom: 20px;">Audited projects</h3>
 							<ul>
 								<div ng-repeat="projectOwner in tpaprojectskeys" style="padding: 0; text-align: left;">
-                                    <strong>{{projectOwner}}</strong>
-                                    <li ng-repeat="project in tpaprojects[projectOwner] track by project.projectId"
-                                        style="padding: 0.5em; text-align: left;">
-                                        {{project.name ? project.name : project.projectId}}
-                                        <a target="_blank"
-										href="{{project.registryagreement.context.infrastructure.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{project.urlReporterHttps}}/dashboards/{{project.registryagreement.id}}/tpa"
-										class="btn btn-success"
-                                            style="margin-left: 0.5em; padding: 0 5px; float: right;">
-                                            Dashboard
-                                        </a>
-                                        <a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
-										target="_blank" class="btn btn-info"
-                                            style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
-                                    </li>
-                                </div>
-								<li ng-if="tpaprojectskeys.length == 0 || tpaprojectskeys[0] == null"><strong>There are no audited projects for this course yet.</strong></li>
+									<strong>{{projectOwner}}</strong>
+									<li ng-repeat="project in tpaprojects[projectOwner] track by project.projectId"
+										style="padding: 0.5em; text-align: left;">
+										{{project.name ? project.name : project.projectId}}
+										<a target="_blank"
+											href="{{project.registryagreement.context.infrastructure.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{project.urlReporterHttps}}/dashboards/{{project.registryagreement.id}}/tpa"
+											class="btn btn-success"
+											style="margin-left: 0.5em; padding: 0 5px; float: right;">
+											Dashboard
+										</a>
+										<a href="./render?model={{project.urlRegistryHttps}}/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
+											target="_blank" class="btn btn-info"
+											style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
+									</li>
+								</div>
+								<li ng-if="tpaprojectskeys.length == 0 || tpaprojectskeys[0] == null"><strong>There are
+										no audited projects for this course yet.</strong></li>
 							</ul>
 						</div>
 					</div>
@@ -141,19 +142,20 @@ Released   : 20140228
 							<h3 style="padding-bottom: 20px;">Other projects</h3>
 							<ul>
 								<div ng-repeat="projectOwner in notpaprojectskeys"
-                                    style="padding: 0; text-align: left;">
-                                    <strong>{{projectOwner}}</strong>
-                                    <li ng-repeat="project in notpaprojects[projectOwner] track by project.projectId"
-                                        style="padding: 0.5em; text-align: left;">
-                                        {{project.name ? project.name : project.projectId}}
-										<a ng-click="createTpa(project);" 
+									style="padding: 0; text-align: left;">
+									<strong>{{projectOwner}}</strong>
+									<li ng-repeat="project in notpaprojects[projectOwner] track by project.projectId"
+										style="padding: 0.5em; text-align: left;">
+										{{project.name ? project.name : project.projectId}}
+										<a ng-click="createTpa(project);"
 											class="btn {{displayItems.creatingTPA ? 'btn-warning disabled' : 'btn-success'}}"
 											style="margin-left: 0.5em; padding: 0 5px; float:right">
-                                            {{displayItems.creatingTPA ? 'In progress' : 'Create TPA'}}
-                                        </a>
-                                    </li>
-                                </div>
-								<li ng-if="notpaprojectskeys.length == 0 || notpaprojectskeys[0] == null"><strong>There are no more projects to audit.</strong></li>
+											{{displayItems.creatingTPA ? 'In progress' : 'Create TPA'}}
+										</a>
+									</li>
+								</div>
+								<li ng-if="notpaprojectskeys.length == 0 || notpaprojectskeys[0] == null"><strong>There
+										are no more projects to audit.</strong></li>
 							</ul>
 						</div>
 					</div>

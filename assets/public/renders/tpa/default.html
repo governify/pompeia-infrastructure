@@ -68,41 +68,38 @@
         padding: 0 !important;
     }
 
-    .tooltip2 {
+    /* Tooltip container */
+    .tooltipbottom {
         position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        /* If you want dots under the hoverable text */
     }
 
-    .tooltip2 .tooltiptext2 {
+    /* Tooltip text */
+    .tooltipbottom .tooltipbottomtext {
         visibility: hidden;
         width: 120px;
-        background-color: #555;
+        background-color: black;
         color: #fff;
         text-align: center;
-        border-radius: 6px;
         padding: 5px 0;
+        border-radius: 6px;
+
+        /* Position the tooltip text - see examples below! */
         position: absolute;
         z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -60px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
 
-    .tooltip2 .tooltiptext2::after {
-        content: "";
-        position: absolute;
+        width: 120px;
         top: 100%;
         left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: #555 transparent transparent transparent;
+        margin-left: -60px;
+        /* Use half of the width (120/2 = 60), to center the tooltip */
     }
 
-    .tooltip2:hover .tooltiptext2 {
+    /* Show the tooltip text when you mouse over the tooltip container */
+    .tooltipbottom:hover .tooltipbottomtext {
         visibility: visible;
-        opacity: 1;
     }
 
     body {
@@ -147,7 +144,12 @@
                         class="btn btn-success">
                         Dashboard
                     </a>
-                    <button type="button" class="btn {{displayItems.automaticComputation ? 'btn-info' : 'btn-danger'}}">Automatic Computation: {{displayItems.automaticComputation ? 'Yes' : 'No'}}</button>           
+                    <button type="button"
+                        class="tooltipbottom btn {{displayItems.automaticComputation ? 'btn-info' : 'btn-danger'}}">
+                        Automatic Computation: {{displayItems.automaticComputation ? 'Yes' : 'No'}}
+                        <span class="tooltipbottomtext">Tooltip text</span>
+                    </button>
+
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                         data-target="#metricsModal">Calculate Metrics</button>
                 </span>
@@ -178,7 +180,8 @@
                                 value="{{calculateMetrics.from}}" class="form-control"><br />
 
                             <label>Period end date:</label><br />
-                            <input type="datetime-local" ng-model="calculateMetrics.to" value="{{calculateMetrics.to}}" class="form-control"><br />
+                            <input type="datetime-local" ng-model="calculateMetrics.to" value="{{calculateMetrics.to}}"
+                                class="form-control"><br />
 
                             <div class="form-check">
                                 <span>
@@ -243,11 +246,12 @@
                     <div class="col-xs-12 col-md-5" style="zoom: 0.75;text-align: left;">
                         <div>
                             <h2>
-                                Project name: {{displayItems.scopeManagerInfo.scope.name ? displayItems.scopeManagerInfo.scope.name : displayItems.scopeManagerInfo.scope.projectId}}
+                                Project name:
+                                {{displayItems.scopeManagerInfo.scope.name ? displayItems.scopeManagerInfo.scope.name : displayItems.scopeManagerInfo.scope.projectId}}
                             </h2>
                             <h3>
                                 TPA: {{model.id}}
-                            </h3>                            
+                            </h3>
                         </div>
                         <div>
                             <span>
