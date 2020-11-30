@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Replace scope manager and assets manager key with random keys
+RANDOM_KEY1=$(openssl rand -hex 16)
+RANDOM_KEY2=$(openssl rand -hex 16)
+sed -i "s/{{RANDOM_KEY1}}/$RANDOM_KEY1/g" ./.env
+sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
+
+export $(grep -v '^#' .env | xargs)
+
 if [ -z $1 ]
   then 
   echo -e "Usage: governify-project-bluejay-infrastructure/setup.up DNS_SUFFIX [SERVER_IP] [SERVICES_PREFIX]
@@ -14,8 +22,7 @@ SERVICES_PREFIX (optional): The prefix that will be used for every service name 
 fi
 
 SERVER_IP=""
-RANDOM_KEY1=$(openssl rand -hex 16)
-RANDOM_KEY2=$(openssl rand -hex 16)
+
 
 if [ -z $2 ]
 then
@@ -44,9 +51,7 @@ docker network create bouncer_bouncer_network
 #find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" {} \;
 #find 'configurations/' -type f -name '*.yaml' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
-# Replace scope manager and assets manager key with random keys
-sed -i "s/{{RANDOM_KEY1}}/$RANDOM_KEY1/g" ./.env
-sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
+
 
 docker-compose -f docker-compose.yaml --env-file ./.env up -d
 
@@ -76,8 +81,8 @@ docker-compose -f docker-compose.yaml --env-file ./.env up -d
 
 
 #Replacement for letsencrypt file for certificate request
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" init-letsencrypt.sh
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" init-letsencrypt.sh
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" init-letsencrypt.sh
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" init-letsencrypt.sh
 
 
 echo -e "\033[33m

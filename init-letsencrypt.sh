@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-domains=(assets.{{SERVICES_PREFIX}}{{DNS_SUFFIX}} ui.{{SERVICES_PREFIX}}{{DNS_SUFFIX}} scopes.{{SERVICES_PREFIX}}{{DNS_SUFFIX}} reporter.{{SERVICES_PREFIX}}{{DNS_SUFFIX}} registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}} dashboard.{{SERVICES_PREFIX}}{{DNS_SUFFIX}})
+export $(grep -v '^#' .env | xargs)
+
+domains=(assets.${SERVICES_PREFIX}${DNS_SUFFIX} ui.${SERVICES_PREFIX}${DNS_SUFFIX} scopes.${SERVICES_PREFIX}${DNS_SUFFIX} reporter.${SERVICES_PREFIX}${DNS_SUFFIX} registry.${SERVICES_PREFIX}${DNS_SUFFIX} dashboard.${SERVICES_PREFIX}${DNS_SUFFIX})
 rsa_key_size=4096
 data_path="./data/certbot"
 email="" # Adding a valid address is strongly recommended
