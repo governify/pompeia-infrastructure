@@ -10,6 +10,8 @@ services:
   nginx:
     environment:
       - SERVICE_NAME=bouncer-nginx-container
+      - SERVICES_PREFIX=${SERVICES_PREFIX:?}
+      - DNS_SUFFIX=${DNS_SUFFIX:?}
     container_name: bouncer-nginx-container
     image: nginx
     ports:

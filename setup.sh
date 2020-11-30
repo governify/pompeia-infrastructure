@@ -61,18 +61,18 @@ docker-compose -f docker-compose.yaml --env-file ./.env up -d
 #find 'tests/eventCollectorMockups/' -type f -name '*.json' -exec sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" {} \;
 
 #Nginx Services configuration replacement prefixes
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/dashboard.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/dashboard.conf
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/registry.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/registry.conf
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/reporter.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/reporter.conf
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/ui.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/ui.conf
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/scopes.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/scopes.conf
-sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/assets.conf
-sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/assets.conf
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/dashboard.conf
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/dashboard.conf
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/registry.conf
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/registry.conf
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/reporter.conf
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/reporter.conf
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/ui.conf
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/ui.conf
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/scopes.conf
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/scopes.conf
+#sed -i "s/{{DNS_SUFFIX}}/$DNS_SUFFIX/g" config/services-nginx-config/assets.conf
+#sed -i "s/{{SERVICES_PREFIX}}/$SERVICES_PREFIX/g" config/services-nginx-config/assets.conf
 
 
 #Replacement for letsencrypt file for certificate request
