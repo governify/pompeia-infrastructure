@@ -4,7 +4,7 @@ $scope.displayItems = {
     "statusType": undefined,
     "scopeManagerInfo": {},
     "automaticComputation": false,
-    "automaticComputationInfo": {}
+    "automaticComputationInfo": {id: 123, status: "stopped", script: "/asdf/script.js"}
 };
 
 const setPageAlert = (message, type) => {

@@ -79,7 +79,7 @@
     /* Tooltip text */
     .tooltipbottom .tooltipbottomtext {
         visibility: hidden;
-        width: 120px;
+        width: max-content;
         background-color: black;
         color: #fff;
         text-align: center;
@@ -90,8 +90,7 @@
         position: absolute;
         z-index: 1;
 
-        width: 120px;
-        top: 100%;
+        top: 105%;
         left: 50%;
         margin-left: -60px;
         /* Use half of the width (120/2 = 60), to center the tooltip */
@@ -147,7 +146,7 @@
                     <button type="button"
                         class="tooltipbottom btn {{displayItems.automaticComputation ? 'btn-info' : 'btn-danger'}}">
                         Automatic Computation: {{displayItems.automaticComputation ? 'Yes' : 'No'}}
-                        <span class="tooltipbottomtext">Tooltip text</span>
+                        <span class="tooltipbottomtext">{{beautifyMetric(displayItems.automaticComputationInfo)}}</span>
                     </button>
 
                     <button type="button" class="btn btn-primary" data-toggle="modal"
