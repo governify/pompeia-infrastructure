@@ -27,7 +27,7 @@ services:
       - './configurations/nginx/data/certbot/conf:/etc/letsencrypt'
       - './configurations/nginx/config/static:/etc/nginx/static'
       - './configurations/nginx/certs:/etc/nginx/certs'
-      - './configurations/nginx/config/services-nginx-config:/etc/nginx/conf.d'
+      - './configurations/nginx/config/services-nginx-config:/etc/nginx/templates'
       - './configurations/nginx/data/certbot/www:/var/www/certbot'
       - './logs/bouncer-nginx:/var/log/nginx'
     command: >-
