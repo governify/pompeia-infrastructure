@@ -7,3 +7,4 @@ curl "https://dinahosting.com/special/api.php?AUTH_USER=$1&AUTH_PWD=$2&responseT
 curl "https://dinahosting.com/special/api.php?AUTH_USER=$1&AUTH_PWD=$2&responseType=Json&domain=${DNS_SUFFIX/./}&hostname=reporter.${SERVICES_PREFIX}&ip=${SERVER_IP}&command=Domain_Zone_AddTypeA"
 curl "https://dinahosting.com/special/api.php?AUTH_USER=$1&AUTH_PWD=$2&responseType=Json&domain=${DNS_SUFFIX/./}&hostname=registry.${SERVICES_PREFIX}&ip=${SERVER_IP}&command=Domain_Zone_AddTypeA"
 curl "https://dinahosting.com/special/api.php?AUTH_USER=$1&AUTH_PWD=$2&responseType=Json&domain=${DNS_SUFFIX/./}&hostname=assets.${SERVICES_PREFIX}&ip=${SERVER_IP}&command=Domain_Zone_AddTypeA"
+curl "https://dinahosting.com/special/api.php?AUTH_USER=$1&AUTH_PWD=$2&responseType=Json&domain=${DNS_SUFFIX/./}&hostname=director.${SERVICES_PREFIX}&ip=${SERVER_IP}&command=Domain_Zone_AddTypeA"
