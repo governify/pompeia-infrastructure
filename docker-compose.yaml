@@ -201,7 +201,7 @@ services:
     restart: 'unless-stopped'
   bluejay_director:
     container_name: bluejay-director
-    image: 'governify/director:dev'
+    image: 'governify/director:latest'
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-director
       - NODE_ENV=production
@@ -211,6 +211,8 @@ services:
       bluejay_network:
         aliases:
           - director.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+    depends_on:
+      - bluejay_assetsmanager
     mem_limit: 400m
     restart: 'unless-stopped'
 volumes:
