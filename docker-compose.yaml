@@ -27,12 +27,9 @@ services:
       - './configurations/nginx/data/certbot/conf:/etc/letsencrypt'
       - './configurations/nginx/config/static:/etc/nginx/static'
       - './configurations/nginx/certs:/etc/nginx/certs'
-      - './configurations/nginx/config/services-nginx-config:/etc/nginx/templates'
+      - ''./configurations/nginx/config/services-nginx-config:/etc/nginx/templates'
       - './configurations/nginx/data/certbot/www:/var/www/certbot'
       - './logs/bouncer-nginx:/var/log/nginx'
-    command: >-
-      /bin/bash -c "nginx -g 'daemon off;' & while [ 1 ]; do nginx -s reload &>>
-      /tmp/reload.log; sleep 30; clear; done"
     networks:
       - bluejay_network
     mem_limit: 100m
