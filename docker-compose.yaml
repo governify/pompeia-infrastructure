@@ -199,6 +199,20 @@ services:
       - './assets:/home/theia/src-gen/backend/files'
     mem_limit: 400m
     restart: 'unless-stopped'
+  bluejay_director:
+    container_name: bluejay-director
+    image: 'governify/director:dev'
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-director
+      - NODE_ENV=production
+      - PORT=80
+      - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+    networks:
+      bluejay_network:
+        aliases:
+          - director.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+    mem_limit: 400m
+    restart: 'unless-stopped'
 volumes:
   bluejay_influxdb_volume: null
   bluejay_registry_db_volume: null
