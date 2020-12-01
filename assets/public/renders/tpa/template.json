@@ -18,7 +18,7 @@
         "definitions": {
             "schemas": {},
             "dashboards": {
-                "tpa": {
+                "main": {
                     "base": "$_[URL_INT_ASSETS_MANAGER]/api/v1/public/grafana-dashboards/tpa/base.json",
                     "modifier": "$_[URL_INT_ASSETS_MANAGER]/api/v1/public/grafana-dashboards/tpa/modifier.js",
                     "overlay": "$_[URL_INT_ASSETS_MANAGER]/api/v1/public/grafana-dashboards/tpa/overlay.js"
