@@ -4,16 +4,16 @@ services:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./configurations/nginx/data/certbot/conf:/etc/letsencrypt
+      - ./configurations/nginx/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   nginx:
+    container_name: bluejay-nginx
+    image: nginx
     environment:
-      - SERVICE_NAME=bouncer-nginx-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-nginx
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - DNS_SUFFIX=${DNS_SUFFIX:?}
-    container_name: bouncer-nginx-container
-    image: nginx
     ports:
       - '443:443'
       - '80:80'
@@ -23,13 +23,13 @@ services:
         soft: 10240
         hard: 10240
     volumes:
-      - './config/nginx.conf:/etc/nginx/nginx.conf'
-      - ./data/certbot/conf:/etc/letsencrypt
-      - './config/static:/etc/nginx/static'
-      - './certs:/etc/nginx/certs'
-      - './config/services-nginx-config:/etc/nginx/conf.d'
+      - './configurations/nginx/config/nginx.conf:/etc/nginx/nginx.conf'
+      - './configurations/nginx/data/certbot/conf:/etc/letsencrypt'
+      - './configurations/nginx/config/static:/etc/nginx/static'
+      - './configurations/nginx/certs:/etc/nginx/certs'
+      - './configurations/nginx/config/services-nginx-config:/etc/nginx/conf.d'
+      - './configurations/nginx/data/certbot/www:/var/www/certbot'
       - './logs/bouncer-nginx:/var/log/nginx'
-      - './data/certbot/www:/var/www/certbot'
     command: >-
       /bin/bash -c "nginx -g 'daemon off;' & while [ 1 ]; do nginx -s reload &>>
       /tmp/reload.log; sleep 30; clear; done"
@@ -38,10 +38,10 @@ services:
     mem_limit: 100m
     restart: 'on-failure:5'
   bluejay_reporter:
-    container_name: bluejay-reporter-container
+    container_name: bluejay-reporter
     image: governify/reporter:dev
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-reporter-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-reporter
       - NODE_ENV=production
       - PORT=80
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
@@ -59,10 +59,10 @@ services:
       - bluejay_registry_db
       - bluejay_influxdb
   bluejay_grafana:
-    container_name: bluejay-grafana-container
+    container_name: bluejay-grafana
     image: governify/dashboard:dev
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-grafana-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-grafana
       - NODE_ENV=production
     networks:
       bouncer_bouncer_network:
@@ -75,10 +75,10 @@ services:
     depends_on:
       - bluejay_reporter
   bluejay_render:
-    container_name: bluejay-render-container
+    container_name: bluejay-render
     image: governify/render:dev
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-render-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-render
       - NODE_ENV=production
       - PORT=80
       - LAYOUT=bootstrap3.html
@@ -96,10 +96,10 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_registry_db:
-    environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-registry-db-container
-    container_name: bluejay-registry-db-container
+    container_name: bluejay-registry-db
     image: mongo
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-registry-db
     networks:
       bouncer_bouncer_network:
         aliases:
@@ -111,28 +111,28 @@ services:
     restart: 'unless-stopped'
   bluejay_influxdb:
     image: 'influxdb:latest'
-    container_name: bluejay-influxdb-container
+    container_name: bluejay-influxdb
     networks:
       bouncer_bouncer_network:
         aliases:
           - influxdb
     volumes:
       - 'bluejay_influxdb_volume:/var/lib/influxdb'
-      - './influxdb:/etc/influxdb'
+      - './configurations/influxdb:/etc/influxdb'
       - './backups/influxdb:/var/backups'
     mem_limit: 1200m
     restart: 'unless-stopped'
   bluejay_registry:
-    container_name: bluejay-registry-container
+    container_name: bluejay-registry
     image: 'isagroup/governify-registry:bluejay'
     networks:
       bouncer_bouncer_network:
         aliases:
           - registry.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-registry
       - NODE_ENV=production
       - PORT=80
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-registry-container
     volumes:
       - './logs/registry:/opt/app/logs'
       - './static:/opt/app/public/static'
@@ -141,10 +141,10 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_eventcollector:
-    container_name: bluejay-eventcollector-container
+    container_name: bluejay-eventcollector
     image: 'governify/collector-events:dev'
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-eventcollector-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-eventcollector
       - NODE_ENV=production
       - PORT=80
       - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
@@ -160,10 +160,10 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_scopemanager:
-    container_name: bluejay-scopemanager-container
+    container_name: bluejay-scopemanager
     image: 'governify/scope-manager:dev'
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-scopemanager-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-scopemanager
       - NODE_ENV=production
       - PORT=80
       - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
@@ -178,10 +178,10 @@ services:
     depends_on:
       - bluejay_assetsmanager
   bluejay_assetsmanager:
-    container_name: bluejay-assetsmanager-container
+    container_name: bluejay-assetsmanager
     image: 'governify/assets-manager:dev'
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager-container
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager
       - NODE_ENV=production
       - PORT=80
       - LOGIN_USER=governify-admin
