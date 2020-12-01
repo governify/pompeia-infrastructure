@@ -106,20 +106,20 @@ services:
           - mongo_registry
     volumes:
       - 'bluejay_registry_db_volume:/data/db'
-      - './data2import:/data2import'
+      - './backups/mongodb:/data2import'
     mem_limit: 1200m
     restart: 'unless-stopped'
   bluejay_influxdb:
     image: 'influxdb:latest'
     container_name: bluejay-influxdb-container
-    volumes:
-      - 'bluejay_influxdb_volume:/var/lib/influxdb'
-      - './influxdb:/etc/influxdb'
-      - './data2import/influxdb:/var/backups'
     networks:
       bouncer_bouncer_network:
         aliases:
           - influxdb
+    volumes:
+      - 'bluejay_influxdb_volume:/var/lib/influxdb'
+      - './influxdb:/etc/influxdb'
+      - './backups/influxdb:/var/backups'
     mem_limit: 1200m
     restart: 'unless-stopped'
   bluejay_registry:
