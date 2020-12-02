@@ -208,8 +208,8 @@
                             <!-- Buttons -->
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <a ng-click="calculateEventsMetrics(model.id)"
-                                class="btn btn-primary {{calculateMetrics.agree ? '' : 'disabled'}}">
-                                Compute
+                                class="btn {{calculateMetrics.message == 'TPA data is being generated for the period.' ? 'btn-warning disabled' : 'btn-primary'}} {{calculateMetrics.agree ? '' : 'disabled'}}">
+                                {{calculateMetrics.message == 'TPA data is being generated for the period.' ? 'In progress' : 'Compute'}}
                             </a>
                         </div>
                     </div>
