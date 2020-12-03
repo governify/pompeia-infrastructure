@@ -147,11 +147,14 @@
                         Dashboard
                     </a>
                     <button type="button"
-                        class="tooltipbottom btn {{displayItems.automaticComputation ? 'btn-info' : 'btn-danger'}}">
+                        class="tooltipbottom btn {{displayItems.automaticComputation ? 'btn-info' : 'btn-danger'}}" ng-click="swapAutomaticComputation()">
                         Automatic Computation: {{displayItems.automaticComputation ? 'Yes' : 'No'}}
                         <span class="tooltipbottomtext">
-                            <li>ID: {{displayItems.automaticComputationInfo.id}}</li>
-                            <li>Status: {{displayItems.automaticComputationInfo.status}}</li>
+                            <li>ID: {{model.id}}</li>
+                            <li ng-if="displayItems.automaticComputation">Init: {{displayItems.automaticComputationInfo.init}}</li>
+                            <li ng-if="displayItems.automaticComputation">End: {{displayItems.automaticComputationInfo.end}}</li>
+                            <li ng-if="displayItems.automaticComputation">Interval: {{displayItems.automaticComputationInfo.interval}}</li>
+                            </span>
                     </button>
 
                     <button type="button" class="btn btn-primary" data-toggle="modal"

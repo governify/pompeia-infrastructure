@@ -4,7 +4,7 @@ $scope.displayItems = {
     "statusType": undefined,
     "scopeManagerInfo": {},
     "automaticComputation": false,
-    "automaticComputationInfo": {id: 123, status: "stopped", script: "/asdf/script.js"}
+    "automaticComputationInfo": { id: 123, status: "stopped", script: "/asdf/script.js" }
 };
 
 const setPageAlert = (message, type) => {
@@ -30,12 +30,65 @@ $scope.calculateMetrics = {
 $scope.urlReporter = "https://reporter.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v4";
 $scope.urlRegistry = "https://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6";
 $scope.urlScopeManager = "https://scopes.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
+$scope.urlDirector = "https://director.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
+
+const urlIntAssets = "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
+
+$scope.swapAutomaticComputation = () => {
+    if ($scope.displayItems.automaticComputation) {
+        try {
+            deleteUrl($scope.urlDirector + "/tasks/" + $scope.model.id, (err, data) => {
+                // Reporter not answering properly
+                if (err) {
+                    setPageAlert("Automatic computation task could not be deactivated.", "error");
+                    console.log(err)
+                } else {
+                    $scope.displayItems.automaticComputation = false;
+                    $scope.displayItems.automaticComputationInfo = {};
+                    $scope.$apply();
+                }
+            });
+        } catch (err) {
+            setPageAlert("Automatic computation task could not be deactivated.", "error");
+            console.log(err)
+
+        }
+    } else {
+        try {
+            const task = {
+                "id": $scope.model.id,
+                "script": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1/public/director/test.js",
+                "running": true,
+                "config": {
+                    "agreementId": $scope.model.id
+                },
+                "init": "2020-01-01T00:00:00",
+                "interval": 5000,
+                "end": "2020-12-12T00:00:00"
+            }
+            postUrl($scope.urlDirector + "/tasks", task, (err, data) => {
+                // Reporter not answering properly
+                if (err) {
+                    setPageAlert("Automatic computation task could not be activated.", "error");
+                    console.log(err)
+                } else {
+                    $scope.displayItems.automaticComputation = true;
+                    $scope.displayItems.automaticComputationInfo = data;
+                    $scope.$apply();
+                }
+            });
+        } catch (err) {
+            setPageAlert("Automatic computation task could not be activated.", "error");
+            console.log(err)
+        }
+    }
+}
 
 // This function is called at the end of the code
 const init = () => {
     try {
-        for (let i = -11; i<15; i++) {
-            $scope.calculateMetrics.timezones.push("GMT" + (i<0 ? "-" : "+") + Math.abs(i) + ":00")
+        for (let i = -11; i < 15; i++) {
+            $scope.calculateMetrics.timezones.push("GMT" + (i < 0 ? "-" : "+") + Math.abs(i) + ":00")
         }
 
         //Get project Info from scopeManager
@@ -65,29 +118,34 @@ const init = () => {
                     console.info("Loaded agreement from mongo.")
                     $scope.model = data;
                     $scope.computersUsed = Object.keys($scope.model.context.definitions.computers);
+
+                    //Get computation information from director
+                    getUrl(
+                        $scope.urlDirector + "/tasks/" + $scope.model.id,
+                        (err, data) => {
+                            if (err) {
+                                $scope.displayItems.automaticComputation = false;
+                                $scope.displayItems.automaticComputationInfo = {};
+                                /* if (err.status === 404) {
+                                    $scope.displayItems.automaticComputation = false;
+                                } */
+                            }
+                            if (data) {
+                                console.info("Loaded execution from director.");
+                                $scope.displayItems.automaticComputation = true;
+                                $scope.displayItems.automaticComputationInfo = data;
+                            }
+                            $scope.$apply();
+                        }
+                    );
                 } else {
                     setPageAlert("No agreement found in mongo.", "error");
                     console.info("No agreement found in mongo, loaded default.");
+                    $scope.$apply();
                 }
                 $scope.modelLoaded = $scope.modelLoaded == false ? true : false;
-                $scope.$apply();
             }
         );
-
-        //Get computation information from director
-        /*getUrl(
-            getDirectorUrl() + "/executions?config.tpa=" + $scope.model.id,
-            (err, data) => {
-                if (data) {
-                    console.info("Loaded execution from director.");
-                    $scope.displayItems.automaticComputationInfo = data;
-                }
-                else {
-                    console.info("No execution active on director.");
-                }
-                $scope.$apply();
-            }
-        );*/
     } catch (err) {
         $scope.modelLoaded = true;
         console.log(err);
@@ -108,16 +166,16 @@ $scope.calculateEventsMetrics = function (id) {
 
     try {
         setModalAlert("");
-        
+
         if ($scope.calculateMetrics.agree) {
 
             if (!$scope.calculateMetrics.from || !$scope.calculateMetrics.to) {
                 setModalAlert("Invalid date.");
-            } else {                
+            } else {
                 // Periods generation
                 var firstDateOffset = new Date(Date.parse($scope.calculateMetrics.from.toISOString())).getTimezoneOffset();
                 var firstDate = Date.parse($scope.calculateMetrics.from.toISOString()) - firstDateOffset * 60 * 1000;
-                
+
                 var lastDateOffset = new Date(Date.parse($scope.calculateMetrics.to.toISOString())).getTimezoneOffset();
                 var lastDate = Date.parse($scope.calculateMetrics.to.toISOString()) - lastDateOffset * 60 * 1000;
                 console.log("Input", $scope.calculateMetrics.to.toISOString());
@@ -225,7 +283,7 @@ var deleteUrl = (url, data, callback) => {
     if (!callback && data) {
         callback = data;
     }
-    
+
     $.ajax({
         url: url,
         type: "DELETE",
