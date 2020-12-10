@@ -31,7 +31,7 @@ services:
       - './configurations/nginx/data/certbot/www:/var/www/certbot'
       - './logs/bouncer-nginx:/var/log/nginx'
     networks:
-      - bluejay_network
+      - governify_network
     mem_limit: 100m
     restart: 'on-failure:5'
   bluejay_reporter:
@@ -44,7 +44,7 @@ services:
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - DNS_SUFFIX=${DNS_SUFFIX:?}
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - reporter.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     volumes:
@@ -62,7 +62,7 @@ services:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-grafana
       - NODE_ENV=production
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - dashboard.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     volumes:
@@ -85,7 +85,7 @@ services:
       - DEFAULT_CONTROLLER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}/api/v1/public/renders/index/controller.js
       - DEFAULT_MODEL=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}/api/v1/public/renders/index/model.json
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - ui.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     volumes:
@@ -98,7 +98,7 @@ services:
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-registry-db
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - mongo_registry
     volumes:
@@ -110,7 +110,7 @@ services:
     image: 'influxdb:latest'
     container_name: bluejay-influxdb
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - influxdb
     volumes:
@@ -123,7 +123,7 @@ services:
     container_name: bluejay-registry
     image: 'isagroup/governify-registry:bluejay'
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - registry.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     environment:
@@ -151,7 +151,7 @@ services:
       - KEY_HEROKU=${KEY_HEROKU}
       - KEY_CODECLIMATE=${KEY_CODECLIMATE}
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - event.collector.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     mem_limit: 400m
@@ -167,7 +167,7 @@ services:
       - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
       - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - scopes.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     mem_limit: 400m
@@ -189,7 +189,7 @@ services:
       - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     volumes:
@@ -205,7 +205,7 @@ services:
       - PORT=80
       - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     networks:
-      bluejay_network:
+      governify_network:
         aliases:
           - director.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
     depends_on:
@@ -217,5 +217,5 @@ volumes:
   bluejay_registry_db_volume: null
   bluejay_grafana_volume: null
 networks:
-  bluejay_network:
+  governify_network:
     external: true

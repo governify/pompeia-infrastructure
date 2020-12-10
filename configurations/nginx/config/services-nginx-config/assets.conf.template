@@ -1,3 +1,8 @@
+$connection_upgrade {     
+    default upgrade;     
+    '' close; 
+}
+
 server {
     listen 443 ssl;
 
@@ -9,6 +14,8 @@ server {
 
     location / {
         proxy_pass http://assets.${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}:80;
+        proxy_set_header Upgrade $http_upgrade;         
+        proxy_set_header Connection $connection_upgrade;
     }
 
 }
@@ -20,6 +27,6 @@ server {
         return 301 https://$host$request_uri;
     }    
     location /.well-known/acme-challenge/ {
-    root /var/www/certbot;
-}
+        root /var/www/certbot;
+    }
 }
