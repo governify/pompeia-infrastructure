@@ -12,8 +12,8 @@ services:
     image: nginx
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-nginx
-      - SERVICES_PREFIX=${SERVICES_PREFIX:?}
-      - DNS_SUFFIX=${DNS_SUFFIX:?}
+      - BLUEJAY_SERVICES_PREFIX=${SERVICES_PREFIX:?}
+      - BLUEJAY_DNS_SUFFIX=${DNS_SUFFIX:?}
     ports:
       - '443:443'
       - '80:80'

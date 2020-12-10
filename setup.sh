@@ -15,16 +15,18 @@ docker network create bluejay_network
 # Docker compose
 docker-compose -f docker-compose.yaml --env-file ./.env up -d
 
+echo -e "\033[33m
+                 **************************************************************
+                 ****              WARNING: CPU LIMITS.                    ****
+                 ****        None of the containers have CPU limits.       ****
+                 ****        If you need to add those limits, do it        ****
+                 ****        in the required compose files.                ****
+                 **************************************************************\033[0m\n"
+
+
+
 # declare -A SERVICES=([$SERVICES_PREFIX-assetsmanager-container]=assets.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-scopemanager-container]=scopes.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-eventcollector-container]=event.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-ptcollector-container]=pt.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-grafana-container]=dashboard.$SERVICES_PREFIX:3000 [$SERVICES_PREFIX-registry-container]=registry.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-render-container]=ui.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-connector-container]=pt.connector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-reporter-container]=reporter.$SERVICES_PREFIX:80)
 
-#echo -e "\033[33m
-#                 **************************************************************
-#                 ****              WARNING: CPU LIMITS.                    ****
-#                 ****        None of the containers have CPU limits.       ****
-#                 ****        If you need to add those limits, do it        ****
-#                 ****        in the required compose files.                ****
-#                 **************************************************************\033[0m\n"
-#
 #echo -e "List of services added to bouncer (maybe you want to add them to your hosts file):\n"
 #for service in "${!SERVICES[@]}"; do
 #  service_url=${SERVICES[$service]}
