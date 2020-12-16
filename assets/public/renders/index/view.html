@@ -112,7 +112,7 @@ Released   : 20140228
 				<div class="row" ng-if="finishloading" style="width: 100%; margin: 0;">
 					<!-- Audited Projects -->
 					<div class="col-sm-5 col-sm-offset-1" style="padding: 0;">
-						<div class="well" style="margin-right: 50px">
+						<div class="well" style="margin-right: 10px">
 							<h3 style="padding-bottom: 20px;">Audited projects</h3>
 							<ul>
 								<div ng-repeat="projectOwner in tpaprojectskeys" style="padding: 0; text-align: left;">
@@ -138,8 +138,13 @@ Released   : 20140228
 					</div>
 					<!-- Non Audited Projects -->
 					<div class="col-sm-5" style="padding: 0;">
-						<div class="well" style="margin-left: 50px">
+						<div class="well" style="margin-left: 10px">
 							<h3 style="padding-bottom: 20px;">Other projects</h3>
+							<a ng-click="createAllTpas(notpaprojects);"
+								class="btn {{displayItems.creatingTPA ? 'btn-warning disabled' : 'btn-success'}}"
+								style="margin-left: 0.5em; padding: 0 5px; float:right">
+								{{displayItems.creatingTPA ? 'In progress' : 'Create all TPAs'}}
+							</a>
 							<ul>
 								<div ng-repeat="projectOwner in notpaprojectskeys"
 									style="padding: 0; text-align: left;">

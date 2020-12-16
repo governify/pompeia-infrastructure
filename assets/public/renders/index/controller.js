@@ -150,7 +150,7 @@ $scope.reloadProjects = function () {
     loadProjects();
 }
 
-$scope.createTpa = function (project) {
+$scope.createTpa = function (project, openTab = true) {
     $scope.displayItems.creatingTPA = true;
     $http({
         method: 'GET',
@@ -175,7 +175,9 @@ $scope.createTpa = function (project) {
                 $scope.displayItems.statusType = "success";
                 $scope.displayItems.creatingTPA = false;
                 loadProjects();
-                window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
+                if (openTab) {
+                    window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
+                }
                 $scope.finishloading = true;
             }, (err) => {
                 $scope.displayItems.statusMessage = "There was a problem when sending TPA to registry.";
@@ -195,4 +197,10 @@ $scope.createTpa = function (project) {
         $scope.displayItems.creatingTPA = false;
         console.log(err);
     });
+}
+
+$scope.createAllTpas = (projects) => {
+    for (const project of projects[Object.keys(projects)[0]]){
+        $scope.createTpa(project, false);
+    }
 }
