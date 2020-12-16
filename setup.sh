@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 # Replace scope manager and assets manager key with random keys
 RANDOM_KEY1=$(openssl rand -hex 16)
