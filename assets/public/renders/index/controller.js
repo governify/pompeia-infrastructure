@@ -18,6 +18,11 @@ var scopeManagerURL = "";
 var domain = '';
 $scope.domain = '';
 
+const setPageAlert = (message, type) => {
+    $scope.displayItems.statusMessage = message;
+    $scope.displayItems.statusType = type;
+}
+
 /* Check if it is already set up */
 $http({
     method: 'GET',
@@ -28,8 +33,7 @@ $http({
     $scope.domain = domain;
     loadProjects();
 }).catch(err => {
-    $scope.displayItems.statusMessage = "Template file could not be loaded.";
-    $scope.displayItems.statusType = "error";
+    setPageAlert("Template file could not be loaded.", "error");
     console.log(err);
 });
 
@@ -49,8 +53,7 @@ function loadProjects() {
                 firstLoad = false;
                 loadProjects();
             }, (err) => {
-                $scope.displayItems.statusMessage = "Scope Manager courses could not be loaded.";
-                $scope.displayItems.statusType = "error";
+                setPageAlert("Scope Manager courses could not be loaded.", "error");
                 $scope.finishloading = true;
                 console.log(err);
             });
@@ -98,27 +101,23 @@ function loadProjects() {
                         $scope.notpaprojectskeys.push(Object.keys(scopeNotpaprojects).filter(item => item === "Projects w/o owner")[0]);
                         $scope.finishloading = true;
                     } catch (err) {
-                        $scope.displayItems.statusMessage = "Comparing registry projects failed.";
-                        $scope.displayItems.statusType = "error";
+                        setPageAlert("Comparing registry projects failed.", "error");
                         $scope.finishloading = true;
                         console.log(err);
                     }
                 }, (err) => {
-                    $scope.displayItems.statusMessage = "Error when obtaining registry agreements.";
-                    $scope.displayItems.statusType = "error";
+                    setPageAlert("Error when obtaining registry agreements.", "error");
                     $scope.finishloading = true;
                     console.log(err);
                 });
             }, (err) => {
-                $scope.displayItems.statusMessage = "Scope Manager courses could not be loaded.";
-                $scope.displayItems.statusType = "error";
+                setPageAlert("Scope Manager courses could not be loaded.", "error");
                 $scope.finishloading = true;
                 console.log(err);
             });
         }
     } catch (err) {
-        $scope.displayItems.statusMessage = "Projects loading failed.";
-        $scope.displayItems.statusType = "error";
+        setPageAlert("Projects loading failed.", "error");
         $scope.finishloading = true;
         console.log(err);
     }
@@ -171,8 +170,7 @@ $scope.createTpa = function (project, openTab = true) {
                 url: 'https://registry.' + domain + '/api/v6/agreements',
                 data: tpa
             }).then(() => {
-                $scope.displayItems.statusMessage = "TPA created successfully.";
-                $scope.displayItems.statusType = "success";
+                setPageAlert("TPA created successfully.", "success");
                 $scope.displayItems.creatingTPA = false;
                 loadProjects();
                 if (openTab) {
@@ -180,20 +178,17 @@ $scope.createTpa = function (project, openTab = true) {
                 }
                 $scope.finishloading = true;
             }, (err) => {
-                $scope.displayItems.statusMessage = "There was a problem when sending TPA to registry.";
-                $scope.displayItems.statusType = "error";
+                setPageAlert("There was a problem when sending TPA to registry.", "error");
                 $scope.displayItems.creatingTPA = false;
                 console.log(err);
             });
         } catch (err) {
-            $scope.displayItems.statusMessage = "Problem when creating TPA.";
-            $scope.displayItems.statusType = "error";
+            setPageAlert("Problem when creating TPA.", "error");
             $scope.displayItems.creatingTPA = false;
             console.log(err);
         }
     }, (err) => {
-        $scope.displayItems.statusMessage = "Problem when creating TPA.";
-        $scope.displayItems.statusType = "error";
+        setPageAlert("Problem when creating TPA.", "error");
         $scope.displayItems.creatingTPA = false;
         console.log(err);
     });
