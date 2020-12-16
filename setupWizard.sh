@@ -21,7 +21,7 @@ do
         do
             clear
             # Menu 2 - Header and options
-            declare -a menu2Options=("(Optional) Git, Docker and Docker Compose installation (AWS)" "Enviroment variables setup" "(Optional) Automatic DNS records generation (DynaHosting)" "System deployment" "(Optional) Lets-encrypt automatic certificates generation (Staging)" "(Optional) Lets-encrypt automatic certificates generation" "Go back" );
+            declare -a menu2Options=("(Optional) Git, Docker and Docker Compose installation (yum/AWS)" "Enviroment variables setup" "(Optional) Automatic DNS records generation (DynaHosting)" "System deployment" "(Optional) Lets-encrypt automatic certificates generation (Staging)" "(Optional) Lets-encrypt automatic certificates generation" "Go back" );
             generateDialog "options" "Deployment Menu - Follow steps in order. You can skip optional ones and do them by yourself if needed." "${menu2Options[@]}"
             # Reader
             echo -n "Select an option please: "
@@ -43,6 +43,7 @@ do
                 read dynaHostingUsername
                 echo -n "Please, enter your DynaHosting password: "
                 read -s dynaHostingPassword
+                echo ""
 
                 # Execute script
                 ./utils/createDNS.sh ${dynaHostingUsername} ${dynaHostingPassword}
@@ -52,7 +53,7 @@ do
             elif [ $choice2 = 4 ]
             then
                 clear
-                declare -a menu3Options=("I want to use the Nginx. There is no running reverse proxy in this system" "Do not use it. I want to comment/remove the container from docker-compose.yaml (edit it here)" "I've already got rid of it. Go ahead" "Go back" );
+                declare -a menu3Options=("I want to use the Nginx. There is no running reverse proxy in this system. Continue with the deployment" "Do not use it. I want to comment/remove the container from docker-compose.yaml (edit it here)" "I have already modified the docker-compose file. Continue with the deployment" "Go back" );
                 generateDialog "options" "Deploying the system will instantiate an Nginx to use it as a reverse proxy." "${menu3Options[@]}"
                 # Reader
                 echo -n "Select an option please: "
