@@ -1,38 +1,56 @@
-#!/bin/bash 
+#!/bin/bash
+source utils/menu.sh
 
-# Replace scope manager and assets manager key with random keys
-RANDOM_KEY1=$(openssl rand -hex 16)
-RANDOM_KEY2=$(openssl rand -hex 16)
-sed -i "s/{{RANDOM_KEY1}}/$RANDOM_KEY1/g" ./.env
-sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
+MENU2=true
+# Menu 2 - Installation
+while [ $MENU2 = true ]
+do
+    clear
+    # Menu 2 - Header and options
+    declare -a menu2Options=("Enviroment variables setup" "System deployment" "(Optional) Lets-encrypt automatic certificates generation" "Go back" );
+    generateDialog "options" "Deployment Menu - Follow steps in order. You can skip optional ones and do them by yourself if needed." "${menu2Options[@]}"
+    # Reader
+    echo -n "Select an option please: "
+    read choice2
 
-# Export .env variables
-export $(grep -v '^#' .env | xargs)
+    if [ $choice2 = 1 ]
+    then
+        nano .env
+    elif [ $choice2 = 2 ]
+    then
+        ./utils/deploy.sh
+        # Stop
+        echo -n "Press any key to continue."
+        read nothing
+    elif [ $choice2 = 3 ]
+    then
+        clear
+        echo "-------------------------------------------------------------------------------------------"
+        echo "Init Letsencrypt helps you by generating free SSL certificates automatically."
+        echo "It is possible that your new DNS records are not updated yet in the different DNS servers." 
+        echo "It is highly recommended to use this tool in staging mode until it succedes to make sure it will work and not being temporally banned by it."
+        echo "- On failure, you should wait a bit for the dns to update and keep trying."
+        echo "- On success, you can go ahead and not use the staging option as it should work."
+        echo "-------------------------------------------------------------------------------------------"
+        echo "Do you want to use the staging option? (Y/n)"
+        read choice4
+        if [ $choice4 = "y" || $choice4 = "Y" ]
+        then
+            ./utils/init-letsencrypt.sh 1
+            # Stop
+            echo -n "Press any key to continue."
+            read nothing
+        else
+            ./utils/init-letsencrypt.sh 0
+            # Stop
+            echo -n "Press any key to continue."
+            read nothing
+        fi
+    elif [ $choice2 = 4 ]
+    then
+        MENU2=false
+    fi
+done
 
-# Create bouncer network
-docker network create governify_network
-
-# Docker compose
-docker-compose -f docker-compose.yaml --env-file ./.env up -d
-
-echo -e "\033[33m
-                 **************************************************************
-                 ****              WARNING: CPU LIMITS.                    ****
-                 ****        None of the containers have CPU limits.       ****
-                 ****        If you need to add those limits, do it        ****
-                 ****        in the required compose files.                ****
-                 **************************************************************\033[0m\n"
-
-
-
-# declare -A SERVICES=([$SERVICES_PREFIX-assetsmanager-container]=assets.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-scopemanager-container]=scopes.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-eventcollector-container]=event.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-ptcollector-container]=pt.collector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-grafana-container]=dashboard.$SERVICES_PREFIX:3000 [$SERVICES_PREFIX-registry-container]=registry.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-render-container]=ui.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-connector-container]=pt.connector.$SERVICES_PREFIX:80 [$SERVICES_PREFIX-reporter-container]=reporter.$SERVICES_PREFIX:80)
-
-#echo -e "List of services added to bouncer (maybe you want to add them to your hosts file):\n"
-#for service in "${!SERVICES[@]}"; do
-#  service_url=${SERVICES[$service]}
-#  IFS=':' read -r -a splitted <<< "$service_url"
-#  SERVICE_URL=${splitted[0]}$DNS_SUFFIX
-#  SERVICE_PORT=${splitted[1]}
-#
-#  echo $SERVER_IP $SERVICE_URL
-#done
+# Do something after getting their choice
+clear

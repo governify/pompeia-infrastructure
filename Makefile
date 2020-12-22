@@ -15,12 +15,12 @@ edit-compose:
 	nano ./docker-compose.yaml
 
 deploy-bluejay:
-	./setup.sh
+	./utils/deploy.sh
 
-certificates-staging:
+generate-certificates-staging:
 	./utils/init-letsencrypt.sh 1
 
-certificates-production:
+generate-certificates-production:
 	./utils/init-letsencrypt.sh 0
 
 fix-system:
@@ -35,7 +35,7 @@ install-with-prerequisites-and-nginx:
 	read nothing
 	nano .env
 	./utils/createDNS.sh ${DYNAHOSTING_USER} ${DYNAHOSTING_PASSWORD}
-	./setup.sh
+	./utils/deploy.sh
 	./utils/init-letsencrypt.sh 0
 	docker restart bluejay-reporter
 	docker restart bluejay-registry
@@ -50,7 +50,7 @@ install-with-prerequisites:
 	echo "Please, comment nginx in docker-compose.yaml. Press a key to open the editor:"
 	read nothing
 	nano ./docker-compose.yaml
-	./setup.sh
+	./utils/deploy.sh
 	docker restart bluejay-reporter
 	docker restart bluejay-registry
 	docker restart bluejay-eventcollector
@@ -60,7 +60,7 @@ install-with-nginx:
 	read nothing
 	nano .env
 	./utils/createDNS.sh ${DYNAHOSTING_USER} ${DYNAHOSTING_PASSWORD}
-	./setup.sh
+	./utils/deploy.sh
 	./utils/init-letsencrypt.sh 0
 	docker restart bluejay-reporter
 	docker restart bluejay-registry
@@ -70,7 +70,7 @@ install-local:
 	echo "Please, enter the enviroment variables. Press a key to open the editor:"
 	read nothing
 	nano .env
-	./setup.sh
+	./utils/deploy.sh
 	docker restart bluejay-reporter
 	docker restart bluejay-registry
 	docker restart bluejay-eventcollector
