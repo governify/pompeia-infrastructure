@@ -32,7 +32,7 @@ do
             then
                 ./utils/preparation.sh
                 # Stop
-                echo -n "Press any key to continue."
+                echo -n "Press enter to continue."
                 read nothing
             elif [ $choice2 = 2 ]
             then
@@ -49,7 +49,7 @@ do
                 # Execute script
                 ./utils/createDNS.sh ${dynaHostingUsername} ${dynaHostingPassword}
                 # Stop
-                echo -n "Press any key to continue."
+                echo -n "Press enter to continue."
                 read nothing
             elif [ $choice2 = 4 ]
             then
@@ -66,7 +66,7 @@ do
 
                     ./utils/deploy.sh
                     # Stop
-                    echo -n "Press any key to continue."
+                    echo -n "Press enter to continue."
                     read nothing
                 elif [ $choice3 = 4 ]
                 then
@@ -74,7 +74,7 @@ do
                 else
                     ./utils/deploy.sh
                     # Stop
-                    echo -n "Press any key to continue."
+                    echo -n "Press enter to continue."
                     read nothing
                 fi 
             elif [ $choice2 = 5 ]
@@ -87,19 +87,19 @@ do
                 echo "- On failure, you should wait a bit for the dns to update and keep trying."
                 echo "- On success, you can go ahead and not use the staging option as it should work."
                 echo "-------------------------------------------------------------------------------------------"
-                echo "Do you want to use the staging option? (Y/n)"
+                echo -n "Do you want to use the staging option? (y/N) "
 
                 read choice4
-                if [ $choice4 = "y" || $choice4 = "Y" ]
+                if [ $choice4 = "y" ] || [ $choice4 = "Y" ]
                 then
                     ./utils/init-letsencrypt.sh 1
                     # Stop
-                    echo -n "Press any key to continue."
+                    echo -n "Press enter to continue."
                     read nothing
                 else
                     ./utils/init-letsencrypt.sh 0
                     # Stop
-                    echo -n "Press any key to continue."
+                    echo -n "Press enter to continue."
                     read nothing
                 fi          
             elif [ $choice2 = 6 ]
@@ -113,7 +113,7 @@ do
         echo ""
         echo "Bluejay ecosystem based in Governify (https://github.com/governify). Developed by ISA Group (https://www.isa.us.es). "
         # Stop
-        echo -n "Press any key to continue."
+        echo -n "Press enter to continue."
         read nothing
     elif [ $choice1 = 3 ]
     then

@@ -20,7 +20,7 @@ do
     then
         ./utils/deploy.sh
         # Stop
-        echo -n "Press any key to continue."
+        echo -n "Press enter to continue."
         read nothing
     elif [ $choice2 = 3 ]
     then
@@ -32,18 +32,18 @@ do
         echo "- On failure, you should wait a bit for the dns to update and keep trying."
         echo "- On success, you can go ahead and not use the staging option as it should work."
         echo "-------------------------------------------------------------------------------------------"
-        echo "Do you want to use the staging option? (Y/n)"
+        echo -n "Do you want to use the staging option? (Y/n) "
         read choice4
-        if [ $choice4 = "y" || $choice4 = "Y" ]
+        if [ $choice4 = "y" ] || [ $choice4 = "Y" ]
         then
             ./utils/init-letsencrypt.sh 1
             # Stop
-            echo -n "Press any key to continue."
+            echo -n "Press enter to continue."
             read nothing
         else
             ./utils/init-letsencrypt.sh 0
             # Stop
-            echo -n "Press any key to continue."
+            echo -n "Press enter to continue."
             read nothing
         fi
     elif [ $choice2 = 4 ]
