@@ -9,7 +9,7 @@
 # Configuration
 symbol="*"
 paddingSymbol=" "
-lineLength=110
+lineLength=120
 charsToOption=1
 charsToName=3
 
