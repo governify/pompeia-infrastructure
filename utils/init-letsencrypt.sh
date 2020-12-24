@@ -8,6 +8,7 @@ rsa_key_size=4096
 data_path="./configurations/nginx/data/certbot"
 email="" # Adding a valid address is strongly recommended
 staging=${1:=0} # Set to 1 if you're testing your setup to avoid hitting request limits
+dummy=${2:=0}
 
 if [ -d "$data_path" ]; then
   read -p "Existing data found for $domains. Continue and replace existing certificate? (y/N) " decision
@@ -41,41 +42,44 @@ echo "### Starting nginx ..."
 docker-compose up --force-recreate -d nginx
 echo
 
-for domain in "${domains[@]}"; do
-  echo "### Deleting dummy certificate for $domain ..."
-  docker-compose run --rm --entrypoint "\
-    rm -Rf /etc/letsencrypt/live/$domain && \
-    rm -Rf /etc/letsencrypt/archive/$domain && \
-    rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
-  echo
-done
+if [$dummy != "1"]
+then
+  for domain in "${domains[@]}"; do
+    echo "### Deleting dummy certificate for $domain ..."
+    docker-compose run --rm --entrypoint "\
+      rm -Rf /etc/letsencrypt/live/$domain && \
+      rm -Rf /etc/letsencrypt/archive/$domain && \
+      rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
+    echo
+  done
 
-echo "### Requesting Let's Encrypt certificate for $domains ..."
-#Join $domains to -d args
+  echo "### Requesting Let's Encrypt certificate for $domains ..."
+  #Join $domains to -d args
 
-# Select appropriate email arg
-case "$email" in
-  "") email_arg="--register-unsafely-without-email" ;;
-  *) email_arg="--email $email" ;;
-esac
+  # Select appropriate email arg
+  case "$email" in
+    "") email_arg="--register-unsafely-without-email" ;;
+    *) email_arg="--email $email" ;;
+  esac
 
-# Enable staging mode if needed
-if [ $staging != "0" ]; then staging_arg="--staging"; fi
+  # Enable staging mode if needed
+  if [ $staging != "0" ]; then staging_arg="--staging"; fi
 
-for domain in "${domains[@]}"; do
-  domain_args="$domain_args -d $domain"
+  for domain in "${domains[@]}"; do
+    domain_args="$domain_args -d $domain"
 
-  docker-compose run --rm --entrypoint "\
-    certbot certonly --webroot -w /var/www/certbot \
-      $staging_arg \
-      $email_arg \
-      -d $domain \
-      --rsa-key-size $rsa_key_size \
-      --agree-tos \
-      --force-renewal" certbot
-  echo
+    docker-compose run --rm --entrypoint "\
+      certbot certonly --webroot -w /var/www/certbot \
+        $staging_arg \
+        $email_arg \
+        -d $domain \
+        --rsa-key-size $rsa_key_size \
+        --agree-tos \
+        --force-renewal" certbot
+    echo
 
-done
+  done
 
-echo "### Reloading nginx ..."
-docker-compose exec nginx nginx -s reload
+  echo "### Reloading nginx ..."
+  docker-compose exec nginx nginx -s reload
+fi

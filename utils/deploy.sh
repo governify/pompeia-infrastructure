@@ -15,6 +15,9 @@ docker network create governify_network
 # Docker compose
 docker-compose -f docker-compose.yaml --env-file ./.env up -d
 
+# Create dummy certificates
+./utils/init-letsencrypt.sh 1 1
+
 echo -e "\033[33m
                  **************************************************************
                  ****              WARNING: CPU LIMITS.                    ****
