@@ -9,11 +9,11 @@
             "timeZone": "America/Los_Angeles"
         },
         "infrastructure": {
-            "registry": "http://registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v6",
-            "reporter": "http://reporter.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v4",
-            "render": "https://ui.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/render?model=https://registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v6/agreements/tpa-1010101010&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js",
-            "dashboard": "http://dashboard.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}",
-            "scopeManager": "https://sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1"
+            "registry": "http://registry.bluejaye2e.governify/api/v6",
+            "reporter": "http://reporter.bluejaye2e.governify/api/v4",
+            "render": "https://ui.bluejaye2e.governify/render?model=https://registry.bluejaye2e.governify/api/v6/agreements/tpa-1010101010&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js",
+            "dashboard": "http://dashboard.bluejaye2e.governify",
+            "scopeManager": "https://scopes.bluejaye2e.governify/api/v1"
         },
         "definitions": {
             "schemas": {},
@@ -35,7 +35,7 @@
             },
             "computers": {
                 "pivotaltracker": {
-                    "url": "http://pt.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}",
+                    "url": "http://pt.collector.bluejaye2e.governify",
                     "apiVersion": "1",
                     "config": {
                         "ptkey": "1313131313",
@@ -43,15 +43,15 @@
                             "24x7": "L-DT00:00-23:59/H",
                             "normal": "[{\"from\":\"1/1\",\"to\":\"6/14\",\"schedule\":\"L-VT09:00-18:00/H\"},{\"from\":\"6/15\",\"to\":\"9/15\",\"schedule\":\"L-VT08:30-15:00/H\"},{\"from\":\"9/16\",\"to\":\"12/23\",\"schedule\":\"L-VT09:00-18:00/H\"},{\"from\":\"12/24\",\"to\":\"12/24\",\"schedule\":\"L-VT09:00-13:00/H\"},{\"from\":\"12/25\",\"to\":\"12/30\",\"schedule\":\"L-VT09:00-18:00/H\"},{\"from\":\"12/31\",\"to\":\"12/31\",\"schedule\":\"L-VT09:00-13:00/H\"}]"
                         },
-                        "holidays": "http://registry.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/static/holidays.json"
+                        "holidays": "http://registry.bluejaye2e.governify/static/holidays.json"
                     }
                 },
                 "eventcomputer": {
-                    "url": "http://event.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}",
+                    "url": "http://event.collector.bluejaye2e.governify",
                     "endpoint": "/computations",
                     "apiVersion": "2",
                     "config": {
-                        "scopeManager": "http://sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/scopes/development"
+                        "scopeManager": "http://scopes.bluejaye2e.governify/api/v1/scopes/development"
                     }
                 }
             }
@@ -61,11 +61,11 @@
         "metrics": {
             "PERCENTAGE_OPENPR_FINISHEDSTORIES": {
                 "computer": {
-                    "url": "http://event.collector.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}",
+                    "url": "http://event.collector.bluejaye2e.governify",
                     "endpoint": "/computations",
                     "apiVersion": "2",
                     "config": {
-                        "scopeManager": "http://sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}/api/v1/scopes/development"
+                        "scopeManager": "http://scopes.bluejaye2e.governify/api/v1/scopes/development"
                     }
                 },
                 "measure": {

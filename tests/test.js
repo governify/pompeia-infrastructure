@@ -12,10 +12,29 @@ const influx = new Influx.InfluxDB('http://localhost:8086/metrics')
 // To reject expired TLS certs
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+//const renderURL = "http://localhost:8080";
 const reporterURL = "http://localhost:8081/api/v4";
 const registryURL = "http://localhost:8082/api/v6";
+const scopeManagerURL = "http://localhost:8083/api/v1";
+const assetsManagerURL = "http://localhost:8084/api/v1";
+const directorURL = "http://localhost:8085/api/v1";
+const eventCollectorURL = "http://localhost:8090/api/v2";
 
 let testAgreement;
+
+const { exec } = require("child_process");
+
+/*exec("dir", (error, stdout, stderr) => {
+  if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+  }
+  if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+  }
+  console.log(`stdout: ${stdout}`);
+});*/
 
 // Create Agreement
 describe('Create agreement, calculate guarantees and delete agreement: ', () => {
@@ -26,7 +45,6 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
         done(err);
       }
       testAgreement = JSON.parse(data);
-
       // Delete and check the agreement does not exist already
       chai.request(registryURL)
         .delete("/agreements/" + testAgreement.id)
@@ -59,6 +77,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
         chai.request(registryURL)
           .get("/agreements/" + testAgreement.id)
           .then(response => {
+            
             // Check the response is successful
             assert.equal(response.status, 200, 'The agreement must exist after the creation');
 

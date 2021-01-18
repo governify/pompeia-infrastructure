@@ -3,7 +3,7 @@
         "name": "Pivotal activity 1",
         "type": "GET",
         "requestAPI": "https://www.pivotaltracker.com",
-        "requestEndpoint": "/services/v5/projects/1234/activity?occurred_after=2020-04-27T00:00:00.000Z&occurred_before=2020-04-27T23:59:00.000Z&offset=0",
+        "requestEndpoint": "/services/v5/projects/1234/activity?limit=100&offset=0",
         "response": [
             {
                 "kind": "story_update_activity",
@@ -3555,7 +3555,7 @@
         "name": "Pivotal activity 2",
         "type": "GET",
         "requestAPI": "https://www.pivotaltracker.com",
-        "requestEndpoint": "/services/v5/projects/1234/activity?occurred_after=2020-04-27T00:00:00.000Z&occurred_before=2020-04-27T23:59:00.000Z&offset=71",
+        "requestEndpoint": "/services/v5/projects/1234/activity?limit=100&offset=71",
         "response": []
     },
     {
@@ -8648,7 +8648,7 @@
     {
         "name": "Scope Manager",
         "type": "GET",
-        "requestAPI": "http://sm.{{SERVICES_PREFIX}}{{DNS_SUFFIX}}",
+        "requestAPI": "http://scopes.bluejaye2e.governify",
         "requestEndpoint": "/api/v1/scopes/development/Testing/E2ETesting",
         "response": {
             "code": 200,
