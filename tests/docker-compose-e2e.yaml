@@ -168,7 +168,7 @@ services:
         aliases:
           - assets.bluejaye2e.governify
     volumes:
-      - './e2e-volumes/assets:/home/theia/src-gen/backend/files'
+      - './configurations/assets:/home/theia/src-gen/backend/files'
     mem_limit: 400m
     restart: 'unless-stopped'
     ports:

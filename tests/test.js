@@ -1,6 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -15,10 +12,12 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 //const renderURL = "http://localhost:8080";
 const reporterURL = "http://localhost:8081/api/v4";
 const registryURL = "http://localhost:8082/api/v6";
-const scopeManagerURL = "http://localhost:8083/api/v1";
+const scopeManagerURL = "http://localhost:8083/api/v1"; // Used by collector
 const assetsManagerURL = "http://localhost:8084/api/v1";
 const directorURL = "http://localhost:8085/api/v1";
-const eventCollectorURL = "http://localhost:8090/api/v2";
+const eventCollectorURL = "http://localhost:8090/api/v2"; // Used by registry
+
+//api/v1/private/scope-manager/scopes.json
 
 let testAgreement;
 
@@ -46,35 +45,35 @@ before((done) => {
         console.log(`stdout: ${stdout1}`);
       }
 
-      // Read the template
-      fs.readFile(path.join(__dirname, '/testTemplate.json'), 'utf-8', (err, data) => {
-        if (err) {
+      // Fetch the template from Assets Manager checking env variables substitution
+      chai.request(assetsManagerURL)
+        .get("/public/testTemplate.json")
+        .then(response => {
+          testAgreement = JSON.parse(response.text);
+
+          // Delete and check the agreement does not exist already
+          setTimeout(() => {
+            chai.request(registryURL)
+              .delete("/agreements/" + testAgreement.id)
+              .then(response => {
+                chai.request(registryURL)
+                  .get("/agreements/" + testAgreement.id)
+                  .then(response => {
+                    // Check the agreement does not exist
+                    assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
+                    done();
+                  }).catch(err => {
+                    done(err);
+                  });
+              }).catch(err => {
+                done(err);
+              })
+          }, 3000);
+        }).catch(err => {
           done(err);
-        }
-
-        testAgreement = JSON.parse(data);
-
-        // Delete and check the agreement does not exist already
-        setTimeout(() => {
-          chai.request(registryURL)
-            .delete("/agreements/" + testAgreement.id)
-            .then(response => {
-              chai.request(registryURL)
-                .get("/agreements/" + testAgreement.id)
-                .then(response => {
-                  // Check the agreement does not exist
-                  assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
-                  done();
-                }).catch(err => {
-                  done(err);
-                });
-            }).catch(err => {
-              done(err);
-            })
-        }, 3000);
-      });
+        });;
     });
-});
+  });
 });
 
 // Create Agreement
@@ -122,28 +121,28 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
         assert.strictEqual(response.status, 200, 'The points creation must end successful');
         // Database check
         setTimeout(() => {
-        influx.queryRaw('SELECT "guaranteeValue" FROM "autogen"."metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(result => {
-          assert.deepStrictEqual(result.results,
-            [{ "statement_id": 0, "series": [{ "name": "metrics_values", "columns": ["time", "guaranteeValue"], "values": [["2020-04-27T00:00:00Z", 33.33333333333333]] }] }],
-            'The data in influx must be correct');
+          influx.queryRaw('SELECT "guaranteeValue" FROM "autogen"."metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(result => {
+            assert.deepStrictEqual(result.results,
+              [{ "statement_id": 0, "series": [{ "name": "metrics_values", "columns": ["time", "guaranteeValue"], "values": [["2020-04-27T00:00:00Z", 33.33333333333333]] }] }],
+              'The data in influx must be correct');
 
-          // Delete influx inserted points
-          influx.queryRaw('DROP SERIES FROM "metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(() => {
-            // Check it was deleted
-            influx.queryRaw('SELECT "guaranteeValue" FROM "autogen"."metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(result2 => {
-              assert.deepStrictEqual(result2, { "results": [{ "statement_id": 0 }] }, 'The data in influx must have been deleted');
-              // End this test
-              done();
+            // Delete influx inserted points
+            influx.queryRaw('DROP SERIES FROM "metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(() => {
+              // Check it was deleted
+              influx.queryRaw('SELECT "guaranteeValue" FROM "autogen"."metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(result2 => {
+                assert.deepStrictEqual(result2, { "results": [{ "statement_id": 0 }] }, 'The data in influx must have been deleted');
+                // End this test
+                done();
+              }).catch(err => {
+                done(err);
+              });
             }).catch(err => {
               done(err);
             });
           }).catch(err => {
             done(err);
           });
-        }).catch(err => {
-          done(err);
-        });
-      }, 3000);
+        }, 3000);
       }).catch(err => {
         done(err);
       });

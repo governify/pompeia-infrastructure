@@ -1,0 +1,44 @@
+{
+    "development": [
+        {
+            "classId": "Testing",
+            "identities": [],
+            "credentials": [],
+            "projects": [
+                {
+                    "name": "Bluejay Test Project",
+                    "owner": "Isa-Group",
+                    "projectId": "E2ETesting",
+                    "identities": [
+                        {
+                            "source": "github",
+                            "repository": "repositoryPlaceholder",
+                            "repoOwner": "ownerPlaceholder"
+                        },
+                        {
+                            "source": "pivotal",
+                            "projectId": 1234
+                        }
+                    ],
+                    "credentials": [
+                        {
+                            "source": "github",
+                            "apiKey": "apiKeyPlaceholder"
+                        },
+                        {
+                            "source": "pivotal",
+                            "apiKey": "apiKeyPlaceholder"
+                        }
+                    ],
+                    "members": [
+                        {
+                            "memberId": 999999,
+                            "identities": [],
+                            "credentials": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -8644,46 +8644,5 @@
         "requestAPI": "https://api.github.com",
         "requestEndpoint": "/repos/ownerPlaceholder/repositoryPlaceholder/pulls?state=all&page=2",
         "response": []
-    },
-    {
-        "name": "Scope Manager",
-        "type": "GET",
-        "requestAPI": "http://scopes.bluejaye2e.governify",
-        "requestEndpoint": "/api/v1/scopes/development/Testing/E2ETesting",
-        "response": {
-            "code": 200,
-            "message": "Scope returned",
-            "scope": {
-                "projectId": "E2ETesting",
-                "identities": [
-                    {
-                        "source": "github",
-                        "repository": "repositoryPlaceholder",
-                        "repoOwner": "ownerPlaceholder"
-                    },
-                    {
-                        "source": "pivotal",
-                        "projectId": 1234
-                    }
-                ],
-                "credentials": [
-                    {
-                        "source": "github",
-                        "apiKey": "apiKeyPlaceholder"
-                    },
-                    {
-                        "source": "pivotal",
-                        "apiKey": "apiKeyPlaceholder"
-                    }
-                ],
-                "members": [
-                    {
-                        "memberId": 999999,
-                        "identities": [],
-                        "credentials": []
-                    }
-                ]
-            }
-        }
     }
 ]
