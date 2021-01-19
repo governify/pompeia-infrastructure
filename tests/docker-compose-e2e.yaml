@@ -1,7 +1,7 @@
 version: '2.2'
 services:
   bluejay_reporter:
-    container_name: bluejay-reporter
+    container_name: bluejaye2e-reporter
     image: governify/reporter:dev
     environment:
       - SERVICE_NAME=bluejaye2e-reporter
@@ -24,7 +24,7 @@ services:
       - bluejay_registry_db
       - bluejay_influxdb
   bluejay_grafana:
-    container_name: bluejay-grafana
+    container_name: bluejaye2e-grafana
     image: governify/dashboard:dev
     environment:
       - SERVICE_NAME=bluejaye2e-grafana
@@ -40,7 +40,7 @@ services:
     depends_on:
       - bluejay_reporter
 #  bluejay_render:
-#    container_name: bluejay-render
+#    container_name: bluejaye2e-render
 #    image: governify/render:dev
 #    environment:
 #      - SERVICE_NAME=bluejaye2e-render
@@ -63,7 +63,7 @@ services:
 #    ports:
 #      - "8080:80"
   bluejay_registry_db:
-    container_name: bluejay-registry-db
+    container_name: bluejaye2e-registry-db
     image: mongo
     environment:
       - SERVICE_NAME=bluejaye2e-registry-db
@@ -78,7 +78,7 @@ services:
     restart: 'unless-stopped'
   bluejay_influxdb:
     image: 'influxdb:latest'
-    container_name: bluejay-influxdb
+    container_name: bluejaye2e-influxdb
     networks:
       governify_network:
         aliases:
@@ -92,7 +92,7 @@ services:
     mem_limit: 1200m
     restart: 'unless-stopped'
   bluejay_registry:
-    container_name: bluejay-registry
+    container_name: bluejaye2e-registry
     image: 'isagroup/governify-registry:bluejay'
     networks:
       governify_network:
@@ -112,7 +112,7 @@ services:
     ports:
       - "8082:80"
   bluejay_eventcollector:
-    container_name: bluejay-eventcollector
+    container_name: bluejaye2e-eventcollector
     image: 'governify/collector-events:develop'
     environment:
       - SERVICE_NAME=bluejaye2e-eventcollector
@@ -130,7 +130,7 @@ services:
     ports:
       - "8090:80"
   bluejay_scopemanager:
-    container_name: bluejay-scopemanager
+    container_name: bluejaye2e-scopemanager
     image: 'governify/scope-manager:dev'
     environment:
       - SERVICE_NAME=bluejaye2e-scopemanager
@@ -150,7 +150,7 @@ services:
     ports:
       - "8083:80"
   bluejay_assetsmanager:
-    container_name: bluejay-assetsmanager
+    container_name: bluejaye2e-assetsmanager
     image: 'governify/assets-manager:dev'
     environment:
       - SERVICE_NAME=bluejaye2e-assetsmanager
@@ -174,7 +174,7 @@ services:
     ports:
       - "8084:80"
   bluejay_director:
-    container_name: bluejay-director
+    container_name: bluejaye2e-director
     image: 'governify/director:latest'
     environment:
       - SERVICE_NAME=bluejaye2e-director

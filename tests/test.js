@@ -24,46 +24,61 @@ let testAgreement;
 
 const { exec } = require("child_process");
 
-/*exec("dir", (error, stdout, stderr) => {
-  if (error) {
+before((done) => {
+  // Docker-compose up -d
+  console.log('---------- Start E2E infrastructure ----------');
+  exec("docker-compose -f tests/docker-compose-e2e.yaml pull", (error, stdout, stderr) => {
+    if (error) {
       console.log(`error: ${error.message}`);
-      return;
-  }
-  if (stderr) {
+      done(error);
+    } else if (stderr) {
       console.log(`stderr: ${stderr}`);
-      return;
-  }
-  console.log(`stdout: ${stdout}`);
-});*/
+    } else {
+      console.log(`stdout: ${stdout}`);
+    }
+    exec("docker-compose -f tests/docker-compose-e2e.yaml up -d", (error1, stdout1, stderr1) => {
+      if (error1) {
+        console.log(`error: ${error1.message}`);
+        done(error1);
+      } else if (stderr) {
+        console.log(`stderr: ${stderr1}`);
+      } else {
+        console.log(`stdout: ${stdout1}`);
+      }
+
+      // Read the template
+      fs.readFile(path.join(__dirname, '/testTemplate.json'), 'utf-8', (err, data) => {
+        if (err) {
+          done(err);
+        }
+
+        testAgreement = JSON.parse(data);
+
+        // Delete and check the agreement does not exist already
+        setTimeout(() => {
+          chai.request(registryURL)
+            .delete("/agreements/" + testAgreement.id)
+            .then(response => {
+              chai.request(registryURL)
+                .get("/agreements/" + testAgreement.id)
+                .then(response => {
+                  // Check the agreement does not exist
+                  assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
+                  done();
+                }).catch(err => {
+                  done(err);
+                });
+            }).catch(err => {
+              done(err);
+            })
+        }, 3000);
+      });
+    });
+});
+});
 
 // Create Agreement
 describe('Create agreement, calculate guarantees and delete agreement: ', () => {
-  before((done) => {
-    // Read the template
-    fs.readFile(path.join(__dirname, '/testTemplate.json'), 'utf-8', (err, data) => {
-      if (err) {
-        done(err);
-      }
-      testAgreement = JSON.parse(data);
-      // Delete and check the agreement does not exist already
-      chai.request(registryURL)
-        .delete("/agreements/" + testAgreement.id)
-        .then(response => {
-          chai.request(registryURL)
-            .get("/agreements/" + testAgreement.id)
-            .then(response => {
-              // Check the agreement does not exist
-              assert.equal(response.status, 404, 'The agreement should not exist at the beginning');
-              done();
-            }).catch(err => {
-              done(err);
-            });
-        }).catch(err => {
-          done(err);
-        })
-    });
-  });
-
   it('should successfully create an agreement', (done) => {
     // Send to update points
     chai.request(registryURL)
@@ -71,15 +86,15 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
       .send(testAgreement)
       .then(response => {
         // Check the response is successful
-        assert.equal(response.status, 200, 'The agreement creation must be successful');
+        assert.strictEqual(response.status, 200, 'The agreement creation must be successful');
 
         // Registry check
         chai.request(registryURL)
           .get("/agreements/" + testAgreement.id)
           .then(response => {
-            
+
             // Check the response is successful
-            assert.equal(response.status, 200, 'The agreement must exist after the creation');
+            assert.strictEqual(response.status, 200, 'The agreement must exist after the creation');
 
             // Remove inserted registry values to compare
             let responseTrimmed = { ...response.body };
@@ -104,8 +119,9 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
       .send({ periods: [{ from: "2020-04-27T00:00:00Z", to: "2020-04-27T23:59:00Z" }] })
       .then(response => {
         // Check the response is successful
-        assert.equal(response.status, 200, 'The points creation must end successful');
+        assert.strictEqual(response.status, 200, 'The points creation must end successful');
         // Database check
+        setTimeout(() => {
         influx.queryRaw('SELECT "guaranteeValue" FROM "autogen"."metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(result => {
           assert.deepStrictEqual(result.results,
             [{ "statement_id": 0, "series": [{ "name": "metrics_values", "columns": ["time", "guaranteeValue"], "values": [["2020-04-27T00:00:00Z", 33.33333333333333]] }] }],
@@ -127,6 +143,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
         }).catch(err => {
           done(err);
         });
+      }, 3000);
       }).catch(err => {
         done(err);
       });
@@ -138,7 +155,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
       .delete("/agreements/" + testAgreement.id)
       .then(response => {
         // Check the response is successful
-        assert.equal(response.status, 200, 'The DELETE request must be successful');
+        assert.strictEqual(response.status, 200, 'The DELETE request must be successful');
 
         // Registry check
         chai.request(registryURL)
@@ -153,5 +170,21 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
       }).catch(err => {
         done(err);
       });
+  });
+});
+
+after((done) => {
+  // Docker-compose down
+  console.log('---------- Stop E2E infrastructure ----------');
+  exec("docker-compose -f tests/docker-compose-e2e.yaml down", (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      done(error);
+    } else if (stderr) {
+      console.log(`stderr: ${stderr}`);
+    } else {
+      console.log(`stdout: ${stdout}`);
+    }
+    done();
   });
 });
