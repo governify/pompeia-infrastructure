@@ -7,10 +7,12 @@ $scope.displayItems = {
     "loadedCourses": false,
     "statusMessage": '',
     "statusType": undefined,
-    "creatingTPA": false
-};
-var firstLoad = true;
+    "creatingTPA": false,
+    "showHidden": false
+}
 
+var firstLoad = true;
+var defaultProject = '';
 
 $scope.developmentScopeJSON = {};
 
@@ -47,8 +49,16 @@ function loadProjects() {
                 method: 'GET',
                 url: scopeManagerURL + '/scopes/development/courses'
             }).then((coursesResponse) => {
-                $scope.developmentScopeJSON = coursesResponse.data.scope;
-                $scope.displayItems.course = $scope.displayItems.course ? $scope.displayItems.course : coursesResponse.data.scope[0].classId;
+                $scope.developmentScopeJSON = [];
+
+                // Add only not hidden projects
+                for (let course of coursesResponse.data.scope) {
+                    if ($scope.displayItems.showHidden || !course.hidden){
+                        $scope.developmentScopeJSON.push(course);
+                    }
+                }
+
+                $scope.displayItems.course = defaultProject ? defaultProject : $scope.developmentScopeJSON[0].classId;
                 $scope.displayItems.loadedCourses = true;
                 firstLoad = false;
                 loadProjects();
@@ -198,4 +208,10 @@ $scope.createAllTpas = (projects) => {
     for (const project of projects[Object.keys(projects)[0]]){
         $scope.createTpa(project, false);
     }
+}
+
+$scope.swapShowHidden = function () {
+    $scope.displayItems.showHidden = !$scope.displayItems.showHidden;
+    firstLoad = true;
+    loadProjects();
 }
