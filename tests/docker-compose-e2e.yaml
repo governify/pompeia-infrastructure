@@ -175,7 +175,7 @@ services:
       - "8084:80"
   bluejay_director:
     container_name: bluejaye2e-director
-    image: 'governify/director:latest'
+    image: 'governify/director:develop'
     environment:
       - SERVICE_NAME=bluejaye2e-director
       - NODE_ENV=production
