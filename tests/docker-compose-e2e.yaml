@@ -2,7 +2,7 @@ version: '2.2'
 services:
   bluejay_reporter:
     container_name: bluejaye2e-reporter
-    image: governify/reporter:dev
+    image: governify/reporter:develop
     environment:
       - SERVICE_NAME=bluejaye2e-reporter
       - NODE_ENV=production
@@ -25,7 +25,7 @@ services:
       - bluejay_influxdb
   bluejay_grafana:
     container_name: bluejaye2e-grafana
-    image: governify/dashboard:dev
+    image: governify/dashboard:develop
     environment:
       - SERVICE_NAME=bluejaye2e-grafana
       - NODE_ENV=production
@@ -41,7 +41,7 @@ services:
       - bluejay_reporter
 #  bluejay_render:
 #    container_name: bluejaye2e-render
-#    image: governify/render:dev
+#    image: governify/render:develop
 #    environment:
 #      - SERVICE_NAME=bluejaye2e-render
 #      - NODE_ENV=production
@@ -93,7 +93,7 @@ services:
     restart: 'unless-stopped'
   bluejay_registry:
     container_name: bluejaye2e-registry
-    image: 'isagroup/governify-registry:bluejay'
+    image: 'governify/registry:develop'
     networks:
       governify_network:
         aliases:
@@ -131,7 +131,7 @@ services:
       - "8090:80"
   bluejay_scopemanager:
     container_name: bluejaye2e-scopemanager
-    image: 'governify/scope-manager:dev'
+    image: 'governify/scope-manager:develop'
     environment:
       - SERVICE_NAME=bluejaye2e-scopemanager
       - NODE_ENV=production
