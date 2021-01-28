@@ -166,6 +166,7 @@ services:
       - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
       - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
       - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
+      - KEY_HEROKU=${KEY_HEROKU}
     networks:
       governify_network:
         aliases:
