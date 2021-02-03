@@ -179,7 +179,7 @@ services:
       - bluejay_assetsmanager
   bluejay_assetsmanager:
     container_name: bluejay-assetsmanager
-    image: 'governify/assets-manager:dev'
+    image: 'governify/assets-manager:develop'
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager
       - NODE_ENV=production
