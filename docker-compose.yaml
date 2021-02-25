@@ -108,7 +108,7 @@ services:
     mem_limit: 1200m
     restart: 'unless-stopped'
   bluejay_influxdb:
-    image: 'influxdb:latest'
+    image: 'influxdb:1.8.4-alpine'
     container_name: bluejay-influxdb
     networks:
       governify_network:
