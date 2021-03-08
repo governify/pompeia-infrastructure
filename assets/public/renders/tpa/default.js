@@ -17,10 +17,10 @@ const setPageAlert = (message, type) => {
 //Calculate Metrics button modal
 $scope.dateNowISO = new Date().toISOString().match(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d/g)[0];
 $scope.calculateMetrics = {
-    "timezone": "GMT+0:00",
+    "timezone": "GMT-8:00",
     "timezones": [],
-    "from": new Date(Date.parse("2020-01-01T00:00")),
-    "to": new Date(Date.parse($scope.dateNowISO)),
+    "from": new Date(Date.parse("2021-01-18T00:00:00")),
+    "to": new Date(Date.parse("2021-03-01T23:59:59")),
     "agree": false,
     "message": "",
     "error": false
@@ -31,8 +31,14 @@ $scope.urlReporter = "https://reporter.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v4"
 $scope.urlRegistry = "https://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6";
 $scope.urlScopeManager = "https://scopes.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
 $scope.urlDirector = "https://director.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
+$scope.urlAssets = "https://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
 
 const urlIntAssets = "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
+const defaultDirectorRunTime = {
+    "init": "2021-01-01T00:00:00",
+    "end": "2021-04-01T00:00:00",
+    "interval": 7200000
+}
 
 $scope.swapAutomaticComputation = () => {
     if ($scope.displayItems.automaticComputation) {
@@ -55,28 +61,36 @@ $scope.swapAutomaticComputation = () => {
         }
     } else {
         try {
-            const task = {
-                "id": $scope.model.id,
-                "script": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1/public/director/test.js",
-                "running": true,
-                "config": {
-                    "agreementId": $scope.model.id
-                },
-                "init": "2020-01-01T00:00:00",
-                "interval": 5000,
-                "end": "2020-12-12T00:00:00"
-            }
-            postUrl($scope.urlDirector + "/tasks", task, (err, data) => {
-                // Reporter not answering properly
-                if (err) {
-                    setPageAlert("Automatic computation task could not be activated.", "error");
-                    console.log(err)
-                } else {
-                    $scope.displayItems.automaticComputation = true;
-                    $scope.displayItems.automaticComputationInfo = data;
-                    $scope.$apply();
-                }
-            });
+            getUrl(
+                $scope.urlAssets + "/public/director/" + $scope.model.context.definitions.scopes.development.class.default + ".json",
+                (err, data) => {
+                    if (err) {
+                        console.log("Director run time could not be found: ", $scope.model.context.definitions.scopes.development.class.default + ".json\n", err);
+                    }
+                    const task = {
+                        "id": $scope.model.id,
+                        "script": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1/public/director/computeCS169L.js",
+                        "running": true,
+                        "config": {
+                            "agreementId": $scope.model.id
+                        },
+                        "init": data ? data.init : "2021-01-01T00:00:00",
+                        "end": data ? data.end : "2021-04-01T00:00:00",
+                        "interval": data ? data.interval : 7200000
+                    }
+                    postUrl($scope.urlDirector + "/tasks", task, (err, data) => {
+                        // Reporter not answering properly
+                        if (err) {
+                            setPageAlert("Automatic computation task could not be activated.", "error");
+                            console.log(err)
+                        } else {
+                            $scope.displayItems.automaticComputation = true;
+                            $scope.displayItems.automaticComputationInfo = data;
+                            $scope.$apply();
+                        }
+                    });
+
+                });
         } catch (err) {
             setPageAlert("Automatic computation task could not be activated.", "error");
             console.log(err)
@@ -188,9 +202,7 @@ $scope.calculateEventsMetrics = function (id) {
                 if (periodDifference <= 0) {
                     setModalAlert("End date must be higher than start date.");
                 } else {
-                    var periods = [{ "from": new Date(firstDate - timezoneOffset).toISOString(), "to": new Date(lastDate - timezoneOffset - 1000).toISOString() }];
-
-                    console.log("Final UTC input:", new Date(lastDate - timezoneOffset).toISOString());
+                    var periods = [{ "from": new Date(firstDate - timezoneOffset).toISOString(), "to": new Date(lastDate - timezoneOffset - 1).toISOString() }];
                     // POST
                     postUrl($scope.urlReporter + '/contracts/' + id + '/createPointsFromPeriods', { "periods": periods }, (err, data) => {
                         // Reporter not answering properly

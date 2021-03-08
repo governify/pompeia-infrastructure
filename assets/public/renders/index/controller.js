@@ -163,7 +163,7 @@ $scope.createTpa = function (project, openTab = true) {
     $scope.displayItems.creatingTPA = true;
     $http({
         method: 'GET',
-        url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
+        url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/' + $scope.displayItems.course + '.json'
     }).then((tparesponse) => {
         try {
             const projectIdNumber = project.projectId;
