@@ -69,7 +69,7 @@ $scope.swapAutomaticComputation = () => {
                     }
                     const task = {
                         "id": $scope.model.id,
-                        "script": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1/public/director/computeCS169L.js",
+                        "script": "http://assets.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1/public/director/" + $scope.model.context.definitions.scopes.development.class.default + ".js",
                         "running": true,
                         "config": {
                             "agreementId": $scope.model.id
