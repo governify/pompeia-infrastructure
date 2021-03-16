@@ -47,7 +47,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - reporter.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - reporter
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
     mem_limit: 400m
@@ -65,7 +65,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - dashboard.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - dashboard
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
     mem_limit: 400m
@@ -82,13 +82,13 @@ services:
       - LAYOUT=bootstrap3.html
       - LOGIN_USER=${USER_RENDER:?}
       - LOGIN_PASSWORD=${PASS_RENDER:?}
-      - DEFAULT_VIEW=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}/api/v1/public/renders/index/view.html
-      - DEFAULT_CONTROLLER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}/api/v1/public/renders/index/controller.js
-      - DEFAULT_MODEL=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}/api/v1/public/renders/index/model.json
+      - DEFAULT_VIEW=http://assets/api/v1/public/renders/index/view.html
+      - DEFAULT_CONTROLLER=http://assets/api/v1/public/renders/index/controller.js
+      - DEFAULT_MODEL=http://assets/api/v1/public/renders/index/model.json
     networks:
       governify_network:
         aliases:
-          - ui.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - ui
     volumes:
       - './logs/render:/opt/app/logs'
     mem_limit: 400m
@@ -126,7 +126,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - registry.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - registry
     environment:
       - DBHOST=mongo_registry.bluejay
       - SERVICE_NAME=${SERVICES_PREFIX:?}-registry
@@ -156,7 +156,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - event.collector.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - event.collector
     mem_limit: 400m
     restart: 'unless-stopped'
   bluejay_scopemanager:
@@ -166,14 +166,14 @@ services:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-scopemanager
       - NODE_ENV=production
       - PORT=80
-      - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+      - URL_INT_ASSETS_MANAGER=http://assets
       - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
       - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
       - KEY_HEROKU=${KEY_HEROKU}
     networks:
       governify_network:
         aliases:
-          - scopes.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - scopes
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
@@ -190,12 +190,12 @@ services:
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - DNS_SUFFIX=${DNS_SUFFIX:?}
       - URL_EXT_ASSETS_MANAGER=https://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
-      - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+      - URL_INT_ASSETS_MANAGER=http://assets
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
     networks:
       governify_network:
         aliases:
-          - assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - assets
     volumes:
       - './assets:/home/theia/src-gen/backend/files'
     mem_limit: 400m
@@ -207,11 +207,11 @@ services:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-director
       - NODE_ENV=production
       - PORT=80
-      - URL_INT_ASSETS_MANAGER=http://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+      - URL_INT_ASSETS_MANAGER=http://assets
     networks:
       governify_network:
         aliases:
-          - director.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+          - director
     depends_on:
       - bluejay_assetsmanager
     mem_limit: 400m

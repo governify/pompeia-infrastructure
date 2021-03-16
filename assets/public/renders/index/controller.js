@@ -30,8 +30,8 @@ $http({
     method: 'GET',
     url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
 }).then(tparesponse => {
-    scopeManagerURL = tparesponse.data.context.infrastructure.scopeManager;
-    domain = tparesponse.data.context.infrastructure.registry.replace('http://registry.', '').replace('/api/v6', '');
+    scopeManagerURL = tparesponse.data.context.infrastructure.external.scopeManager;
+    domain = tparesponse.data.context.infrastructure.external.registry.replace('https://registry.', '').replace('/api/v6', '');
     $scope.domain = domain;
     loadProjects();
 }).catch(err => {
@@ -84,15 +84,8 @@ function loadProjects() {
                             var found = agreements.find(agreement => agreement.id === projectAgreementId);
                             if (found) {
                                 project.registryagreement = found;
-                                project.urlReporterHttps = found.context.infrastructure.reporter;
-                                if (!project.urlReporterHttps.startsWith("https") && project.urlReporterHttps.startsWith("http")) {
-                                    project.urlReporterHttps = project.urlReporterHttps.replace("http", "https");
-                                }
-                                project.urlRegistryHttps = found.context.infrastructure.registry;
-                                if (!project.urlRegistryHttps.startsWith("https") && project.urlRegistryHttps.startsWith("http")) {
-                                    project.urlRegistryHttps = project.urlRegistryHttps.replace("http", "http");
-                                }
-
+                                project.urlReporterHttps = found.context.infrastructure.external.reporter;
+                                project.urlRegistryHttps = found.context.infrastructure.external.registry;
                                 // Clasify by owner
                                 scopeTpaprojects = clasifyProject(project, scopeTpaprojects);
                             } else {
@@ -172,7 +165,7 @@ $scope.createTpa = function (project, openTab = true) {
             tpa.id = project.agreementId ? project.agreementId : 'tpa-' + projectIdNumber;
 
             tpa.context.validity.initial = '2019-01-01';
-            tpa.context.infrastructure.render = 'https://ui.' + domain + '/render?model=https://registry.' + domain + '/api/v6/agreements/' + tpa.id + '&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js';
+            //tpa.context.infrastructure.external.render = 'https://ui.' + domain + '/render?model=http://registry/api/v6/agreements/' + tpa.id + '&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js';
             tpa.context.definitions.scopes.development.project.default = projectIdNumber;
 
             $http({
@@ -184,7 +177,7 @@ $scope.createTpa = function (project, openTab = true) {
                 $scope.displayItems.creatingTPA = false;
                 loadProjects();
                 if (openTab) {
-                    window.open("https://ui.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry.$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
+                    window.open("https://ui$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
                 }
                 $scope.finishloading = true;
             }, (err) => {

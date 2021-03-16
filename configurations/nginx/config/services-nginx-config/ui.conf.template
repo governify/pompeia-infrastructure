@@ -8,7 +8,7 @@ server {
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     location / {
-        proxy_pass http://ui.${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}:80;
+        proxy_pass http://ui:80;
     }
 
 }

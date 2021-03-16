@@ -7,12 +7,12 @@ services:
       - SERVICE_NAME=bluejaye2e-reporter
       - NODE_ENV=production
       - PORT=80
-      - SERVICES_PREFIX=bluejaye2e
+      - SERVICES_PREFIX=.bluejaye2e
       - DNS_SUFFIX=.governify
     networks:
       governify_network:
         aliases:
-          - reporter.bluejaye2e.governify
+          - reporter
     volumes:
       - './e2e-volumes/logs/bluejay-reporter:/opt/app/logs'
     mem_limit: 400m
@@ -32,7 +32,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - dashboard.bluejaye2e.governify
+          - dashboard
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
     mem_limit: 400m
@@ -49,13 +49,13 @@ services:
 #      - LAYOUT=bootstrap3.html
 #      - LOGIN_USER=e2e-user
 #      - LOGIN_PASSWORD=pass
-#      - DEFAULT_VIEW=http://assets.bluejaye2e.governify/api/v1/public/renders/index/view.html
-#      - DEFAULT_CONTROLLER=http://assets.bluejaye2e.governify/api/v1/public/renders/index/controller.js
-#      - DEFAULT_MODEL=http://assets.bluejaye2e.governify/api/v1/public/renders/index/model.json
+#      - DEFAULT_VIEW=http://assets/api/v1/public/renders/index/view.html
+#      - DEFAULT_CONTROLLER=http://assets/api/v1/public/renders/index/controller.js
+#      - DEFAULT_MODEL=http://assets/api/v1/public/renders/index/model.json
 #    networks:
 #      governify_network:
 #        aliases:
-#          - ui.bluejaye2e.governify
+#          - ui
 #    volumes:
 #      - './logs/render:/opt/app/logs'
 #    mem_limit: 400m
@@ -97,7 +97,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - registry.bluejaye2e.governify
+          - registry
     environment:
       - SERVICE_NAME=bluejaye2e-registry
       - NODE_ENV=production
@@ -122,7 +122,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - event.collector.bluejaye2e.governify
+          - event.collector
     mem_limit: 400m
     restart: 'unless-stopped'
     volumes:
@@ -136,13 +136,13 @@ services:
       - SERVICE_NAME=bluejaye2e-scopemanager
       - NODE_ENV=production
       - PORT=80
-      - URL_INT_ASSETS_MANAGER=http://assets.bluejaye2e.governify
+      - URL_INT_ASSETS_MANAGER=http://assets
       - KEY_ASSETS_MANAGER_PRIVATE=e2e-am-key
       - KEY_SCOPE_MANAGER=e2e-sm-key
     networks:
       governify_network:
         aliases:
-          - scopes.bluejaye2e.governify
+          - scopes
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
@@ -151,22 +151,22 @@ services:
       - "8083:80"
   bluejay_assetsmanager:
     container_name: bluejaye2e-assetsmanager
-    image: 'governify/assets-manager:dev'
+    image: 'governify/assets-manager:develop'
     environment:
       - SERVICE_NAME=bluejaye2e-assetsmanager
       - NODE_ENV=production
       - PORT=80
       - LOGIN_USER=e2e-user
       - LOGIN_PASSWORD=pass
-      - SERVICES_PREFIX=bluejaye2e
+      - SERVICES_PREFIX=.bluejaye2e
       - DNS_SUFFIX=.governify
       - URL_EXT_ASSETS_MANAGER=https://assets.bluejaye2e.governify
-      - URL_INT_ASSETS_MANAGER=http://assets.bluejaye2e.governify
+      - URL_INT_ASSETS_MANAGER=http://assets
       - PRIVATE_KEY=e2e-am-key
     networks:
       governify_network:
         aliases:
-          - assets.bluejaye2e.governify
+          - assets
     volumes:
       - './configurations/assets:/home/theia/src-gen/backend/files'
     mem_limit: 400m
@@ -180,11 +180,11 @@ services:
       - SERVICE_NAME=bluejaye2e-director
       - NODE_ENV=production
       - PORT=80
-      - URL_INT_ASSETS_MANAGER=http://assets.bluejaye2e.governify
+      - URL_INT_ASSETS_MANAGER=http://assets
     networks:
       governify_network:
         aliases:
-          - director.bluejaye2e.governify
+          - director
     depends_on:
       - bluejay_assetsmanager
     mem_limit: 400m
