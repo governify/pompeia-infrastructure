@@ -1,9 +1,9 @@
 server {
     listen 443 ssl;
 
-    server_name registry.${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX};
-    ssl_certificate /etc/letsencrypt/live/registry.${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/registry.${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}/privkey.pem;
+    server_name registry${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX};
+    ssl_certificate /etc/letsencrypt/live/registry${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/registry${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -15,7 +15,7 @@ server {
 
 server {
     listen 80;
-    server_name registry.${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX};
+    server_name registry${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX};
     location / {
         return 301 https://$host$request_uri;
     }    
