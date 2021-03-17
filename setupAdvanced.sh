@@ -76,7 +76,7 @@ do
                     # Stop
                     echo -n "Press enter to continue."
                     read nothing
-                fi 
+                fi
             elif [ $choice2 = 5 ]
             then
                 clear
