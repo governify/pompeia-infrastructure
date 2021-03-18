@@ -190,7 +190,7 @@ services:
       - LOGIN_PASSWORD=${PASS_ASSETS:?}
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - DNS_SUFFIX=${DNS_SUFFIX:?}
-      - URL_EXT_ASSETS_MANAGER=https://assets.${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
+      - URL_EXT_ASSETS_MANAGER=https://assets${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
       - URL_INT_ASSETS_MANAGER=http://assets
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
     networks:

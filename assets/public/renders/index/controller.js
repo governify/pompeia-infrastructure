@@ -154,10 +154,7 @@ $scope.reloadProjects = function () {
 
 $scope.createTpa = function (project, openTab = true) {
     $scope.displayItems.creatingTPA = true;
-    $http({
-        method: 'GET',
-        url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/' + $scope.displayItems.course + '.json'
-    }).then((tparesponse) => {
+    getTemplate($scope.displayItems.course).then(tparesponse => {
         try {
             const projectIdNumber = project.projectId;
             var tpa = JSON.parse(JSON.stringify(tparesponse.data).replace(/1010101010/g, projectIdNumber).replace(/2020202020/g, $scope.displayItems.course));
@@ -194,6 +191,24 @@ $scope.createTpa = function (project, openTab = true) {
         setPageAlert("Problem when creating TPA.", "error");
         $scope.displayItems.creatingTPA = false;
         console.log(err);
+    });
+}
+
+// Tries to return courseId.json template and if it is not found returns template.json
+const getTemplate = (courseId) => {
+    return new Promise ((resolve, reject) => {
+        $http({
+            method: 'GET',
+            url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/' + courseId + '.json'
+        }).then((tparesponse) => {
+            resolve(tparesponse);
+        }).catch(err => {
+            if (err.status === 404 && courseId !== 'template') {
+                resolve(getTemplate('template'));
+            } else {
+                reject(err);
+            }
+        });
     });
 }
 
