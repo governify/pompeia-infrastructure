@@ -2,7 +2,7 @@
     "development": [
       {
         "classId": "class01",
-        "hidden": true,
+        "hidden": false,
         "identities": [],
         "credentials": [],
         "projects": [
