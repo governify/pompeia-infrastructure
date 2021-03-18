@@ -91,6 +91,19 @@ services:
       - "8086:8086"
     mem_limit: 1200m
     restart: 'unless-stopped'
+  bluejay_redis:
+    container_name: bluejay-redis
+    image: redis
+    environment:
+      - SERVICE_NAME=bluejaye2e-redis
+    networks:
+      governify_network:
+        aliases:
+          - redis
+    volumes:
+      - 'bluejay_redis_volume:/data'
+    mem_limit: 1200m
+    restart: 'unless-stopped'
   bluejay_registry:
     container_name: bluejaye2e-registry
     image: 'governify/registry:develop'
@@ -118,6 +131,7 @@ services:
       - SERVICE_NAME=bluejaye2e-eventcollector
       - NODE_ENV=e2e
       - PORT=80
+      - REDIS_HOSTNAME=redis
       - KEY_SCOPE_MANAGER=e2e-sm-key
     networks:
       governify_network:
@@ -195,6 +209,7 @@ volumes:
   bluejay_influxdb_volume: null
   bluejay_registry_db_volume: null
   bluejay_grafana_volume: null
+  bluejay_redis_volume: null
 networks:
   governify_network:
     external: false
