@@ -13,7 +13,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const reporterURL = "http://localhost:8081/api/v4";
 const registryURL = "http://localhost:8082/api/v6";
 const scopeManagerURL = "http://localhost:8083/api/v1"; // Used by collector
-const assetsManagerURL = "http://localhost:8084/api/v1";
+const assetsManagerURL = "http://localhost:8088/api/v1";
 const directorURL = "http://localhost:8085/api/v1";
 const eventCollectorURL = "http://localhost:8090/api/v2"; // Used by registry
 
