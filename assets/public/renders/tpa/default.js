@@ -33,7 +33,6 @@ $scope.urlScopeManager = "https://scopes$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1
 $scope.urlDirector = "https://director$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
 $scope.urlAssets = "https://assets$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
 
-const urlIntAssets = "http://assets$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
 const defaultDirectorRunTime = {
     "init": "2021-01-01T00:00:00",
     "end": "2021-04-01T00:00:00",
