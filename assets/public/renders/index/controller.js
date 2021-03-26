@@ -165,6 +165,9 @@ $scope.createTpa = function (project, openTab = true) {
             //tpa.context.infrastructure.external.render = 'https://ui.' + domain + '/render?model=http://registry/api/v6/agreements/' + tpa.id + '&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js';
             tpa.context.definitions.scopes.development.project.default = projectIdNumber;
 
+            // Add notifications
+            // tpa.context.definitions.notifications = project.notifications ? projectScope.notifications : {};
+
             $http({
                 method: 'POST',
                 url: 'https://registry.' + domain + '/api/v6/agreements',
@@ -174,7 +177,7 @@ $scope.createTpa = function (project, openTab = true) {
                 $scope.displayItems.creatingTPA = false;
                 loadProjects();
                 if (openTab) {
-                    window.open("https://ui$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
+                    window.open("https://ui$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
                 }
                 $scope.finishloading = true;
             }, (err) => {
