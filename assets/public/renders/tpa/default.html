@@ -105,7 +105,7 @@
     }
 
     body {
-        background: url("$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
+        background: url("$_[infrastructure.external.assets.default]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
         background-size: auto !important;
         background-attachment: fixed !important;
     }
@@ -117,9 +117,9 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
-    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/tpa.css" rel="stylesheet" type="text/css"
+    <link href="$_[infrastructure.external.assets.default]/api/v1/public/renders/tpa/tpa.css" rel="stylesheet" type="text/css"
         media="all" />
-    <link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css"
+    <link href="$_[infrastructure.external.assets.default]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css"
         media="all" />
 </head>
 
@@ -131,7 +131,7 @@
             <!-- Left -->
             <div ng-if="modelLoaded" style="padding: 0; margin: 0;">
                 <span class="col-xs-offset-9" style="position:absolute; top:10px; left:10px; margin:0;">
-                    <a href="{{urlRegistry}}/agreements/{{model.id}}" target="_blank" class="btn btn-info">
+                    <a href="$_[infrastructure.external.assets.default]/api/v6/agreements/{{model.id}}" target="_blank" class="btn btn-info">
                         View source
                     </a>
                     <button class="btn btn-primary disabled">
@@ -142,7 +142,7 @@
                 <!-- Right -->
                 <span class="col-xs-offset-9" style="position:absolute; top:10px; right:10px; margin:0;">
                     <a target="_blank"
-                        href="https://dashboard$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/dashboard/script/dashboardLoader.js?dashboardURL={{urlReporter}}/dashboards/{{model.id}}/main"
+                        href="$_[infrastructure.external.dashboard.default]/dashboard/script/dashboardLoader.js?dashboardURL=$_[infrastructure.external.reporter.default]/api/v4/dashboards/{{model.id}}/main"
                         class="btn btn-success">
                         Dashboard
                     </a>

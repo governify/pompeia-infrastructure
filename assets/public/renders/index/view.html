@@ -18,15 +18,15 @@ Released   : 20140228
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
 	<link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet" />
-	<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/default.css" rel="stylesheet" type="text/css"
+	<link href="$_[infrastructure.external.assets.default]/api/v1/public/renders/index/default.css" rel="stylesheet" type="text/css"
 		media="all" />
-	<link href="$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css"
+	<link href="$_[infrastructure.external.assets.default]/api/v1/public/renders/index/fonts.css" rel="stylesheet" type="text/css"
 		media="all" />
 </head>
 
 <style>
 	body {
-		background: url("$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
+		background: url("$_[infrastructure.external.assets.default]/api/v1/public/renders/index/images/blue_mountains_1.jpg") !important;
 		background-size: auto !important;
 		background-attachment: fixed !important;
 	}
@@ -42,7 +42,7 @@ Released   : 20140228
 				<button class="btn btn-info disabled" ng-click="editDefaultTPA()">
 					Edit default TPA
 				</button>
-				<a href="./render?model=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/model.json&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/adminview.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/index/admincontroller.js"
+				<a href="./render?model=$_[infrastructure.internal.assets.default]/api/v1/public/renders/index/model.json&view=$_[infrastructure.internal.assets.default]/api/v1/public/renders/index/adminview.html&ctrl=$_[infrastructure.internal.assets.default]/api/v1/public/renders/index/admincontroller.js"
 					class="btn btn-primary disabled">
 					Admin UI
 				</a>
@@ -121,12 +121,12 @@ Released   : 20140228
 										style="padding: 0.5em; text-align: left;">
 										{{project.name ? project.name : project.projectId}}
 										<a target="_blank"
-											href="{{project.registryagreement.context.infrastructure.external.dashboard}}/dashboard/script/dashboardLoader.js?dashboardURL={{project.urlReporterHttps}}/dashboards/{{project.registryagreement.id}}/main"
+											href="$_[infrastructure.external.dashboard.default]/dashboard/script/dashboardLoader.js?dashboardURL=$_[infrastructure.external.reporter.default]/api/v4/dashboards/{{project.registryagreement.id}}/main"
 											class="btn btn-success"
 											style="margin-left: 0.5em; padding: 0 5px; float: right;">
 											Dashboard
 										</a>
-										<a href="./render?model=http://registry/api/v6/agreements/tpa-{{project.projectId}}&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js"
+										<a href="./render?model=$_[infrastructure.internal.registry.default]/api/v6/agreements/tpa-{{project.projectId}}&view=$_[infrastructure.internal.assets.default]/api/v1/public/renders/tpa/default.html&ctrl=$_[infrastructure.internal.assets.default]/api/v1/public/renders/tpa/default.js"
 											target="_blank" class="btn btn-info"
 											style="margin-left: 0.5em;padding: 0 5px; float: right;">TPA</a>
 									</li>

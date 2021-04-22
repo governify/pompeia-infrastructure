@@ -7,29 +7,13 @@
             "initial": "2017-10-15",
             "timeZone": "America/Los_Angeles"
         },
-        "infrastructure": {
-            "internal": {
-                "registry": "http://registry/api/v6",
-                "reporter": "http://reporter/api/v4",
-                "dashboard": "http://dashboard",
-                "scopeManager": "http://scopes/api/v1",
-                "assetsManager": "http://assets/api/v1"
-            }, 
-            "external":{
-                "registry": "https://registry$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6",
-                "reporter": "https://reporter$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v4",
-                "dashboard": "https://dashboard$_[SERVICES_PREFIX]$_[DNS_SUFFIX]",
-                "scopeManager": "https://scopes$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1",
-                "assetsManager": "https://assets$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1"
-            }
-        },
         "definitions": {
             "schemas": {},
             "dashboards": {
                 "main": {
-                    "base": "$_[URL_INT_ASSETS_MANAGER]/api/v1/public/grafana-dashboards/tpa/base.json",
-                    "modifier": "$_[URL_INT_ASSETS_MANAGER]/api/v1/public/grafana-dashboards/tpa/modifier.js",
-                    "overlay": "$_[URL_INT_ASSETS_MANAGER]/api/v1/public/grafana-dashboards/tpa/overlay.js"
+                    "base": "$_[infrastructure.internal.assets.default]/api/v1/public/grafana-dashboards/tpa/base.json",
+                    "modifier": "$_[infrastructure.internal.assets.default]/api/v1/public/grafana-dashboards/tpa/modifier.js",
+                    "overlay": "$_[infrastructure.internal.assets.default]/api/v1/public/grafana-dashboards/tpa/overlay.js"
                 }
             },
             "scopes": {
@@ -48,25 +32,12 @@
                     }
                 }
             },
-            "computers": {
-                "pivotaltracker": {
-                    "url": "http://pt.collector",
-                    "apiVersion": "1",
+            "collectors": {
+                "eventcollector": {
+                    "infrastructurePath": "internal.collector.events",
+                    "path": "/api/v2/computations",
                     "config": {
-                        "ptkey": "1313131313",
-                        "schedules": {
-                            "24x7": "L-DT00:00-23:59/H",
-                            "normal": "[{\"from\":\"1/1\",\"to\":\"6/14\",\"schedule\":\"L-VT09:00-18:00/H\"},{\"from\":\"6/15\",\"to\":\"9/15\",\"schedule\":\"L-VT08:30-15:00/H\"},{\"from\":\"9/16\",\"to\":\"12/23\",\"schedule\":\"L-VT09:00-18:00/H\"},{\"from\":\"12/24\",\"to\":\"12/24\",\"schedule\":\"L-VT09:00-13:00/H\"},{\"from\":\"12/25\",\"to\":\"12/30\",\"schedule\":\"L-VT09:00-18:00/H\"},{\"from\":\"12/31\",\"to\":\"12/31\",\"schedule\":\"L-VT09:00-13:00/H\"}]"
-                        },
-                        "holidays": "http://registry/static/holidays.json"
-                    }
-                },
-                "eventcomputer": {
-                    "url": "http://event.collector",
-                    "endpoint": "/computations",
-                    "apiVersion": "2",
-                    "config": {
-                        "scopeManager": "http://scopes/api/v1/scopes/development"
+                        "scopeManager": "$_[infrastructure.internal.scopes.default]"
                     }
                 }
             }
@@ -75,8 +46,8 @@
     "terms": {
         "metrics": {
             "PERCENTAGE_NEWBRANCHWR_STARTEDSTORIES": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "actual",
@@ -108,8 +79,8 @@
                 }
             },
             "PERCENTAGE_OPENPR_FINISHEDSTORIES": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "actual",
@@ -136,8 +107,8 @@
                 }
             },
             "PERCENTAGE_MERGEPR_DELIVEREDSTORIES": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "actual",
@@ -164,8 +135,8 @@
                 }
             },
             "PERCENTAGE_RELEASES_DELIVEREDSTORIES": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "actual",
@@ -195,8 +166,8 @@
                 }
             },
             "PERCENTAGE_MASTER_PR_MERGE_CHANGES_UNDER_300": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "actual",
@@ -222,8 +193,8 @@
                 }
             },
             "NUMBER_GITHUB_MERGE_PR": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "actual",
@@ -239,8 +210,8 @@
                 }
             },
             "STDEV_GITHUB_MERGE_PR": {
-                "computer": {
-                    "$ref": "#/context/definitions/computers/eventcomputer"
+                "collector": {
+                    "$ref": "#/context/definitions/collectors/eventcollector"
                 },
                 "measure": {
                     "computing": "string",

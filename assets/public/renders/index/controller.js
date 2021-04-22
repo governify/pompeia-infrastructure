@@ -16,10 +16,6 @@ var defaultProject = '';
 
 $scope.developmentScopeJSON = {};
 
-var scopeManagerURL = "";
-var domain = '';
-$scope.domain = '';
-
 const setPageAlert = (message, type) => {
     $scope.displayItems.statusMessage = message;
     $scope.displayItems.statusType = type;
@@ -28,11 +24,8 @@ const setPageAlert = (message, type) => {
 /* Check if it is already set up */
 $http({
     method: 'GET',
-    url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/template.json'
+    url: '$_[infrastructure.external.assets.default]/api/v1/public/renders/tpa/template.json'
 }).then(tparesponse => {
-    scopeManagerURL = tparesponse.data.context.infrastructure.external.scopeManager;
-    domain = tparesponse.data.context.infrastructure.external.registry.replace('https://registry.', '').replace('/api/v6', '');
-    $scope.domain = domain;
     loadProjects();
 }).catch(err => {
     setPageAlert("Template file could not be loaded.", "error");
@@ -47,7 +40,7 @@ function loadProjects() {
         if (firstLoad) {
             $http({
                 method: 'GET',
-                url: scopeManagerURL + '/scopes/development/courses'
+                url: '$_[infrastructure.external.scopes.default]/scopes/development/courses'
             }).then((coursesResponse) => {
                 $scope.developmentScopeJSON = [];
 
@@ -70,11 +63,11 @@ function loadProjects() {
         } else {
             $http({
                 method: 'GET',
-                url: scopeManagerURL + '/scopes/development/' + $scope.displayItems.course
+                url: '$_[infrastructure.external.scopes.default]/scopes/development/' + $scope.displayItems.course
             }).then(projectresponse => {
                 $http({
                     method: 'GET',
-                    url: 'https://registry.' + domain + '/api/v6/agreements'
+                    url: '$_[infrastructure.external.registry.default]/api/v6/agreements'
                 }).then((regresponse) => {
                     try {
                         var projects = projectresponse.data.scope.projects;
@@ -162,7 +155,6 @@ $scope.createTpa = function (project, openTab = true) {
             tpa.id = project.agreementId ? project.agreementId : 'tpa-' + projectIdNumber;
 
             tpa.context.validity.initial = '2019-01-01';
-            //tpa.context.infrastructure.external.render = 'https://ui.' + domain + '/render?model=http://registry/api/v6/agreements/' + tpa.id + '&view=/renders/tpa/default.html&ctrl=/renders/tpa/default.js';
             tpa.context.definitions.scopes.development.project.default = projectIdNumber;
 
             // Add notifications
@@ -170,14 +162,14 @@ $scope.createTpa = function (project, openTab = true) {
 
             $http({
                 method: 'POST',
-                url: 'https://registry.' + domain + '/api/v6/agreements',
+                url: '$_[infrastructure.external.registry.default]/api/v6/agreements',
                 data: tpa
             }).then(() => {
                 setPageAlert("TPA created successfully.", "success");
                 $scope.displayItems.creatingTPA = false;
                 loadProjects();
                 if (openTab) {
-                    window.open("https://ui$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/render?model=http://registry/api/v6/agreements/" + tpa.id + "&view=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.html&ctrl=$_[URL_INT_ASSETS_MANAGER]/api/v1/public/renders/tpa/default.js", "_blank");
+                    window.open("$_[infrastructure.external.render.default]/render?model=$_[infrastructure.internal.registry.default]/api/v6/agreements/" + tpa.id + "&view=$_[infrastructure.internal.assets.default]/api/v1/public/renders/tpa/default.html&ctrl=$_[infrastructure.internal.assets.default]/api/v1/public/renders/tpa/default.js", "_blank");
                 }
                 $scope.finishloading = true;
             }, (err) => {
@@ -202,7 +194,7 @@ const getTemplate = (courseId) => {
     return new Promise ((resolve, reject) => {
         $http({
             method: 'GET',
-            url: '$_[URL_EXT_ASSETS_MANAGER]/api/v1/public/renders/tpa/' + courseId + '.json'
+            url: '$_[infrastructure.external.assets.default]/api/v1/public/renders/tpa/' + courseId + '.json'
         }).then((tparesponse) => {
             resolve(tparesponse);
         }).catch(err => {
