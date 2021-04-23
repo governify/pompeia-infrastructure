@@ -148,7 +148,7 @@ services:
     networks:
       governify_network:
         aliases:
-          - event.collector
+          - collector-events
     depends_on:
       - bluejay_assetsmanager
       - bluejay_redis
