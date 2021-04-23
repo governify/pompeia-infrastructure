@@ -64,7 +64,7 @@ services:
 # ================================================
   bluejay_assetsmanager:
     container_name: bluejay-assetsmanager
-    image: 'governify/assets-manager:commons'
+    image: 'governify/assets:commons'
     environment:
       - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager
       - NODE_ENV=production
@@ -79,7 +79,7 @@ services:
         aliases:
           - assets
     volumes:
-      - './assets:/home/theia/src-gen/backend/files'
+      - './assets:/home/project'
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================

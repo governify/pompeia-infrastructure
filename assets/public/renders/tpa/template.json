@@ -36,6 +36,7 @@
                 "eventcollector": {
                     "infrastructurePath": "internal.collector.events",
                     "path": "/api/v2/computations",
+                    "type": "POST-GET-V1",
                     "config": {
                         "scopeManager": "$_[infrastructure.internal.scopes.default]"
                     }

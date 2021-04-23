@@ -40,7 +40,7 @@ function loadProjects() {
         if (firstLoad) {
             $http({
                 method: 'GET',
-                url: '$_[infrastructure.external.scopes.default]/scopes/development/courses'
+                url: '$_[infrastructure.external.scopes.default]/api/v1/scopes/development/courses'
             }).then((coursesResponse) => {
                 $scope.developmentScopeJSON = [];
 
@@ -63,7 +63,7 @@ function loadProjects() {
         } else {
             $http({
                 method: 'GET',
-                url: '$_[infrastructure.external.scopes.default]/scopes/development/' + $scope.displayItems.course
+                url: '$_[infrastructure.external.scopes.default]/api/v1/scopes/development/' + $scope.displayItems.course
             }).then(projectresponse => {
                 $http({
                     method: 'GET',
@@ -77,8 +77,8 @@ function loadProjects() {
                             var found = agreements.find(agreement => agreement.id === projectAgreementId);
                             if (found) {
                                 project.registryagreement = found;
-                                project.urlReporterHttps = found.context.infrastructure.external.reporter;
-                                project.urlRegistryHttps = found.context.infrastructure.external.registry;
+                                //project.urlReporterHttps = found.context.infrastructure.external.reporter;
+                                //project.urlRegistryHttps = found.context.infrastructure.external.registry;
                                 // Clasify by owner
                                 scopeTpaprojects = clasifyProject(project, scopeTpaprojects);
                             } else {

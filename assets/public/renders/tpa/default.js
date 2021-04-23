@@ -123,7 +123,7 @@ const init = () => {
                 if (data) {
                     console.info("Loaded agreement from mongo.")
                     $scope.model = data;
-                    $scope.computersUsed = Object.keys($scope.model.context.definitions.computers);
+                    $scope.collectorsUsed = Object.keys($scope.model.context.definitions.collectors);
 
                     //Get computation information from director
                     getUrl(

@@ -131,7 +131,7 @@
             <!-- Left -->
             <div ng-if="modelLoaded" style="padding: 0; margin: 0;">
                 <span class="col-xs-offset-9" style="position:absolute; top:10px; left:10px; margin:0;">
-                    <a href="$_[infrastructure.external.assets.default]/api/v6/agreements/{{model.id}}" target="_blank" class="btn btn-info">
+                    <a href="$_[infrastructure.external.registry.default]/api/v6/agreements/{{model.id}}" target="_blank" class="btn btn-info">
                         View source
                     </a>
                     <button class="btn btn-primary disabled">
@@ -270,9 +270,9 @@
                             </span>
                             <br>
                             <span>
-                                <strong>Computers being used:</strong>
+                                <strong>Collectors being used:</strong>
                             </span>
-                            <span ng-repeat="computer in computersUsed">{{computer}}{{$last ? "" : ", "}} </span>
+                            <span ng-repeat="collector in collectorsUsed">{{collector}}{{$last ? "" : ", "}} </span>
                             <br>
                             <span>
                                 <strong>Start date:</strong>
