@@ -1,0 +1,70 @@
+internal:
+  render:
+    default: 'angular'
+    angular: 'http://ui'
+  assets:
+    default: 'theia'
+    theia: 'http://assets'
+  reporter:
+    default: 'grafana'
+    grafana: 'http://reporter'
+  registry:
+    default: 'standard'
+    standard: 'http://registry'
+  collector:
+    default: 'events'
+    events: 'http://collector-events'
+    dynamic: 'http://collector-dynamic'
+    ppinot: 'http://galibo-computer'
+    pivotal: 'http://collector-pivotal'
+    github: 'http://collector-github'
+    osseco: 'http://collector-osseco'  
+  dashboard:
+    default: 'grafana'
+    grafana: 'http://dashboard'
+  director:
+    default: 'standard'
+    standard: 'http://director'
+  scopes:
+    default: 'bluejay'
+    bluejay: 'http://scopes'
+  logs:
+    default: 'naos'
+    naos: 'http://naos-logs'  
+external:
+  render: 
+    default: 'angular'
+    angular: 'https://ui{{dns.bluejay}}'
+  assets:
+    default: 'theia'
+    theia: 'https://assets{{dns.bluejay}}'
+  reporter:
+    default: 'grafana'
+    grafana: 'https://reporter{{dns.bluejay}}'
+  registry:
+    default: 'standard'
+    standard: 'https://registry{{dns.bluejay}}'
+  collector:
+    default: 'events'
+    events: 'https://collector-events{{dns.bluejay}}'
+    dynamic: 'https://collector-dynamic{{dns.bluejay}}'
+    ppinot: 'https://galibo-computer{{dns.bluejay}}'
+    pivotal: 'https://collector-pivotal{{dns.bluejay}}'
+    github: 'https://collector-github{{dns.bluejay}}'
+    osseco: 'https://collector-osseco{{dns.bluejay}}'
+  dashboard:
+    default: 'grafana'
+    grafana: 'https://dashboard{{dns.bluejay}}'
+  scopes:
+    default: 'bluejay'
+    bluejay: 'https://scopes{{dns.bluejay}}'
+  director:
+    default: 'standard'
+    standard: 'https://director{{dns.bluejay}}'
+  logs:
+    default: 'naos'
+    naos: 'https://naos-logs{{dns.bluejay}}'    
+dns:
+  default: 'bluejay'
+  bluejay: '$_[SERVICES_PREFIX]$_[DNS_SUFFIX]'
+  galibo: '.galibo.governify.io'

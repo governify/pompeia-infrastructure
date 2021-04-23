@@ -172,7 +172,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
   });
 });
 
-after((done) => {
+/* after((done) => {
   // Docker-compose down
   console.log('---------- Stop E2E infrastructure ----------');
   exec("docker-compose -f tests/docker-compose-e2e.yaml down", (error, stdout, stderr) => {
@@ -186,4 +186,4 @@ after((done) => {
     }
     done();
   });
-});
+}); */

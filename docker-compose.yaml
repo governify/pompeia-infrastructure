@@ -1,5 +1,6 @@
 version: '2.2'
 services:
+############### NGINX/CERTIFICATES ###############
   certbot:
     image: certbot/certbot
     restart: unless-stopped
@@ -7,6 +8,7 @@ services:
       - ./configurations/nginx/data/certbot/conf:/etc/letsencrypt
       - ./configurations/nginx/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+# ================================================
   nginx:
     container_name: bluejay-nginx
     image: nginx
@@ -34,9 +36,56 @@ services:
       - governify_network
     mem_limit: 100m
     restart: 'on-failure:5'
+############### MICROSERVICES ############### 
+  bluejay_render:
+    container_name: bluejay-render
+    image: governify/render:commons
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-render
+      - NODE_ENV=production
+      - PORT=80
+      - LAYOUT=bootstrap3.html
+      - LOGIN_USER=${USER_RENDER:?}
+      - LOGIN_PASSWORD=${PASS_RENDER:?}
+      - DEFAULT_VIEW=http://assets/api/v1/public/renders/index/view.html
+      - DEFAULT_CONTROLLER=http://assets/api/v1/public/renders/index/controller.js
+      - DEFAULT_MODEL=http://assets/api/v1/public/renders/index/model.json
+      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+    networks:
+      governify_network:
+        aliases:
+          - ui
+    volumes:
+      - './logs/render:/opt/app/logs'
+    depends_on:
+      - bluejay_assetsmanager
+    mem_limit: 400m
+    restart: 'unless-stopped'
+# ================================================
+  bluejay_assetsmanager:
+    container_name: bluejay-assetsmanager
+    image: 'governify/assets-manager:commons'
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager
+      - NODE_ENV=production
+      - PORT=80
+      - LOGIN_USER=${USER_ASSETS:?}
+      - LOGIN_PASSWORD=${PASS_ASSETS:?}
+      - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
+      - SERVICES_PREFIX=${SERVICES_PREFIX:?}
+      - DNS_SUFFIX=${DNS_SUFFIX:?}
+    networks:
+      governify_network:
+        aliases:
+          - assets
+    volumes:
+      - './assets:/home/theia/src-gen/backend/files'
+    mem_limit: 400m
+    restart: 'unless-stopped'
+# ================================================
   bluejay_reporter:
     container_name: bluejay-reporter
-    image: governify/reporter:develop
+    image: governify/reporter:commons
     environment:
       - DB_HOST=influxdb
       - SERVICE_NAME=${SERVICES_PREFIX:?}-reporter
@@ -44,6 +93,7 @@ services:
       - PORT=80
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - DNS_SUFFIX=${DNS_SUFFIX:?}
+      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     networks:
       governify_network:
         aliases:
@@ -56,6 +106,55 @@ services:
       - bluejay_assetsmanager
       - bluejay_registry_db
       - bluejay_influxdb
+# ================================================
+  bluejay_registry:
+    container_name: bluejay-registry
+    image: 'governify/registry:commons'
+    networks:
+      governify_network:
+        aliases:
+          - registry
+    environment:
+      - DB_HOST=mongo_registry
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-registry
+      - NODE_ENV=production
+      - PORT=80
+      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+    volumes:
+      - './logs/registry:/opt/app/logs'
+      - './static:/opt/app/public/static'
+    depends_on:
+      - bluejay_assetsmanager
+      - bluejay_registry_db
+    mem_limit: 400m
+    restart: 'unless-stopped'
+# ================================================
+  bluejay_eventcollector:
+    container_name: bluejay-eventcollector
+    image: 'governify/collector-events:commons'
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-eventcollector
+      - NODE_ENV=production
+      - PORT=80
+      - REDIS_HOSTNAME=redis
+      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
+      - KEY_GITHUB=${KEY_GITHUB}
+      - KEY_PIVOTAL=${KEY_PIVOTAL}
+      - KEY_TRAVIS_PUBLIC=${KEY_TRAVIS_PUBLIC}
+      - KEY_TRAVIS_PRIVATE=${KEY_TRAVIS_PRIVATE}
+      - KEY_HEROKU=${KEY_HEROKU}
+      - KEY_CODECLIMATE=${KEY_CODECLIMATE}
+      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+    networks:
+      governify_network:
+        aliases:
+          - event.collector
+    depends_on:
+      - bluejay_assetsmanager
+      - bluejay_redis
+    mem_limit: 400m
+    restart: 'unless-stopped'
+# ================================================
   bluejay_grafana:
     container_name: bluejay-grafana
     image: governify/dashboard:1.0.3
@@ -68,31 +167,78 @@ services:
           - dashboard
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
+    depends_on:
+      - bluejay_assetsmanager
+      - bluejay_reporter
     mem_limit: 400m
     restart: 'unless-stopped'
-    depends_on:
-      - bluejay_reporter
-  bluejay_render:
-    container_name: bluejay-render
-    image: governify/render:develop
+# ================================================
+  bluejay_director:
+    container_name: bluejay-director
+    image: 'governify/director:commons'
     environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-render
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-director
       - NODE_ENV=production
       - PORT=80
-      - LAYOUT=bootstrap3.html
-      - LOGIN_USER=${USER_RENDER:?}
-      - LOGIN_PASSWORD=${PASS_RENDER:?}
-      - DEFAULT_VIEW=http://assets/api/v1/public/renders/index/view.html
-      - DEFAULT_CONTROLLER=http://assets/api/v1/public/renders/index/controller.js
-      - DEFAULT_MODEL=http://assets/api/v1/public/renders/index/model.json
+      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     networks:
       governify_network:
         aliases:
-          - ui
-    volumes:
-      - './logs/render:/opt/app/logs'
+          - director
+    depends_on:
+      - bluejay_assetsmanager
     mem_limit: 400m
     restart: 'unless-stopped'
+# ================================================
+  bluejay_scopemanager:
+    container_name: bluejay-scopemanager
+    image: 'governify/scope-manager:commons'
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-scopemanager
+      - NODE_ENV=production
+      - PORT=80
+      - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
+      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
+      - KEY_HEROKU=${KEY_HEROKU}
+      - KEY_GITHUB=${KEY_GITHUB}
+      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+    networks:
+      governify_network:
+        aliases:
+          - scopes
+    depends_on:
+      - bluejay_assetsmanager
+    mem_limit: 400m
+    restart: 'unless-stopped'
+# ================================================
+  bluejay_join:
+    container_name: bluejay-join
+    image: 'governify/join-bluejay:develop'
+    environment:
+      - SERVICE_NAME=${SERVICES_PREFIX:?}-join
+      - NODE_ENV=production
+      - PORT=80
+    networks:
+      governify_network:
+        aliases:
+          - join
+    mem_limit: 400m
+    restart: 'unless-stopped'
+############### DATABASES ###############
+  bluejay_influxdb:
+    image: 'influxdb:1.8.4-alpine'
+    container_name: bluejay-influxdb
+    networks:
+      governify_network:
+        aliases:
+          - influxdb
+    volumes:
+      - 'bluejay_influxdb_volume:/var/lib/influxdb'
+      - './configurations/influxdb:/etc/influxdb'
+      - './backups/influxdb:/var/backups'
+    mem_limit: 1200m
+    restart: 'unless-stopped'
+# ================================================
   bluejay_registry_db:
     container_name: bluejay-registry-db
     image: mongo
@@ -107,130 +253,7 @@ services:
       - './backups/mongodb:/data2import'
     mem_limit: 2000m
     restart: 'unless-stopped'
-  bluejay_influxdb:
-    image: 'influxdb:1.8.4-alpine'
-    container_name: bluejay-influxdb
-    networks:
-      governify_network:
-        aliases:
-          - influxdb
-    volumes:
-      - 'bluejay_influxdb_volume:/var/lib/influxdb'
-      - './configurations/influxdb:/etc/influxdb'
-      - './backups/influxdb:/var/backups'
-    mem_limit: 1200m
-    restart: 'unless-stopped'
-  bluejay_registry:
-    container_name: bluejay-registry
-    image: 'governify/registry:develop'
-    networks:
-      governify_network:
-        aliases:
-          - registry
-    environment:
-      - DB_HOST=mongo_registry
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-registry
-      - NODE_ENV=production
-      - PORT=80
-    volumes:
-      - './logs/registry:/opt/app/logs'
-      - './static:/opt/app/public/static'
-    depends_on:
-      - bluejay_registry_db
-    mem_limit: 400m
-    restart: 'unless-stopped'
-  bluejay_eventcollector:
-    container_name: bluejay-eventcollector
-    image: 'governify/collector-events:develop'
-    environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-eventcollector
-      - NODE_ENV=production
-      - PORT=80
-      - REDIS_HOSTNAME=redis
-      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
-      - KEY_GITHUB=${KEY_GITHUB}
-      - KEY_PIVOTAL=${KEY_PIVOTAL}
-      - KEY_TRAVIS_PUBLIC=${KEY_TRAVIS_PUBLIC}
-      - KEY_TRAVIS_PRIVATE=${KEY_TRAVIS_PRIVATE}
-      - KEY_HEROKU=${KEY_HEROKU}
-      - KEY_CODECLIMATE=${KEY_CODECLIMATE}
-    networks:
-      governify_network:
-        aliases:
-          - event.collector
-    mem_limit: 400m
-    restart: 'unless-stopped'
-  bluejay_scopemanager:
-    container_name: bluejay-scopemanager
-    image: 'governify/scope-manager:develop'
-    environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-scopemanager
-      - NODE_ENV=production
-      - PORT=80
-      - URL_INT_ASSETS_MANAGER=http://assets
-      - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
-      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
-      - KEY_HEROKU=${KEY_HEROKU}
-      - KEY_GITHUB=${KEY_GITHUB}
-    networks:
-      governify_network:
-        aliases:
-          - scopes
-    mem_limit: 400m
-    restart: 'unless-stopped'
-    depends_on:
-      - bluejay_assetsmanager
-  bluejay_assetsmanager:
-    container_name: bluejay-assetsmanager
-    image: 'governify/assets-manager:develop'
-    environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-assetsmanager
-      - NODE_ENV=production
-      - PORT=80
-      - LOGIN_USER=${USER_ASSETS:?}
-      - LOGIN_PASSWORD=${PASS_ASSETS:?}
-      - SERVICES_PREFIX=${SERVICES_PREFIX:?}
-      - DNS_SUFFIX=${DNS_SUFFIX:?}
-      - URL_EXT_ASSETS_MANAGER=https://assets${SERVICES_PREFIX:?}${DNS_SUFFIX:?}
-      - URL_INT_ASSETS_MANAGER=http://assets
-      - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
-    networks:
-      governify_network:
-        aliases:
-          - assets
-    volumes:
-      - './assets:/home/theia/src-gen/backend/files'
-    mem_limit: 400m
-    restart: 'unless-stopped'
-  bluejay_director:
-    container_name: bluejay-director
-    image: 'governify/director:develop'
-    environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-director
-      - NODE_ENV=production
-      - PORT=80
-      - URL_INT_ASSETS_MANAGER=http://assets
-    networks:
-      governify_network:
-        aliases:
-          - director
-    depends_on:
-      - bluejay_assetsmanager
-    mem_limit: 400m
-    restart: 'unless-stopped'
-  bluejay_join:
-    container_name: bluejay-join
-    image: 'governify/join-bluejay:develop'
-    environment:
-      - SERVICE_NAME=${SERVICES_PREFIX:?}-join
-      - NODE_ENV=production
-      - PORT=80
-    networks:
-      governify_network:
-        aliases:
-          - join
-    mem_limit: 400m
-    restart: 'unless-stopped'
+# ================================================
   bluejay_redis:
     container_name: bluejay-redis
     image: redis
