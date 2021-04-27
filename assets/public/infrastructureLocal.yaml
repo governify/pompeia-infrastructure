@@ -1,0 +1,92 @@
+internal:
+#  render:
+#    default: 'angular'
+#    angular: 'http://localhost:5100'
+#  assets:
+#    default: 'theia'
+#    theia: 'http://localhost:5200'
+#  reporter:
+#    default: 'grafana'
+#    grafana: 'http://localhost:5300'
+#  registry:
+#    default: 'standard'
+#    standard: 'http://localhost:5400'
+#  collector:
+#    default: 'events'
+#    events: 'http://localhost:5500'
+#    dynamic: 'http://localhost:5501'
+#    ppinot: 'http://localhost:5502'
+#    pivotal: 'http://localhost:5503'
+#    github: 'http://localhost:5504'
+#    osseco: 'http://localhost:5505'
+#  dashboard:
+#    default: 'grafana'
+#    grafana: 'http://localhost:5600'
+#  scopes:
+#    default: 'bluejay'
+#    bluejay: 'http://localhost:5700'
+#  director:
+#    default: 'standard'
+#    standard: 'http://localhost:5800'
+  render:
+    default: 'angular'
+    angular: 'http://ui'
+  assets:
+    default: 'theia'
+    theia: 'http://assets'
+  reporter:
+    default: 'grafana'
+    grafana: 'http://reporter'
+  registry:
+    default: 'standard'
+    standard: 'http://registry'
+  collector:
+    default: 'events'
+    events: 'http://collector-events'
+    dynamic: 'http://collector-dynamic'
+    ppinot: 'http://galibo-computer'
+    pivotal: 'http://collector-pivotal'
+    github: 'http://collector-github'
+    osseco: 'http://collector-osseco'  
+  dashboard:
+    default: 'grafana'
+    grafana: 'http://dashboard'
+  director:
+    default: 'standard'
+    standard: 'http://director'
+  scopes:
+    default: 'bluejay'
+    bluejay: 'http://scopes'
+  logs:
+    default: 'naos'
+    naos: 'http://naos-logs'  
+external:
+  render:
+    default: 'angular'
+    angular: 'http://localhost:5100'
+  assets:
+    default: 'theia'
+    theia: 'http://localhost:5200'
+  reporter:
+    default: 'grafana'
+    grafana: 'http://localhost:5300'
+  registry:
+    default: 'standard'
+    standard: 'http://localhost:5400'
+  collector:
+    default: 'events'
+    events: 'http://localhost:5500'
+    dynamic: 'http://localhost:5501'
+    ppinot: 'http://localhost:5502'
+    pivotal: 'http://localhost:5503'
+    github: 'http://localhost:5504'
+    osseco: 'http://localhost:5505'
+  dashboard:
+    default: 'grafana'
+    grafana: 'http://localhost:5600'
+  scopes:
+    default: 'bluejay'
+    bluejay: 'http://localhost:5700'
+  director:
+    default: 'standard'
+    standard: 'http://localhost:5800'

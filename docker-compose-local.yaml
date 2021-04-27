@@ -1,40 +1,5 @@
 version: '2.2'
 services:
-############### NGINX/CERTIFICATES ###############
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./configurations/nginx/data/certbot/conf:/etc/letsencrypt
-      - ./configurations/nginx/data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-# ================================================
-  nginx:
-    container_name: bluejay-nginx
-    image: nginx
-    environment:
-      - BLUEJAY_SERVICES_PREFIX=${SERVICES_PREFIX:?}
-      - BLUEJAY_DNS_SUFFIX=${DNS_SUFFIX:?}
-    ports:
-      - '443:443'
-      - '80:80'
-    ulimits:
-      nproc: 10240
-      nofile:
-        soft: 10240
-        hard: 10240
-    volumes:
-      - './configurations/nginx/config/nginx.conf:/etc/nginx/nginx.conf'
-      - './configurations/nginx/data/certbot/conf:/etc/letsencrypt'
-      - './configurations/nginx/config/static:/etc/nginx/static'
-      - './configurations/nginx/certs:/etc/nginx/certs'
-      - './configurations/nginx/config/services-nginx-config:/etc/nginx/templates'
-      - './configurations/nginx/data/certbot/www:/var/www/certbot'
-      - './logs/bouncer-nginx:/var/log/nginx'
-    networks:
-      - governify_network
-    mem_limit: 100m
-    restart: 'on-failure:5'
 ############### MICROSERVICES ############### 
   bluejay_render:
     container_name: bluejay-render
@@ -55,6 +20,8 @@ services:
           - ui
     volumes:
       - './logs/render:/opt/app/logs'
+    ports:
+      - '5100:80'
     depends_on:
       - bluejay_assetsmanager
     mem_limit: 400m
@@ -69,14 +36,14 @@ services:
       - LOGIN_USER=${USER_ASSETS:?}
       - LOGIN_PASSWORD=${PASS_ASSETS:?}
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
-      - SERVICES_PREFIX=${SERVICES_PREFIX:?}
-      - DNS_SUFFIX=${DNS_SUFFIX:?}
     networks:
       governify_network:
         aliases:
           - assets
     volumes:
       - './assets:/home/project'
+    ports:
+      - '5200:80'
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
@@ -94,6 +61,8 @@ services:
           - reporter
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
+    ports:
+      - '5300:80'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
@@ -116,6 +85,8 @@ services:
     volumes:
       - './logs/registry:/opt/app/logs'
       - './static:/opt/app/public/static'
+    ports:
+      - '5400:80'
     depends_on:
       - bluejay_assetsmanager
       - bluejay_registry_db
@@ -141,6 +112,8 @@ services:
       governify_network:
         aliases:
           - collector-events
+    ports:
+      - '5500:80'
     depends_on:
       - bluejay_assetsmanager
       - bluejay_redis
@@ -158,6 +131,8 @@ services:
           - dashboard
     volumes:
       - 'bluejay_grafana_volume:/var/lib/grafana'
+    ports:
+      - '5600:3000'
     depends_on:
       - bluejay_assetsmanager
       - bluejay_reporter
@@ -175,6 +150,8 @@ services:
       governify_network:
         aliases:
           - director
+    ports:
+      - '5800:80'
     depends_on:
       - bluejay_assetsmanager
     mem_limit: 400m
@@ -195,6 +172,8 @@ services:
       governify_network:
         aliases:
           - scopes
+    ports:
+      - '5700:80'
     depends_on:
       - bluejay_assetsmanager
     mem_limit: 400m
@@ -210,6 +189,8 @@ services:
       governify_network:
         aliases:
           - join
+    ports:
+      - '20080:80'
     mem_limit: 400m
     restart: 'unless-stopped'
 ############### DATABASES ###############
