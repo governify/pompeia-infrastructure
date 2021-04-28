@@ -30,7 +30,7 @@ internal:
     bluejay: 'http://scopes'
   logs:
     default: 'naos'
-    naos: 'http://naos-logs'  
+    naos: 'http://naos-logs'
 external:
   render: 
     default: 'angular'

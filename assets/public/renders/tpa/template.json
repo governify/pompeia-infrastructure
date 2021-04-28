@@ -38,7 +38,7 @@
                     "endpoint": "/api/v2/computations",
                     "type": "POST-GET-V1",
                     "config": {
-                        "scopeManager": "$_[infrastructure.internal.scopes.default]"
+                        "scopeManager": "$_[infrastructure.internal.scopes.default]/api/v1/scopes/development"
                     }
                 }
             }
