@@ -36,6 +36,7 @@ services:
       - LOGIN_USER=${USER_ASSETS:?}
       - LOGIN_PASSWORD=${PASS_ASSETS:?}
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
+      - GOV_INFRASTRUCTURE=/home/project/public/infrastructure-local.yaml
     networks:
       governify_network:
         aliases:
