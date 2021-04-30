@@ -28,6 +28,11 @@ internal:
   director:
     default: 'standard'
     standard: 'http://host.docker.internal:5800'
+  database:
+    default: 'mongo-registry'
+    mongo-registry: 'mongodb://host.docker.internal:5001'
+    influx-reporter: 'http://host.docker.internal:5002'
+    redis-ec: 'redis://host.docker.internal:5003'
 external:
   render:
     default: 'angular'

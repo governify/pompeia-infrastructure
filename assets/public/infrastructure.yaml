@@ -31,6 +31,11 @@ internal:
   logs:
     default: 'naos'
     naos: 'http://naos-logs'
+  database:
+    default: 'mongo-registry'
+    mongo-registry: 'mongodb://mongo_registry:27017'
+    influx-reporter: 'http://influxdb:8086'
+    redis-ec: 'redis://redis:6379'
 external:
   render: 
     default: 'angular'

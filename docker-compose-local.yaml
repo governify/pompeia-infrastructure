@@ -29,7 +29,7 @@ services:
 # ================================================
   bluejay_assetsmanager:
     container_name: bluejay-assetsmanager
-    image: 'governify/assets:commons'
+    image: 'governify/assets-manager:commons'
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -206,6 +206,8 @@ services:
       - 'bluejay_influxdb_volume:/var/lib/influxdb'
       - './configurations/influxdb:/etc/influxdb'
       - './backups/influxdb:/var/backups'
+    ports:
+      - "5002:8086"
     mem_limit: 1200m
     restart: 'unless-stopped'
 # ================================================
@@ -219,6 +221,8 @@ services:
     volumes:
       - 'bluejay_registry_db_volume:/data/db'
       - './backups/mongodb:/data2import'
+    ports:
+      - "5001:27017"
     mem_limit: 2000m
     restart: 'unless-stopped'
 # ================================================
@@ -231,6 +235,8 @@ services:
           - redis
     volumes:
       - 'bluejay_redis_volume:/data'
+    ports:
+      - "5003:6379"
     mem_limit: 1200m
     restart: 'unless-stopped'
 volumes:
