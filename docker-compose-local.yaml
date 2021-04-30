@@ -118,7 +118,7 @@ services:
     depends_on:
       - bluejay_assetsmanager
       - bluejay_redis
-    mem_limit: 400m
+    mem_limit: 700m
     restart: 'unless-stopped'
 # ================================================
   bluejay_grafana:
