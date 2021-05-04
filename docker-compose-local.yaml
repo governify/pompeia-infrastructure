@@ -1,7 +1,7 @@
 version: '2.2'
 services:
 ############### MICROSERVICES ############### 
-  bluejay_render:
+  bluejay-render:
     container_name: bluejay-render
     image: governify/render:commons
     environment:
@@ -14,21 +14,17 @@ services:
       - DEFAULT_CONTROLLER=http://host.docker.internal:5200/api/v1/public/renders/index/controller.js
       - DEFAULT_MODEL=http://host.docker.internal:5200/api/v1/public/renders/index/model.json
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
-    networks:
-      governify_network:
-        aliases:
-          - ui
     volumes:
       - './logs/render:/opt/app/logs'
     ports:
       - '5100:80'
     depends_on:
-      - bluejay_assetsmanager
+      - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_assetsmanager:
-    container_name: bluejay-assetsmanager
+  bluejay-assets-manager:
+    container_name: bluejay-assets-manager
     image: 'governify/assets-manager:commons'
     environment:
       - NODE_ENV=production
@@ -37,10 +33,6 @@ services:
       - LOGIN_PASSWORD=${PASS_ASSETS:?}
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
       - GOV_INFRASTRUCTURE=/home/project/public/infrastructure-local.yaml
-    networks:
-      governify_network:
-        aliases:
-          - assets
     volumes:
       - './assets:/home/project'
     ports:
@@ -48,18 +40,13 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_reporter:
+  bluejay-reporter:
     container_name: bluejay-reporter
     image: governify/reporter:commons
     environment:
-      - DB_HOST=influxdb
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
-    networks:
-      governify_network:
-        aliases:
-          - reporter
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
     ports:
@@ -67,19 +54,14 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
-      - bluejay_assetsmanager
-      - bluejay_registry_db
-      - bluejay_influxdb
+      - bluejay-assets-manager
+      - bluejay-mongo-registry
+      - bluejay-influx-reporter
 # ================================================
-  bluejay_registry:
+  bluejay-registry:
     container_name: bluejay-registry
     image: 'governify/registry:commons'
-    networks:
-      governify_network:
-        aliases:
-          - registry
     environment:
-      - DB_HOST=mongo_registry
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
@@ -89,18 +71,17 @@ services:
     ports:
       - '5400:80'
     depends_on:
-      - bluejay_assetsmanager
-      - bluejay_registry_db
+      - bluejay-assets-manager
+      - bluejay-mongo-registry
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_eventcollector:
-    container_name: bluejay-eventcollector
+  bluejay-collector-events:
+    container_name: bluejay-collector-events
     image: 'governify/collector-events:commons'
     environment:
       - NODE_ENV=production
       - PORT=80
-      - REDIS_HOSTNAME=redis
       - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
       - KEY_GITHUB=${KEY_GITHUB}
       - KEY_PIVOTAL=${KEY_PIVOTAL}
@@ -109,57 +90,46 @@ services:
       - KEY_HEROKU=${KEY_HEROKU}
       - KEY_CODECLIMATE=${KEY_CODECLIMATE}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
-    networks:
-      governify_network:
-        aliases:
-          - collector-events
     ports:
       - '5500:80'
     depends_on:
-      - bluejay_assetsmanager
-      - bluejay_redis
+      - bluejay-assets-manager
+      - bluejay-redis-ec
     mem_limit: 700m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_grafana:
-    container_name: bluejay-grafana
-    image: governify/dashboard:1.0.3
+  bluejay-dashboard:
+    container_name: bluejay-dashboard
+    image: governify/dashboard:develop
     environment:
       - NODE_ENV=production
-    networks:
-      governify_network:
-        aliases:
-          - dashboard
+      - INFLUX_URL=http://host.docker.internal:5002
     volumes:
-      - 'bluejay_grafana_volume:/var/lib/grafana'
+      - 'bluejay-dashboard-volume:/var/lib/grafana'
     ports:
       - '5600:3000'
     depends_on:
-      - bluejay_assetsmanager
-      - bluejay_reporter
+      - bluejay-assets-manager
+      - bluejay-reporter
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_director:
+  bluejay-director:
     container_name: bluejay-director
     image: 'governify/director:commons'
     environment:
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
-    networks:
-      governify_network:
-        aliases:
-          - director
     ports:
       - '5800:80'
     depends_on:
-      - bluejay_assetsmanager
+      - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_scopemanager:
-    container_name: bluejay-scopemanager
+  bluejay-scope-manager:
+    container_name: bluejay-scope-manager
     image: 'governify/scope-manager:commons'
     environment:
       - NODE_ENV=production
@@ -169,41 +139,29 @@ services:
       - KEY_HEROKU=${KEY_HEROKU}
       - KEY_GITHUB=${KEY_GITHUB}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
-    networks:
-      governify_network:
-        aliases:
-          - scopes
     ports:
       - '5700:80'
     depends_on:
-      - bluejay_assetsmanager
+      - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_join:
+  bluejay-join:
     container_name: bluejay-join
     image: 'governify/join-bluejay:develop'
     environment:
       - NODE_ENV=production
       - PORT=80
-    networks:
-      governify_network:
-        aliases:
-          - join
     ports:
-      - '20080:80'
+      - '6001:80'
     mem_limit: 400m
     restart: 'unless-stopped'
 ############### DATABASES ###############
-  bluejay_influxdb:
+  bluejay-influx-reporter:
     image: 'influxdb:1.8.4-alpine'
     container_name: bluejay-influxdb
-    networks:
-      governify_network:
-        aliases:
-          - influxdb
     volumes:
-      - 'bluejay_influxdb_volume:/var/lib/influxdb'
+      - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
       - './configurations/influxdb:/etc/influxdb'
       - './backups/influxdb:/var/backups'
     ports:
@@ -211,39 +169,28 @@ services:
     mem_limit: 1200m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_registry_db:
+  bluejay-mongo-registry:
     container_name: bluejay-registry-db
     image: mongo
-    networks:
-      governify_network:
-        aliases:
-          - mongo_registry
     volumes:
-      - 'bluejay_registry_db_volume:/data/db'
+      - 'bluejay-mongo-registry-volume:/data/db'
       - './backups/mongodb:/data2import'
     ports:
       - "5001:27017"
     mem_limit: 2000m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_redis:
+  bluejay-redis-ec:
     container_name: bluejay-redis
     image: redis
-    networks:
-      governify_network:
-        aliases:
-          - redis
     volumes:
-      - 'bluejay_redis_volume:/data'
+      - 'bluejay-redis-ec-volume:/data'
     ports:
       - "5003:6379"
     mem_limit: 1200m
     restart: 'unless-stopped'
 volumes:
-  bluejay_influxdb_volume: null
-  bluejay_registry_db_volume: null
-  bluejay_grafana_volume: null
-  bluejay_redis_volume: null
-networks:
-  governify_network:
-    external: true
+  bluejay-influx-reporter-volume: null
+  bluejay-mongo-registry-volume: null
+  bluejay-dashboard-volume: null
+  bluejay-redis-ec-volume: null
