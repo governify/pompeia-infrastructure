@@ -1,41 +1,33 @@
 internal:
   render:
     default: 'angular'
-    angular: 'http://ui'
+    angular: 'http://bluejay-render'
   assets:
     default: 'theia'
-    theia: 'http://assets'
+    theia: 'http://bluejay-assets-manager'
   reporter:
     default: 'grafana'
-    grafana: 'http://reporter'
+    grafana: 'http://bluejay-reporter'
   registry:
     default: 'standard'
-    standard: 'http://registry'
+    standard: 'http://bluejay-registry'
   collector:
     default: 'events'
-    events: 'http://collector-events'
-    dynamic: 'http://collector-dynamic'
-    ppinot: 'http://galibo-computer'
-    pivotal: 'http://collector-pivotal'
-    github: 'http://collector-github'
-    osseco: 'http://collector-osseco'  
+    events: 'http://bluejay-collector-events'
   dashboard:
     default: 'grafana'
-    grafana: 'http://dashboard'
+    grafana: 'http://bluejay-dashboard'
   director:
     default: 'standard'
-    standard: 'http://director'
+    standard: 'http://bluejay-director'
   scopes:
     default: 'bluejay'
-    bluejay: 'http://scopes'
-  logs:
-    default: 'naos'
-    naos: 'http://naos-logs'
+    bluejay: 'http://bluejay-scope-manager'
   database:
     default: 'mongo-registry'
-    mongo-registry: 'mongodb://mongo_registry:27017'
-    influx-reporter: 'http://influxdb:8086'
-    redis-ec: 'redis://redis:6379'
+    mongo-registry: 'mongodb://bluejay-mongo-registry:27017'
+    influx-reporter: 'http://bluejay-influx-reporter:8086'
+    redis-ec: 'redis://bluejay-redis-ec:6379'
 external:
   render: 
     default: 'angular'
@@ -52,11 +44,6 @@ external:
   collector:
     default: 'events'
     events: 'https://collector-events{{dns.bluejay}}'
-    dynamic: 'https://collector-dynamic{{dns.bluejay}}'
-    ppinot: 'https://galibo-computer{{dns.bluejay}}'
-    pivotal: 'https://collector-pivotal{{dns.bluejay}}'
-    github: 'https://collector-github{{dns.bluejay}}'
-    osseco: 'https://collector-osseco{{dns.bluejay}}'
   dashboard:
     default: 'grafana'
     grafana: 'https://dashboard{{dns.bluejay}}'
@@ -65,11 +52,7 @@ external:
     bluejay: 'https://scopes{{dns.bluejay}}'
   director:
     default: 'standard'
-    standard: 'https://director{{dns.bluejay}}'
-  logs:
-    default: 'naos'
-    naos: 'https://naos-logs{{dns.bluejay}}'    
+    standard: 'https://director{{dns.bluejay}}' 
 dns:
   default: 'bluejay'
   bluejay: '$_[SERVICES_PREFIX]$_[DNS_SUFFIX]'
-  galibo: '.galibo.governify.io'

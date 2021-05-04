@@ -8,7 +8,7 @@ server {
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     location / {
-        proxy_pass http://scopes:80;
+        proxy_pass http://bluejay-scope-manager:80;
     }
 
 }
