@@ -1,4 +1,6 @@
 node_modules
 /logs/
 tests/e2e-volumes
+/tests/logs
+/tests/static
 

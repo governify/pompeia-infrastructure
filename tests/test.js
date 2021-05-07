@@ -4,20 +4,16 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 const Influx = require('influx');
-const influx = new Influx.InfluxDB('http://localhost:8086/metrics')
+const influx = new Influx.InfluxDB('http://localhost:5002/metrics');
+
+const governify = require('governify-commons');
+process.env.GOV_INFRASTRUCTURE = "http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml";
+process.env.KEY_ASSETS_MANAGER_PRIVATE = "bd2f80ee5bc9d1122dd379b5bffdb818";
+process.env.KEY_SCOPE_MANAGER = "c025ff8502893fc6c5a87cf3febe4882";
 
 // To reject expired TLS certs
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-//const renderURL = "http://localhost:8080";
-const reporterURL = "http://localhost:8081/api/v4";
-const registryURL = "http://localhost:8082/api/v6";
-const scopeManagerURL = "http://localhost:8083/api/v1"; // Used by collector
-const assetsManagerURL = "http://localhost:8088/api/v1";
-const directorURL = "http://localhost:8085/api/v1";
-const eventCollectorURL = "http://localhost:8090/api/v2"; // Used by registry
-
-//api/v1/private/scope-manager/scopes.json
+process.env.COMPOSE_HTTP_TIMEOUT = "200";
 
 let testAgreement;
 
@@ -35,43 +31,44 @@ before((done) => {
     } else {
       console.log(`stdout: ${stdout}`);
     }
-    exec("docker-compose -f tests/docker-compose-e2e.yaml up -d", (error1, stdout1, stderr1) => {
+    exec("docker-compose -f tests/docker-compose-e2e.yaml --env-file .env-local up -d", (error1, stdout1, stderr1) => {
       if (error1) {
         console.log(`error: ${error1.message}`);
         done(error1);
-      } else if (stderr) {
+      } else if (stderr1) {
         console.log(`stderr: ${stderr1}`);
       } else {
         console.log(`stdout: ${stdout1}`);
       }
+      governify.init().then(() => {
+        // Fetch the template from Assets Manager checking env variables substitution
+        chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
+          .get("/api/v1/public/testTemplate.json")
+          .then(response => {
+            testAgreement = JSON.parse(response.text);
 
-      // Fetch the template from Assets Manager checking env variables substitution
-      chai.request(assetsManagerURL)
-        .get("/public/testTemplate.json")
-        .then(response => {
-          testAgreement = JSON.parse(response.text);
-
-          // Delete and check the agreement does not exist already
-          setTimeout(() => {
-            chai.request(registryURL)
-              .delete("/agreements/" + testAgreement.id)
-              .then(response => {
-                chai.request(registryURL)
-                  .get("/agreements/" + testAgreement.id)
-                  .then(response => {
-                    // Check the agreement does not exist
-                    assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
-                    done();
-                  }).catch(err => {
-                    done(err);
-                  });
-              }).catch(err => {
-                done(err);
-              })
-          }, 3000);
-        }).catch(err => {
-          done(err);
-        });;
+            // Delete and check the agreement does not exist already
+            setTimeout(() => {
+              chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+                .delete("/api/v6/agreements/" + testAgreement.id)
+                .then(response => {
+                  chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+                    .get("/api/v6/agreements/" + testAgreement.id)
+                    .then(response => {
+                      // Check the agreement does not exist
+                      assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
+                      done();
+                    }).catch(err => {
+                      done(err);
+                    });
+                }).catch(err => {
+                  done(err);
+                })
+            }, 3000);
+          }).catch(err => {
+            done(err);
+          });;
+      });
     });
   });
 });
@@ -80,16 +77,16 @@ before((done) => {
 describe('Create agreement, calculate guarantees and delete agreement: ', () => {
   it('should successfully create an agreement', (done) => {
     // Send to update points
-    chai.request(registryURL)
-      .post("/agreements")
+    chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+      .post("/api/v6/agreements")
       .send(testAgreement)
       .then(response => {
         // Check the response is successful
         assert.strictEqual(response.status, 200, 'The agreement creation must be successful');
 
         // Registry check
-        chai.request(registryURL)
-          .get("/agreements/" + testAgreement.id)
+        chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+          .get("/api/v6/agreements/" + testAgreement.id)
           .then(response => {
 
             // Check the response is successful
@@ -113,8 +110,8 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
 
   it('should compute agreement periods', (done) => {
     // Send to update points
-    chai.request(reporterURL)
-      .post('/contracts/' + testAgreement.id + '/createPointsFromPeriods')
+    chai.request(governify.infrastructure.getServiceURL('external.reporter.default'))
+      .post('/api/v4/contracts/' + testAgreement.id + '/createPointsFromPeriods')
       .send({ periods: [{ from: "2020-04-27T00:00:00Z", to: "2020-04-27T23:59:00Z" }] })
       .then(response => {
         // Check the response is successful
@@ -150,15 +147,15 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
 
   it('should successfully delete the agreement', (done) => {
     // Send to update points
-    chai.request(registryURL)
-      .delete("/agreements/" + testAgreement.id)
+    chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+      .delete("/api/v6/agreements/" + testAgreement.id)
       .then(response => {
         // Check the response is successful
         assert.strictEqual(response.status, 200, 'The DELETE request must be successful');
 
         // Registry check
-        chai.request(registryURL)
-          .get("/agreements/" + testAgreement.id)
+        chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+          .get("/api/v6/agreements/" + testAgreement.id)
           .then(response => {
             // Check the agreement does not exist
             assert.equal(response.status, 404, 'The agreement must no longer exist in the registry');
@@ -172,7 +169,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
   });
 });
 
-/* after((done) => {
+after((done) => {
   // Docker-compose down
   console.log('---------- Stop E2E infrastructure ----------');
   exec("docker-compose -f tests/docker-compose-e2e.yaml down", (error, stdout, stderr) => {
@@ -186,4 +183,4 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
     }
     done();
   });
-}); */
+});
