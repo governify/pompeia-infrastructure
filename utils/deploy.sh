@@ -10,7 +10,7 @@ sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
 export $(grep -v '^#' .env | xargs)
 
 # Create bouncer network
-docker network create governify_network
+docker network create governify-bluejay
 
 # Docker compose
 docker-compose -f docker-compose.yaml --env-file ./.env up -d

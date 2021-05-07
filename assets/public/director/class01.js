@@ -9,7 +9,7 @@ const period = [{
 
 
 module.exports.main = (config) => {
-    const requestURL = 'http://reporter/api/v4/contracts/' + config.agreementId + '/createPointsFromPeriods';
+    const requestURL = '$_[infrastructure.internal.reporter.default]/api/v4/contracts/' + config.agreementId + '/createPointsFromPeriods';
 
     axios.post(requestURL, {periods: period}).then((response) => {
         console.log("Finished points creation for TPA:", config.agreementId);

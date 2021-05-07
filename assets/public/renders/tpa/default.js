@@ -26,13 +26,6 @@ $scope.calculateMetrics = {
     "error": false
 }
 
-// Urls
-$scope.urlReporter = "https://reporter$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v4";
-$scope.urlRegistry = "https://registry$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v6";
-$scope.urlScopeManager = "https://scopes$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
-$scope.urlDirector = "https://director$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
-$scope.urlAssets = "https://assets$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1";
-
 const defaultDirectorRunTime = {
     "init": "2021-01-01T00:00:00",
     "end": "2021-04-01T00:00:00",
@@ -42,7 +35,7 @@ const defaultDirectorRunTime = {
 $scope.swapAutomaticComputation = () => {
     if ($scope.displayItems.automaticComputation) {
         try {
-            deleteUrl($scope.urlDirector + "/tasks/" + $scope.model.id, (err, data) => {
+            deleteUrl("$_[infrastructure.external.director.default]/api/v1/tasks/" + $scope.model.id, (err, data) => {
                 // Reporter not answering properly
                 if (err) {
                     setPageAlert("Automatic computation task could not be deactivated.", "error");
@@ -61,14 +54,14 @@ $scope.swapAutomaticComputation = () => {
     } else {
         try {
             getUrl(
-                $scope.urlAssets + "/public/director/" + $scope.model.context.definitions.scopes.development.class.default + ".json",
+                "$_[infrastructure.external.assets.default]/api/v1/public/director/" + $scope.model.context.definitions.scopes.development.class.default + ".json",
                 (err, data) => {
                     if (err) {
                         console.log("Director run time could not be found: ", $scope.model.context.definitions.scopes.development.class.default + ".json\n", err);
                     }
                     const task = {
                         "id": $scope.model.id,
-                        "script": "http://assets$_[SERVICES_PREFIX]$_[DNS_SUFFIX]/api/v1/public/director/" + $scope.model.context.definitions.scopes.development.class.default + ".js",
+                        "script": "$_[infrastructure.external.assets.default]/api/v1/public/director/" + $scope.model.context.definitions.scopes.development.class.default + ".js",
                         "running": true,
                         "config": {
                             "agreementId": $scope.model.id
@@ -77,7 +70,7 @@ $scope.swapAutomaticComputation = () => {
                         "end": data ? data.end : "2021-04-01T00:00:00",
                         "interval": data ? data.interval : 7200000
                     }
-                    postUrl($scope.urlDirector + "/tasks", task, (err, data) => {
+                    postUrl("$_[infrastructure.external.director.default]/api/v1/tasks", task, (err, data) => {
                         // Reporter not answering properly
                         if (err) {
                             setPageAlert("Automatic computation task could not be activated.", "error");
@@ -106,7 +99,7 @@ const init = () => {
 
         //Get project Info from scopeManager
         getUrl(
-            $scope.urlScopeManager + "/scopes/development/" + $scope.model.context.definitions.scopes.development.class.default + "/" + $scope.model.context.definitions.scopes.development.project.default,
+            "$_[infrastructure.external.scopes.default]/api/v1/scopes/development/" + $scope.model.context.definitions.scopes.development.class.default + "/" + $scope.model.context.definitions.scopes.development.project.default,
             (err, data) => {
                 if (data) {
                     if (data.code == 200) {
@@ -125,16 +118,16 @@ const init = () => {
 
         //Get existing agreement from mongo
         getUrl(
-            $scope.urlRegistry + "/agreements/" + $scope.model.id,
+            "$_[infrastructure.external.registry.default]/api/v6/agreements/" + $scope.model.id,
             (err, data) => {
                 if (data) {
                     console.info("Loaded agreement from mongo.")
                     $scope.model = data;
-                    $scope.computersUsed = Object.keys($scope.model.context.definitions.computers);
+                    $scope.collectorsUsed = Object.keys($scope.model.context.definitions.collectors);
 
                     //Get computation information from director
                     getUrl(
-                        $scope.urlDirector + "/tasks/" + $scope.model.id,
+                        "$_[infrastructure.external.director.default]/api/v1/tasks/" + $scope.model.id,
                         (err, data) => {
                             if (err) {
                                 $scope.displayItems.automaticComputation = false;
@@ -203,7 +196,7 @@ $scope.calculateEventsMetrics = function (id) {
                 } else {
                     var periods = [{ "from": new Date(firstDate - timezoneOffset).toISOString(), "to": new Date(lastDate - timezoneOffset - 1).toISOString() }];
                     // POST
-                    postUrl($scope.urlReporter + '/contracts/' + id + '/createPointsFromPeriods', { "periods": periods }, (err, data) => {
+                    postUrl('$_[infrastructure.external.reporter.default]/api/v4/contracts/' + id + '/createPointsFromPeriods', { "periods": periods }, (err, data) => {
                         // Reporter not answering properly
                         /* if (err) {
                             console.log(err)
