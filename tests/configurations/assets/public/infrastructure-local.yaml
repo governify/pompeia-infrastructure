@@ -1,38 +1,38 @@
 internal:
   render:
     default: 'angular'
-    angular: 'http://172.17.0.1:5100'
+    angular: 'http://host.docker.internal:5100'
   assets:
     default: 'theia'
-    theia: 'http://172.17.0.1:5200'
+    theia: 'http://host.docker.internal:5200'
   reporter:
     default: 'grafana'
-    grafana: 'http://172.17.0.1:5300'
+    grafana: 'http://host.docker.internal:5300'
   registry:
     default: 'standard'
-    standard: 'http://172.17.0.1:5400'
+    standard: 'http://host.docker.internal:5400'
   collector:
     default: 'events'
-    events: 'http://172.17.0.1:5500'
-    dynamic: 'http://172.17.0.1:5501'
-    ppinot: 'http://172.17.0.1:5502'
-    pivotal: 'http://172.17.0.1:5503'
-    github: 'http://172.17.0.1:5504'
-    osseco: 'http://172.17.0.1:5505'
+    events: 'http://host.docker.internal:5500'
+    dynamic: 'http://host.docker.internal:5501'
+    ppinot: 'http://host.docker.internal:5502'
+    pivotal: 'http://host.docker.internal:5503'
+    github: 'http://host.docker.internal:5504'
+    osseco: 'http://host.docker.internal:5505'
   dashboard:
     default: 'grafana'
-    grafana: 'http://172.17.0.1:5600'
+    grafana: 'http://host.docker.internal:5600'
   scopes:
     default: 'bluejay'
-    bluejay: 'http://172.17.0.1:5700'
+    bluejay: 'http://host.docker.internal:5700'
   director:
     default: 'standard'
-    standard: 'http://172.17.0.1:5800'
+    standard: 'http://host.docker.internal:5800'
   database:
     default: 'mongo-registry'
-    mongo-registry: 'mongodb://172.17.0.1:5001'
-    influx-reporter: 'http://172.17.0.1:5002'
-    redis-ec: 'redis://172.17.0.1:5003'
+    mongo-registry: 'mongodb://host.docker.internal:5001'
+    influx-reporter: 'http://host.docker.internal:5002'
+    redis-ec: 'redis://host.docker.internal:5003'
 external:
   render:
     default: 'angular'

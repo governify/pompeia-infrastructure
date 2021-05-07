@@ -7,7 +7,7 @@ const Influx = require('influx');
 const influx = new Influx.InfluxDB('http://localhost:5002/metrics');
 
 const governify = require('governify-commons');
-process.env.GOV_INFRASTRUCTURE = "http://172.17.0.1:5200/api/v1/public/infrastructure-local.yaml";
+process.env.GOV_INFRASTRUCTURE = "http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml";
 process.env.KEY_ASSETS_MANAGER_PRIVATE = "bd2f80ee5bc9d1122dd379b5bffdb818";
 process.env.KEY_SCOPE_MANAGER = "c025ff8502893fc6c5a87cf3febe4882";
 
@@ -22,52 +22,54 @@ const { exec } = require("child_process");
 before((done) => {
   // Docker-compose up -d
   console.log('---------- Start E2E infrastructure ----------');
-  exec("docker-compose -f tests/docker-compose-e2e.yaml pull", (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`);
-      done(error);
-    } else if (stderr) {
-      console.log(`stderr: ${stderr}`);
-    } else {
-      console.log(`stdout: ${stdout}`);
-    }
-    exec("docker-compose -f tests/docker-compose-e2e.yaml --env-file .env-local up -d", (error1, stdout1, stderr1) => {
-      if (error1) {
-        console.log(`error: ${error1.message}`);
-        done(error1);
-      } else if (stderr1) {
-        console.log(`stderr: ${stderr1}`);
+  exec("--add-host=host.docker.internal:172.17.0.1", (error0, stdout1, stderr2) => {
+    exec("docker-compose -f tests/docker-compose-e2e.yaml pull", (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        done(error);
+      } else if (stderr) {
+        console.log(`stderr: ${stderr}`);
       } else {
-        console.log(`stdout: ${stdout1}`);
+        console.log(`stdout: ${stdout}`);
       }
-      governify.init().then(() => {
-        // Fetch the template from Assets Manager checking env variables substitution
-        chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
-          .get("/api/v1/public/testTemplate.json")
-          .then(response => {
-            testAgreement = JSON.parse(response.text);
+      exec("docker-compose -f tests/docker-compose-e2e.yaml --env-file .env-local up -d", (error1, stdout1, stderr1) => {
+        if (error1) {
+          console.log(`error: ${error1.message}`);
+          done(error1);
+        } else if (stderr1) {
+          console.log(`stderr: ${stderr1}`);
+        } else {
+          console.log(`stdout: ${stdout1}`);
+        }
+        governify.init().then(() => {
+          // Fetch the template from Assets Manager checking env variables substitution
+          chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
+            .get("/api/v1/public/testTemplate.json")
+            .then(response => {
+              testAgreement = JSON.parse(response.text);
 
-            // Delete and check the agreement does not exist already
-            setTimeout(() => {
-              chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
-                .delete("/api/v6/agreements/" + testAgreement.id)
-                .then(response => {
-                  chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
-                    .get("/api/v6/agreements/" + testAgreement.id)
-                    .then(response => {
-                      // Check the agreement does not exist
-                      assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
-                      done();
-                    }).catch(err => {
-                      done(err);
-                    });
-                }).catch(err => {
-                  done(err);
-                })
-            }, 3000);
-          }).catch(err => {
-            done(err);
-          });;
+              // Delete and check the agreement does not exist already
+              setTimeout(() => {
+                chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+                  .delete("/api/v6/agreements/" + testAgreement.id)
+                  .then(response => {
+                    chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+                      .get("/api/v6/agreements/" + testAgreement.id)
+                      .then(response => {
+                        // Check the agreement does not exist
+                        assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
+                        done();
+                      }).catch(err => {
+                        done(err);
+                      });
+                  }).catch(err => {
+                    done(err);
+                  })
+              }, 3000);
+            }).catch(err => {
+              done(err);
+            });;
+        });
       });
     });
   });
