@@ -18,6 +18,8 @@ services:
       - './logs/render:/opt/app/logs'
     ports:
       - '5100:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     depends_on:
       - bluejay-assets-manager
     mem_limit: 400m
@@ -37,6 +39,8 @@ services:
       - './configurations/assets:/home/project'
     ports:
       - '5200:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
@@ -51,6 +55,8 @@ services:
       - './logs/bluejay-reporter:/opt/app/logs'
     ports:
       - '5300:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
@@ -69,6 +75,8 @@ services:
       - './logs/registry:/opt/app/logs'
     ports:
       - '5400:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     depends_on:
       - bluejay-assets-manager
       - bluejay-mongo-registry
@@ -91,6 +99,8 @@ services:
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     ports:
       - '5500:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     volumes:
       - './configurations/eventCollectorMockups:/opt/app/tests/e2e'
     depends_on:
@@ -109,6 +119,8 @@ services:
       - 'bluejay-dashboard-volume:/var/lib/grafana'
     ports:
       - '5600:3000'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     depends_on:
       - bluejay-assets-manager
       - bluejay-reporter
@@ -124,6 +136,8 @@ services:
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     ports:
       - '5800:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     depends_on:
       - bluejay-assets-manager
     mem_limit: 400m
@@ -142,6 +156,8 @@ services:
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     ports:
       - '5700:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     depends_on:
       - bluejay-assets-manager
     mem_limit: 400m
@@ -155,6 +171,8 @@ services:
       - PORT=80
     ports:
       - '6001:80'
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     mem_limit: 400m
     restart: 'unless-stopped'
 ############### DATABASES ###############
@@ -166,6 +184,8 @@ services:
       - './configurations/influxdb:/etc/influxdb'
     ports:
       - "5002:8086"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     mem_limit: 1200m
     restart: 'unless-stopped'
 # ================================================
@@ -176,6 +196,8 @@ services:
       - 'bluejay-mongo-registry-volume:/data/db'
     ports:
       - "5001:27017"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     mem_limit: 2000m
     restart: 'unless-stopped'
 # ================================================
@@ -186,6 +208,8 @@ services:
       - 'bluejay-redis-ec-volume:/data'
     ports:
       - "5003:6379"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     mem_limit: 1200m
     restart: 'unless-stopped'
 volumes:

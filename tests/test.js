@@ -22,7 +22,7 @@ const { exec } = require("child_process");
 before((done) => {
   // Docker-compose up -d
   console.log('---------- Start E2E infrastructure ----------');
-  exec("host-manager -add host.docker.internal 172.17.0.1", (error0, stdout1, stderr2) => {
+  exec("host-manager -add host.docker.internal 172.17.0.1", () => {
     exec("docker-compose -f tests/docker-compose-e2e.yaml pull", (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
