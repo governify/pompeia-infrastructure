@@ -3,7 +3,7 @@ services:
 ############### MICROSERVICES ############### 
   bluejay-render:
     container_name: bluejay-render
-    image: governify/render:commons
+    image: governify/render:develop
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -25,7 +25,7 @@ services:
 # ================================================
   bluejay-assets-manager:
     container_name: bluejay-assets-manager
-    image: 'governify/assets-manager:commons'
+    image: 'governify/assets-manager:develop'
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -42,7 +42,7 @@ services:
 # ================================================
   bluejay-reporter:
     container_name: bluejay-reporter
-    image: governify/reporter:commons
+    image: governify/reporter:develop
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -60,7 +60,7 @@ services:
 # ================================================
   bluejay-registry:
     container_name: bluejay-registry
-    image: 'governify/registry:commons'
+    image: 'governify/registry:develop'
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -78,7 +78,7 @@ services:
 # ================================================
   bluejay-collector-events:
     container_name: bluejay-collector-events
-    image: 'governify/collector-events:commons'
+    image: 'governify/collector-events:develop'
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -116,7 +116,7 @@ services:
 # ================================================
   bluejay-director:
     container_name: bluejay-director
-    image: 'governify/director:commons'
+    image: 'governify/director:develop'
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -130,7 +130,7 @@ services:
 # ================================================
   bluejay-scope-manager:
     container_name: bluejay-scope-manager
-    image: 'governify/scope-manager:commons'
+    image: 'governify/scope-manager:develop'
     environment:
       - NODE_ENV=production
       - PORT=80
