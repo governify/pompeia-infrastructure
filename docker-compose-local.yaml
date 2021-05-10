@@ -159,7 +159,7 @@ services:
 ############### DATABASES ###############
   bluejay-influx-reporter:
     image: 'influxdb:1.8.4-alpine'
-    container_name: bluejay-influxdb
+    container_name: bluejay-influx-reporter
     volumes:
       - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
       - './configurations/influxdb:/etc/influxdb'
@@ -170,7 +170,7 @@ services:
     restart: 'unless-stopped'
 # ================================================
   bluejay-mongo-registry:
-    container_name: bluejay-registry-db
+    container_name: bluejay-mongo-registry
     image: mongo
     volumes:
       - 'bluejay-mongo-registry-volume:/data/db'
@@ -181,7 +181,7 @@ services:
     restart: 'unless-stopped'
 # ================================================
   bluejay-redis-ec:
-    container_name: bluejay-redis
+    container_name: bluejay-redis-ec
     image: redis
     volumes:
       - 'bluejay-redis-ec-volume:/data'
