@@ -39,7 +39,7 @@ for domain in "${domains[@]}"; do
 done
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d nginx
+docker-compose up --force-recreate -d bluejay-nginx
 echo
 
 if [ $dummy != 1 ]
@@ -81,5 +81,5 @@ then
   done
 
   echo "### Reloading nginx ..."
-  docker-compose exec nginx nginx -s reload
+  docker-compose exec bluejay-nginx nginx -s reload
 fi
