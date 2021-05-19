@@ -16,7 +16,7 @@ internal:
     events: 'http://bluejay-collector-events'
   dashboard:
     default: 'grafana'
-    grafana: 'http://bluejay-dashboard'
+    grafana: 'http://bluejay-dashboard:3000'
   director:
     default: 'standard'
     standard: 'http://bluejay-director'

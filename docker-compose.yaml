@@ -185,7 +185,7 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
-  bluejay_join:
+  bluejay-join:
     container_name: bluejay-join
     image: 'governify/join-bluejay:develop'
     environment:
