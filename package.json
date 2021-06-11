@@ -23,6 +23,6 @@
     "mocha": "^8.0.1"
   },
   "dependencies": {
-    "governify-commons": "^1.9.4"
+    "governify-commons": "^1.9.7"
   }
 }
