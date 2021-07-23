@@ -41,9 +41,9 @@ external:
   registry:
     default: 'standard'
     standard: 'https://registry{{dns.bluejay}}'
-  collector:
-    default: 'events'
-    events: 'https://collector-events{{dns.bluejay}}'
+#  collector:
+#    default: 'events'
+#    events: 'https://collector-events{{dns.bluejay}}'
   dashboard:
     default: 'grafana'
     grafana: 'https://dashboard{{dns.bluejay}}'
