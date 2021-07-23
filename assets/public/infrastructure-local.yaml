@@ -14,11 +14,11 @@ internal:
   collector:
     default: 'events'
     events: 'http://host.docker.internal:5500'
-    dynamic: 'http://host.docker.internal:5501'
-    ppinot: 'http://host.docker.internal:5502'
-    pivotal: 'http://host.docker.internal:5503'
-    github: 'http://host.docker.internal:5504'
-    osseco: 'http://host.docker.internal:5505'
+#    dynamic: 'http://host.docker.internal:5501'
+#    ppinot: 'http://host.docker.internal:5502'
+#    pivotal: 'http://host.docker.internal:5503'
+#    github: 'http://host.docker.internal:5504'
+#    osseco: 'http://host.docker.internal:5505'
   dashboard:
     default: 'grafana'
     grafana: 'http://host.docker.internal:5600'
