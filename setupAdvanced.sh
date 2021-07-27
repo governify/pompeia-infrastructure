@@ -22,7 +22,7 @@ do
         do
             clear
             # Menu 2 - Header and options
-            declare -a menu2Options=("(Optional) Docker and Docker Compose installation (yum/AWS)" "Enviroment variables setup" "(Optional) Automatic DNS records generation (DynaHosting)" "System deployment" "(Optional) Lets-encrypt automatic certificates generation" "Go back" );
+            declare -a menu2Options=("(Optional) Docker and Docker Compose installation" "Enviroment variables setup" "(Optional) Automatic DNS records generation (DynaHosting)" "System deployment" "(Optional) Lets-encrypt automatic certificates generation" "Go back" );
             generateDialog "options" "Deployment Menu - Follow steps in order. You can skip optional ones and do them by yourself if needed." "${menu2Options[@]}"
             # Reader
             echo -n "Select an option please: "
@@ -30,10 +30,28 @@ do
 
             if [ $choice2 = 1 ]
             then
-                ./utils/preparation.sh
-                # Stop
-                echo -n "Press enter to continue."
-                read nothing
+               clear
+                declare -a menu6Options=("Amazon Web Services (AWS / yum)" "Other platform (apt)" "Go back");
+                generateDialog "options" "Prerequisites installation may vary depending on the platform" "${menu6Options[@]}"
+                # Reader
+                echo -n "Select an option please: "
+                read choice6
+
+                if [ $choice6 = 1 ]
+                then
+                    ./utils/preparation.sh 1
+                    # Stop
+                    echo -n "Press enter to continue."
+                    read nothing
+                elif [ $choice6 = 2 ]
+                then
+                    ./utils/preparation.sh 0
+                    # Stop
+                    echo -n "Press enter to continue."
+                    read nothing
+                else
+                    echo ''
+                fi
             elif [ $choice2 = 2 ]
             then
                 nano .env            
