@@ -143,6 +143,7 @@ services:
     environment:
       - NODE_ENV=production
       - INFLUX_URL=http://bluejay-influx-reporter:8086
+      - GF_PATHS_PLUGINS=/usr/share/grafana/plugins
     networks:
       - governify-bluejay
     volumes:

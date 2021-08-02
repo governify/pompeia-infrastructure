@@ -104,6 +104,7 @@ services:
     environment:
       - NODE_ENV=production
       - INFLUX_URL=http://host.docker.internal:5002
+      - GF_PATHS_PLUGINS=/usr/share/grafana/plugins
     volumes:
       - 'bluejay-dashboard-volume:/var/lib/grafana'
     ports:
