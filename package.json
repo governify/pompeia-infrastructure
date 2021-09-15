@@ -17,12 +17,12 @@
   },
   "homepage": "https://github.com/governify/governify-project-bluejay-infrastructure#readme",
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "chai-http": "^4.3.0",
-    "influx": "^5.5.2",
-    "mocha": "^8.0.1"
+    "influx": "^5.9.2",
+    "mocha": "^8.4.0"
   },
   "dependencies": {
-    "governify-commons": "^1.9.7"
+    "governify-commons": "^1.16.0"
   }
 }
