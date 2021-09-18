@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bluejay-mongo-registry
+  name: bluejay-mongo-registry
+  namespace: governify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bluejay-mongo-registry
+  template:
+    metadata:
+      labels:
+        app: bluejay-mongo-registry
+    spec:
+      containers:
+        - image: mongo
+          imagePullPolicy: Always
+          name: bluejay-mongo-registry
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: volume-bluejay-registry-db-data
+      volumes:
+        - name: volume-bluejay-registry-db-data
+          persistentVolumeClaim:
+            claimName: bluejay-mongo-registry

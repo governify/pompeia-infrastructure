@@ -1,0 +1,22 @@
+{{- if eq .Values.node_env "production" }}
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: httpproxy-bluejay-render
+  namespace: governify
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  virtualhost:
+    fqdn: ui{{ .Values.services_prefix }}{{ .Values.dns_suffix }}
+    {{- if .Values.certs }}
+    tls:
+      secretName: {{ .Release.Name }}-cert
+    {{- end}}
+  routes:
+  - services:
+    - name: bluejay-render
+      port: 80
+    loadBalancerPolicy:
+      strategy: Cookie
+{{- end }}
