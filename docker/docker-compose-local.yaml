@@ -15,7 +15,7 @@ services:
       - DEFAULT_MODEL=http://host.docker.internal:5200/api/v1/public/renders/index/model.json
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     volumes:
-      - './logs/render:/opt/app/logs'
+      - '../logs/render:/opt/app/logs'
     ports:
       - '5100:80'
     depends_on:
@@ -36,7 +36,7 @@ services:
       - ASSETS_REPOSITORY=https://github.com/governify/assets-bluejay
       - ASSETS_REPOSITORY_BRANCH=${ASSETS_REPOSITORY_BRANCH:?}
     volumes:
-      - './assets:/home/project'
+      - '../assets:/home/project'
     ports:
       - '5200:80'
     mem_limit: 400m
@@ -50,7 +50,7 @@ services:
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     volumes:
-      - './logs/bluejay-reporter:/opt/app/logs'
+      - '../logs/bluejay-reporter:/opt/app/logs'
     ports:
       - '5300:80'
     mem_limit: 400m
@@ -68,8 +68,8 @@ services:
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     volumes:
-      - './logs/registry:/opt/app/logs'
-      - './static:/opt/app/public/static'
+      - '../logs/registry:/opt/app/logs'
+      - '../static:/opt/app/public/static'
     ports:
       - '5400:80'
     depends_on:
@@ -165,8 +165,8 @@ services:
     container_name: bluejay-influx-reporter
     volumes:
       - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
-      - './configurations/influxdb:/etc/influxdb'
-      - './backups/influxdb:/var/backups'
+      - '../configurations/influxdb:/etc/influxdb'
+      - '../backups/influxdb:/var/backups'
     ports:
       - "5002:8086"
     mem_limit: 1200m
@@ -177,7 +177,7 @@ services:
     image: mongo
     volumes:
       - 'bluejay-mongo-registry-volume:/data/db'
-      - './backups/mongodb:/data2import'
+      - '../backups/mongodb:/data2import'
     ports:
       - "5001:27017"
     mem_limit: 2000m

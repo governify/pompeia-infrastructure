@@ -5,8 +5,8 @@ services:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - ./configurations/nginx/data/certbot/conf:/etc/letsencrypt
-      - ./configurations/nginx/data/certbot/www:/var/www/certbot
+      - ../configurations/nginx/data/certbot/conf:/etc/letsencrypt
+      - ../configurations/nginx/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 # ================================================
   bluejay-nginx:
@@ -24,13 +24,13 @@ services:
         soft: 10240
         hard: 10240
     volumes:
-      - './configurations/nginx/config/nginx.conf:/etc/nginx/nginx.conf'
-      - './configurations/nginx/data/certbot/conf:/etc/letsencrypt'
-      - './configurations/nginx/config/static:/etc/nginx/static'
-      - './configurations/nginx/certs:/etc/nginx/certs'
-      - './configurations/nginx/config/services-nginx-config:/etc/nginx/templates'
-      - './configurations/nginx/data/certbot/www:/var/www/certbot'
-      - './logs/bouncer-nginx:/var/log/nginx'
+      - '../configurations/nginx/config/nginx.conf:/etc/nginx/nginx.conf'
+      - '../configurations/nginx/data/certbot/conf:/etc/letsencrypt'
+      - '../configurations/nginx/config/static:/etc/nginx/static'
+      - '../configurations/nginx/certs:/etc/nginx/certs'
+      - '../configurations/nginx/config/services-nginx-config:/etc/nginx/templates'
+      - '../configurations/nginx/data/certbot/www:/var/www/certbot'
+      - '../logs/bouncer-nginx:/var/log/nginx'
     networks:
       - governify-bluejay
     mem_limit: 100m
@@ -52,7 +52,7 @@ services:
     networks:
       - governify-bluejay
     volumes:
-      - './logs/render:/opt/app/logs'
+      - '../logs/render:/opt/app/logs'
     depends_on:
       - bluejay-assets-manager
     mem_limit: 400m
@@ -74,7 +74,7 @@ services:
     networks:
       - governify-bluejay
     volumes:
-      - './assets:/home/project'
+      - '../assets:/home/project'
     mem_limit: 400m
     restart: 'unless-stopped'
 # ================================================
@@ -108,8 +108,8 @@ services:
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     volumes:
-      - './logs/registry:/opt/app/logs'
-      - './static:/opt/app/public/static'
+      - '../logs/registry:/opt/app/logs'
+      - '../static:/opt/app/public/static'
     depends_on:
       - bluejay-assets-manager
       - bluejay-mongo-registry
@@ -206,8 +206,8 @@ services:
       - governify-bluejay
     volumes:
       - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
-      - './configurations/influxdb:/etc/influxdb'
-      - './backups/influxdb:/var/backups'
+      - '../configurations/influxdb:/etc/influxdb'
+      - '../backups/influxdb:/var/backups'
     mem_limit: 1200m
     restart: 'unless-stopped'
 # ================================================
