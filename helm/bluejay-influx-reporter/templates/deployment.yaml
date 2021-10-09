@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bluejay-influx-reporter
+  name: bluejay-influx-reporter
+  namespace: governify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bluejay-influx-reporter
+  template:
+    metadata:
+      labels:
+        app: bluejay-influx-reporter
+    spec:
+      containers:
+
+        - image: influxdb:1.8.4-alpine
+          imagePullPolicy: Always
+          name: bluejay-influx-reporter
+          ports:
+            - containerPort: 8086
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/influxdb
+              name: volume-bluejay-influxdb-data
+      volumes:
+        - name: volume-bluejay-influxdb-data
+          persistentVolumeClaim:
+            claimName: bluejay-influx-reporter

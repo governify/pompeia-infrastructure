@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bluejay-collector-events
+  name: bluejay-collector-events
+  namespace: governify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bluejay-collector-events
+  template:
+    metadata:
+      labels:
+        app: bluejay-collector-events
+    spec:
+      containers:
+        - env:
+          - name: NODE_ENV
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: NODE_ENV 
+          - name: PORT
+            value: "80"
+          - name: REDIS_HOSTNAME
+            value: bluejay-redis-ec
+          - name: KEY_SCOPE_MANAGER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_SCOPE_MANAGER
+          - name: KEY_GITHUB
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_GITHUB
+          - name: KEY_PIVOTAL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_PIVOTAL
+          - name: KEY_TRAVIS_PUBLIC
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_TRAVIS_PUBLIC
+          - name: KEY_TRAVIS_PRIVATE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_TRAVIS_PRIVATE
+          - name: KEY_HEROKU
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_HEROKU
+          - name: KEY_CODECLIMATE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: KEY_CODECLIMATE
+          - name: GOV_INFRASTRUCTURE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-env
+                key: GOV_INFRASTRUCTURE
+          image: governify/collector-events:develop
+          imagePullPolicy: Always
+          name: bluejay-collector-events
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: 300Mi
+            limits:
+              memory: 900Mi
+

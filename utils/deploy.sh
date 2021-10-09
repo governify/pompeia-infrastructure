@@ -13,7 +13,7 @@ export $(grep -v '^#' .env | xargs)
 docker network create governify-bluejay
 
 # Docker compose
-docker-compose -f docker-compose.yaml --env-file ./.env up -d
+docker-compose -f docker/docker-compose.yaml --env-file ./.env up -d
 
 # Create dummy certificates
 ./utils/init-letsencrypt.sh 1 1

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bluejay-reporter
+    idle: 'true'
+  name: bluejay-reporter
+  namespace: governify
+spec:
+  {{- if eq .Values.node_env "development" }}
+  type: NodePort
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      {{- if eq .Values.node_env "development" }}
+      nodePort: 5300
+      {{- end }}
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: bluejay-reporter

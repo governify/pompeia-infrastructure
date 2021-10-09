@@ -1,0 +1,14 @@
+{{- if and (eq .Values.node_env "production") (.Values.certs) }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Name }}-cert
+  namespace: governify
+spec:
+  dnsNames:
+    - ui{{ .Values.services_prefix }}{{ .Values.dns_suffix }}
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  secretName: {{ .Release.Name }}-cert
+{{- end }}
