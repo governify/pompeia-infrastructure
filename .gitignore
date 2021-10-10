@@ -1,9 +1,11 @@
 node_modules
-/logs/
-tests/e2e-volumes
-/tests/logs
-/tests/static
-*.log
-.env*
+logs
+static
+backups
 assets
+tests/e2e-volumes
+tests/logs
+tests/static
+.env
 .env-local
+docker-local
