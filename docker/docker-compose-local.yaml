@@ -166,7 +166,6 @@ services:
     volumes:
       - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
       - '../configurations/influxdb:/etc/influxdb'
-      - '../backups/influxdb:/var/backups'
     ports:
       - "5002:8086"
     mem_limit: 1200m
@@ -177,7 +176,6 @@ services:
     image: mongo
     volumes:
       - 'bluejay-mongo-registry-volume:/data/db'
-      - '../backups/mongodb:/data2import'
     ports:
       - "5001:27017"
     mem_limit: 2000m
