@@ -163,6 +163,7 @@ services:
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - INFLUXDB_BIND_ADDRESS=:8088
     networks:
       - governify-bluejay
     depends_on:
@@ -202,6 +203,8 @@ services:
   bluejay-influx-reporter:
     container_name: bluejay-influx-reporter
     image: 'influxdb:1.8.4-alpine'
+    environment:
+      - INFLUXDB_BIND_ADDRESS=:8088
     networks:
       - governify-bluejay
     volumes:

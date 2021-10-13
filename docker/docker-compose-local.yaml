@@ -121,6 +121,7 @@ services:
     container_name: bluejay-director
     image: 'governify/director:develop'
     environment:
+      - INFLUXDB_BIND_ADDRESS=:8088
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
@@ -163,12 +164,15 @@ services:
   bluejay-influx-reporter:
     image: 'influxdb:1.8.4-alpine'
     container_name: bluejay-influx-reporter
+    environment:
+      - INFLUXDB_BIND_ADDRESS=:8088
     volumes:
       - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
       - '../configurations/influxdb:/etc/influxdb'
       - '../backups/influxdb:/var/backups'
     ports:
       - "5002:8086"
+      - "8088:8088"
     mem_limit: 1200m
     restart: 'unless-stopped'
 # ================================================
