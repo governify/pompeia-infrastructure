@@ -30,7 +30,7 @@ for domain in "${domains[@]}"; do
   echo "### Creating dummy certificate for $domain ..."
   path="/etc/letsencrypt/live/$domain"
   mkdir -p "$data_path/conf/live/$domain"
-  docker-compose run --rm --entrypoint "\
+  docker-compose -f ./docker/docker-compose.yaml run --rm --entrypoint "\
     openssl req -x509 -nodes -newkey rsa:4096 -days 1\
       -keyout '$path/privkey.pem' \
       -out '$path/fullchain.pem' \
