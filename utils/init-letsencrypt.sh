@@ -39,14 +39,14 @@ for domain in "${domains[@]}"; do
 done
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d bluejay-nginx
+docker-compose -f ./docker/docker-compose.yaml up --force-recreate -d bluejay-nginx
 echo
 
 if [ $dummy != 1 ]
 then
   for domain in "${domains[@]}"; do
     echo "### Deleting dummy certificate for $domain ..."
-    docker-compose run --rm --entrypoint "\
+    docker-compose -f ./docker/docker-compose.yaml run --rm --entrypoint "\
       rm -Rf /etc/letsencrypt/live/$domain && \
       rm -Rf /etc/letsencrypt/archive/$domain && \
       rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
@@ -68,7 +68,7 @@ then
   for domain in "${domains[@]}"; do
     domain_args="$domain_args -d $domain"
 
-    docker-compose run --rm --entrypoint "\
+    docker-compose -f ./docker/docker-compose.yaml run --rm --entrypoint "\
       certbot certonly --webroot -w /var/www/certbot \
         $staging_arg \
         $email_arg \
@@ -81,5 +81,5 @@ then
   done
 
   echo "### Reloading nginx ..."
-  docker-compose exec bluejay-nginx nginx -s reload
+  docker-compose -f ./docker/docker-compose.yaml exec bluejay-nginx nginx -s reload
 fi
