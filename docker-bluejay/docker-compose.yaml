@@ -89,7 +89,7 @@ services:
     networks:
       - governify-bluejay
     volumes:
-      - './logs/bluejay-reporter:/opt/app/logs'
+      - '../logs/bluejay-reporter:/opt/app/logs'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
