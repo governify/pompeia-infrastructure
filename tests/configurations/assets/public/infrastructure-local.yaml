@@ -14,11 +14,11 @@ internal:
   collector:
     default: 'events'
     events: 'http://host.docker.internal:5500'
-    dynamic: 'http://host.docker.internal:5501'
-    ppinot: 'http://host.docker.internal:5502'
-    pivotal: 'http://host.docker.internal:5503'
-    github: 'http://host.docker.internal:5504'
-    osseco: 'http://host.docker.internal:5505'
+#    dynamic: 'http://host.docker.internal:5501'
+#    ppinot: 'http://host.docker.internal:5502'
+#    pivotal: 'http://host.docker.internal:5503'
+#    github: 'http://host.docker.internal:5504'
+#    osseco: 'http://host.docker.internal:5505'
   dashboard:
     default: 'grafana'
     grafana: 'http://host.docker.internal:5600'
@@ -46,14 +46,14 @@ external:
   registry:
     default: 'standard'
     standard: 'http://localhost:5400'
-  collector:
-    default: 'events'
-    events: 'http://localhost:5500'
-    dynamic: 'http://localhost:5501'
-    ppinot: 'http://localhost:5502'
-    pivotal: 'http://localhost:5503'
-    github: 'http://localhost:5504'
-    osseco: 'http://localhost:5505'
+#  collector:
+#    default: 'events'
+#    events: 'http://localhost:5500'
+#    dynamic: 'http://localhost:5501'
+#    ppinot: 'http://localhost:5502'
+#    pivotal: 'http://localhost:5503'
+#    github: 'http://localhost:5504'
+#    osseco: 'http://localhost:5505'
   dashboard:
     default: 'grafana'
     grafana: 'http://localhost:5600'
