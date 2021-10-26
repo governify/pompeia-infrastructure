@@ -94,7 +94,7 @@ services:
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE}
     ports:
       - '5500:80'
-      volumes:
+    volumes:
       - './configurations/eventCollectorMockups:/opt/app/tests/e2e'
     depends_on:
       - bluejay-assets-manager
