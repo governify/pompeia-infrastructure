@@ -34,7 +34,7 @@ before((done) => {
       } else {
         console.log(`stdout: ${stdout}`);
       }
-      exec("docker-compose -f tests/docker-compose-e2e.yaml --env-file .env-local up -d", (error1, stdout1, stderr1) => {
+      exec("docker-compose -f tests/docker-compose-e2e.yaml up -d", (error1, stdout1, stderr1) => {
         if (error1) {
           console.log(`error: ${error1.message}`);
           done(error1);
