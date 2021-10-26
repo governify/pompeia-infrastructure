@@ -7,11 +7,6 @@ const Influx = require('influx');
 const influx = new Influx.InfluxDB('http://localhost:5002/metrics');
 
 const governify = require('governify-commons');
-process.env.GOV_INFRASTRUCTURE = "http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml";
-process.env.KEY_ASSETS_MANAGER_PRIVATE = "bd2f80ee5bc9d1122dd379b5bffdb818";
-process.env.KEY_SCOPE_MANAGER = "c025ff8502893fc6c5a87cf3febe4882";
-process.env.INFLUX_URL = "http://host.docker.internal:5002";
-process.env.ASSETS_REPOSITORY_BRANCH = "develop";
 
 // To reject expired TLS certs
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';

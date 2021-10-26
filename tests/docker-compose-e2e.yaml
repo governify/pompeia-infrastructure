@@ -13,7 +13,7 @@ services:
       - DEFAULT_VIEW=http://host.docker.internal:5200/api/v1/public/renders/index/view.html
       - DEFAULT_CONTROLLER=http://host.docker.internal:5200/api/v1/public/renders/index/controller.js
       - DEFAULT_MODEL=http://host.docker.internal:5200/api/v1/public/renders/index/model.json
-      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - GOV_INFRASTRUCTURE=http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml
     volumes:
       - './logs/render:/opt/app/logs'
     ports:
@@ -31,10 +31,10 @@ services:
       - PORT=80
       - LOGIN_USER=${USER_ASSETS:?}
       - LOGIN_PASSWORD=${PASS_ASSETS:?}
-      - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
+      - PRIVATE_KEY=bd2f80ee5bc9d1122dd379b5bffdb818
       - GOV_INFRASTRUCTURE=/home/project/public/infrastructure-local.yaml
       - ASSETS_REPOSITORY=https://github.com/governify/assets-bluejay
-      - ASSETS_REPOSITORY_BRANCH=${ASSETS_REPOSITORY_BRANCH:?}
+      - ASSETS_REPOSITORY_BRANCH=develop
     volumes:
       - './configurations/assets:/home/project'
     ports:
@@ -48,7 +48,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
-      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - GOV_INFRASTRUCTURE=http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml
     volumes:
       - './logs/bluejay-reporter:/opt/app/logs'
     ports:
@@ -66,7 +66,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
-      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - GOV_INFRASTRUCTURE=http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml
     volumes:
       - './logs/registry:/opt/app/logs'
       - './static:/opt/app/public/static'
@@ -84,14 +84,14 @@ services:
     environment:
       - NODE_ENV=e2e
       - PORT=80
-      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
+      - KEY_SCOPE_MANAGER=c025ff8502893fc6c5a87cf3febe4882
       - KEY_GITHUB=${KEY_GITHUB}
       - KEY_PIVOTAL=${KEY_PIVOTAL}
       - KEY_TRAVIS_PUBLIC=${KEY_TRAVIS_PUBLIC}
       - KEY_TRAVIS_PRIVATE=${KEY_TRAVIS_PRIVATE}
       - KEY_HEROKU=${KEY_HEROKU}
       - KEY_CODECLIMATE=${KEY_CODECLIMATE}
-      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - GOV_INFRASTRUCTURE=http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml
     ports:
       - '5500:80'
     volumes:
@@ -126,7 +126,7 @@ services:
       - INFLUXDB_BIND_ADDRESS=:8088
       - NODE_ENV=production
       - PORT=80
-      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - GOV_INFRASTRUCTURE=http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml
     ports:
       - '5800:80'
     depends_on:
@@ -140,11 +140,11 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
-      - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
-      - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
+      - KEY_ASSETS_MANAGER_PRIVATE=bd2f80ee5bc9d1122dd379b5bffdb818
+      - KEY_SCOPE_MANAGER=c025ff8502893fc6c5a87cf3febe4882
       - KEY_HEROKU=${KEY_HEROKU}
       - KEY_GITHUB=${KEY_GITHUB}
-      - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - GOV_INFRASTRUCTURE=http://host.docker.internal:5200/api/v1/public/infrastructure-local.yaml
     ports:
       - '5700:80'
     depends_on:
