@@ -48,6 +48,8 @@ before((done) => {
           console.log(`stdout: ${stdout1}`);
         }
         governify.init().then(() => {
+          console.log("AAAA")
+          exec("git checkout -- tests/configurations/assets/private/scope-manager/scopes.json")
           // Fetch the template from Assets Manager checking env variables substitution
           chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
             .get("/api/v1/public/testTemplate.json")
