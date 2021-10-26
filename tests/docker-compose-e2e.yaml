@@ -8,7 +8,7 @@ services:
       - NODE_ENV=production
       - PORT=80
       - LAYOUT=bootstrap5.html
-      - LOGIN_USER=${USER_RENDER:}
+      - LOGIN_USER=${USER_RENDER}
       - LOGIN_PASSWORD=${PASS_RENDER}
       - DEFAULT_VIEW=http://host.docker.internal:5200/api/v1/public/renders/index/view.html
       - DEFAULT_CONTROLLER=http://host.docker.internal:5200/api/v1/public/renders/index/controller.js
