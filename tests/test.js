@@ -12,6 +12,10 @@ process.env.KEY_ASSETS_MANAGER_PRIVATE = "bd2f80ee5bc9d1122dd379b5bffdb818";
 process.env.KEY_SCOPE_MANAGER = "c025ff8502893fc6c5a87cf3febe4882";
 process.env.INFLUX_URL = "http://host.docker.internal:5002";
 process.env.ASSETS_REPOSITORY_BRANCH = "develop";
+process.env.USER_RENDER="test";
+process.env.PASS_RENDER="test";
+process.env.USER_ASSETS="test";
+process.env.PASS_ASSETS="test";
 
 // To reject expired TLS certs
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
