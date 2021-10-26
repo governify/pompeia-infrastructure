@@ -6,7 +6,8 @@ assets
 tests/e2e-volumes
 tests/logs
 tests/static
-!tests/configurations/assets
+!tests/configurations/assets/private
+!tests/configurations/assets/public/testTemplate.json
 .env
 .env-local
 docker-local
