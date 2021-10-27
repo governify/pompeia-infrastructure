@@ -50,10 +50,6 @@ before((done) => {
         }
         governify.init().then(() => {
           exec("git checkout -- tests/configurations/assets/private/scope-manager/scopes.json")
-          exec(`echo ${governify.infrastructure.getServiceURL('internal.registry.default')} >> tests/logs/other.log`)
-          exec(`echo ${governify.infrastructure.getServiceURL('external.registry.default')} >> tests/logs/other.log`)
-          exec(`echo ${governify.infrastructure.getServiceURL('internal.assets.default')} >> tests/logs/other.log`)
-          exec(`echo ${governify.infrastructure.getServiceURL('external.assets.default')} >> tests/logs/other.log`)
           // Fetch the template from Assets Manager checking env variables substitution
           chai.request(governify.infrastructure.getServiceURL('internal.assets.default'))
             .get("/api/v1/public/testTemplate.json")
@@ -77,7 +73,7 @@ before((done) => {
                   }).catch(err => {
                     done(err);
                   })
-              }, 3000);
+              },10000);
             }).catch(err => {
               done(err);
             });;
