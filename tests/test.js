@@ -182,18 +182,6 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
 after((done) => {
   // Docker-compose down
   console.log('---------- Stop E2E infrastructure ----------');
-  execSync("docker logs bluejay-assets-manager > tests/logs/asset.log 2>&1");
-  execSync("docker logs bluejay-render > tests/logs/render.log 2>&1");
-  execSync("docker logs bluejay-reporter > tests/logs/reporter.log 2>&1");
-  execSync("docker logs bluejay-registry > tests/logs/registry.log 2>&1");
-  execSync("docker logs bluejay-collector-events > tests/logs/collector-events.log 2>&1");
-  execSync("docker logs bluejay-dashboard > tests/logs/dashboard.log 2>&1");
-  execSync("docker logs bluejay-scope-manager > tests/logs/scope-manager.log 2>&1");
-  execSync("docker logs bluejay-join > tests/logs/join.log 2>&1");
-  execSync("docker logs bluejay-influx-reporter > tests/logs/influx.log 2>&1");
-  execSync("docker logs bluejay-mongo-registry > tests/logs/mongo.log 2>&1");
-  execSync("docker logs bluejay-redis-ec > tests/logs/redis.log 2>&1");
-  execSync("docker logs bluejay-director > tests/logs/director.log 2>&1");
   exec("docker-compose -f tests/docker-compose-e2e.yaml down", (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
