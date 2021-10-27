@@ -182,7 +182,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
 after((done) => {
   // Docker-compose down
   console.log('---------- Stop E2E infrastructure ----------');
-  execSync("docker logs bluejay-assets-manager > tests/logs/asset-logs.log 2>&1");
+  execSync("docker logs bluejay-assets-manager > tests/logs/asset.log 2>&1");
   execSync("docker logs bluejay-render > tests/logs/render.log 2>&1");
   execSync("docker logs bluejay-reporter > tests/logs/reporter.log 2>&1");
   execSync("docker logs bluejay-registry > tests/logs/registry.log 2>&1");
