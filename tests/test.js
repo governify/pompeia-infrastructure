@@ -50,32 +50,32 @@ before((done) => {
         governify.init().then(() => {
           exec("git checkout -- tests/configurations/assets/private/scope-manager/scopes.json")
           // Fetch the template from Assets Manager checking env variables substitution
-          chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
-            .get("/api/v1/public/testTemplate.json")
-            .then(response => {
-              testAgreement = JSON.parse(response.text);
+        //   chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
+        //     .get("/api/v1/public/testTemplate.json")
+        //     .then(response => {
+        //       testAgreement = JSON.parse(response.text);
 
-              // Delete and check the agreement does not exist already
-              setTimeout(() => {
-                chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
-                  .delete("/api/v6/agreements/" + testAgreement.id)
-                  .then(response => {
-                    chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
-                      .get("/api/v6/agreements/" + testAgreement.id)
-                      .then(response => {
-                        // Check the agreement does not exist
-                        assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
-                        done();
-                      }).catch(err => {
-                        done(err);
-                      });
-                  }).catch(err => {
-                    done(err);
-                  })
-              }, 3000);
-            }).catch(err => {
-              done(err);
-            });;
+        //       // Delete and check the agreement does not exist already
+        //       setTimeout(() => {
+        //         chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+        //           .delete("/api/v6/agreements/" + testAgreement.id)
+        //           .then(response => {
+        //             chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+        //               .get("/api/v6/agreements/" + testAgreement.id)
+        //               .then(response => {
+        //                 // Check the agreement does not exist
+        //                 assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
+        //                 done();
+        //               }).catch(err => {
+        //                 done(err);
+        //               });
+        //           }).catch(err => {
+        //             done(err);
+        //           })
+        //       }, 3000);
+        //     }).catch(err => {
+        //       done(err);
+        //     });;
         });
       });
     });
