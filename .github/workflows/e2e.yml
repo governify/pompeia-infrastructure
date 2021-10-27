@@ -33,5 +33,5 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: logs
-        path: asset-logs.log
+        name: Logs
+        path: tests/logs
