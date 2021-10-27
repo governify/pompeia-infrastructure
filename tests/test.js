@@ -75,6 +75,7 @@ before((done) => {
                     done(err);
                   })
               }, 3000); */
+              done();
             }).catch(err => {
               done(err);
             });;
