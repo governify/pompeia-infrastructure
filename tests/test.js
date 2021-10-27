@@ -76,7 +76,10 @@ before((done) => {
         //     }).catch(err => {
         //       done(err);
         //     });;
-        });
+        }).catch(err => {
+            console.error("ERROR: ", err);
+            done(err);
+        });;
       });
     });
   });
