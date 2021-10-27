@@ -178,7 +178,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
   });
 });
 
-/* after((done) => {
+after((done) => {
   // Docker-compose down
   console.log('---------- Stop E2E infrastructure ----------');
   exec("docker-compose -f tests/docker-compose-e2e.yaml down", (error, stdout, stderr) => {
@@ -190,6 +190,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
     } else {
       console.log(`stdout: ${stdout}`);
     }
+    exec("docker logs --tail 200 bluejay-assets-manager > asset-logs.log")
     done();
   });
-}); */
+});

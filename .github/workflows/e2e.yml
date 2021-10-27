@@ -30,4 +30,5 @@ jobs:
       env:
         CI: true
     - name: Docker logs
-      run: docker logs "${{ job.services.bluejay-assets-manager.id }}"
+      run: cat asset-logs.log
+      if: always()
