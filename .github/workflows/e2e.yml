@@ -23,6 +23,8 @@ jobs:
       run: npm ci
     - name: Add host.docker.internal association to 172.17.0.1
       run: sudo echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+    - name: Give permissions to edit assets tests folder
+      run: sudo chmod -R 777 /tests/configurations/assets
     - name: Run tests
       run: npm run test
       env:
