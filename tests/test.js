@@ -49,7 +49,6 @@ before((done) => {
         }
         governify.init().then(() => {
           exec("git checkout -- tests/configurations/assets/private/scope-manager/scopes.json")
-          exec("docker logs --tail 100 bluejay-assets-manager")
           // Fetch the template from Assets Manager checking env variables substitution
           chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
             .get("/api/v1/public/testTemplate.json")
