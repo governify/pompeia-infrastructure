@@ -49,38 +49,34 @@ before((done) => {
         }
         governify.init().then(() => {
           exec("git checkout -- tests/configurations/assets/private/scope-manager/scopes.json")
-          done();
           // Fetch the template from Assets Manager checking env variables substitution
-        //   chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
-        //     .get("/api/v1/public/testTemplate.json")
-        //     .then(response => {
-        //       testAgreement = JSON.parse(response.text);
+          chai.request(governify.infrastructure.getServiceURL('internal.assets.default'))
+            .get("/api/v1/public/testTemplate.json")
+            .then(response => {
+              testAgreement = JSON.parse(response.text);
 
-        //       // Delete and check the agreement does not exist already
-        //       setTimeout(() => {
-        //         chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
-        //           .delete("/api/v6/agreements/" + testAgreement.id)
-        //           .then(response => {
-        //             chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
-        //               .get("/api/v6/agreements/" + testAgreement.id)
-        //               .then(response => {
-        //                 // Check the agreement does not exist
-        //                 assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
-        //                 done();
-        //               }).catch(err => {
-        //                 done(err);
-        //               });
-        //           }).catch(err => {
-        //             done(err);
-        //           })
-        //       }, 3000);
-        //     }).catch(err => {
-        //       done(err);
-        //     });;
-        }).catch(err => {
-            console.error("ERROR: ", err);
-            done(err);
-        });;
+              // Delete and check the agreement does not exist already
+              setTimeout(() => {
+                chai.request(governify.infrastructure.getServiceURL('internal.registry.default'))
+                  .delete("/api/v6/agreements/" + testAgreement.id)
+                  .then(response => {
+                    chai.request(governify.infrastructure.getServiceURL('internal.registry.default'))
+                      .get("/api/v6/agreements/" + testAgreement.id)
+                      .then(response => {
+                        // Check the agreement does not exist
+                        assert.strictEqual(response.status, 404, 'The agreement should not exist at the beginning');
+                        done();
+                      }).catch(err => {
+                        done(err);
+                      });
+                  }).catch(err => {
+                    done(err);
+                  })
+              }, 3000);
+            }).catch(err => {
+              done(err);
+            });;
+        });
       });
     });
   });
@@ -90,7 +86,7 @@ before((done) => {
 describe('Create agreement, calculate guarantees and delete agreement: ', () => {
   it('should successfully create an agreement', (done) => {
     // Send to update points
-    chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+    chai.request(governify.infrastructure.getServiceURL('internal.registry.default'))
       .post("/api/v6/agreements")
       .send(testAgreement)
       .then(response => {
@@ -98,7 +94,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
         assert.strictEqual(response.status, 200, 'The agreement creation must be successful');
 
         // Registry check
-        chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+        chai.request(governify.infrastructure.getServiceURL('internal.registry.default'))
           .get("/api/v6/agreements/" + testAgreement.id)
           .then(response => {
 
@@ -123,7 +119,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
 
   it('should compute agreement periods', (done) => {
     // Send to update points
-    chai.request(governify.infrastructure.getServiceURL('external.reporter.default'))
+    chai.request(governify.infrastructure.getServiceURL('internal.reporter.default'))
       .post('/api/v4/contracts/' + testAgreement.id + '/createPointsFromPeriods')
       .send({ periods: [{ from: "2020-04-27T00:00:00Z", to: "2020-04-27T23:59:00Z" }] })
       .then(response => {
@@ -160,14 +156,14 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
 
   it('should successfully delete the agreement', (done) => {
     // Send to update points
-    chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+    chai.request(governify.infrastructure.getServiceURL('internal.registry.default'))
       .delete("/api/v6/agreements/" + testAgreement.id)
       .then(response => {
         // Check the response is successful
         assert.strictEqual(response.status, 200, 'The DELETE request must be successful');
 
         // Registry check
-        chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
+        chai.request(governify.infrastructure.getServiceURL('internal.registry.default'))
           .get("/api/v6/agreements/" + testAgreement.id)
           .then(response => {
             // Check the agreement does not exist
