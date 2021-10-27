@@ -26,7 +26,7 @@ jobs:
     - name: Give permissions to edit assets tests folder
       run: |
         sudo chmod -R 777 tests/configurations/assets
-        sudo chmod -R 777 tests/logs
+        mkdir -m 777 tests/logs
     - name: Run tests
       run: npm run test
       env:
