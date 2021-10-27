@@ -51,13 +51,14 @@ before((done) => {
         governify.init().then(() => {
           exec("git checkout -- tests/configurations/assets/private/scope-manager/scopes.json")
           // Fetch the template from Assets Manager checking env variables substitution
+          exec(`echo ${governify.infrastructure.getServiceURL('external.assets.default')}`)
           chai.request(governify.infrastructure.getServiceURL('external.assets.default'))
             .get("/api/v1/public/testTemplate.json")
             .then(response => {
               testAgreement = JSON.parse(response.text);
 
               // Delete and check the agreement does not exist already
-              setTimeout(() => {
+              /* setTimeout(() => {
                 chai.request(governify.infrastructure.getServiceURL('external.registry.default'))
                   .delete("/api/v6/agreements/" + testAgreement.id)
                   .then(response => {
@@ -73,7 +74,7 @@ before((done) => {
                   }).catch(err => {
                     done(err);
                   })
-              }, 3000);
+              }, 3000); */
             }).catch(err => {
               done(err);
             });;
