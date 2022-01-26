@@ -136,6 +136,7 @@ services:
     container_name: bluejay-scope-manager
     image: 'governify/scope-manager:develop'
     environment:
+      - PRIVATE_KEY=${PRIVATE_KEY}
       - NODE_ENV=production
       - PORT=80
       - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
@@ -155,6 +156,8 @@ services:
     container_name: bluejay-join
     image: 'governify/join-bluejay:develop'
     environment:
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - KEY_GITHUB=${KEY_GITHUB}
       - NODE_ENV=development
       - PORT=80
     ports:

@@ -173,8 +173,9 @@ services:
 # ================================================
   bluejay-scope-manager:
     container_name: bluejay-scope-manager
-    image: governify/scope-manager:v1.5.1
+    image: governify/scope-manager:v1.6.0
     environment:
+      - PRIVATE_KEY=${PRIVATE_KEY}
       - NODE_ENV=production
       - PORT=80
       - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
@@ -192,8 +193,10 @@ services:
 # ================================================
   bluejay-join:
     container_name: bluejay-join
-    image: governify/join-bluejay:v1.1.1
+    image: governify/join-bluejay:v1.2.0
     environment:
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - KEY_GITHUB=${KEY_GITHUB}
       - NODE_ENV=production
       - PORT=80
     networks:
