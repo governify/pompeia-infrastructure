@@ -4,7 +4,7 @@
   "description": "Infrastructure for deploying the ecosystem as described in the BLUEJAY project.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 600000 --no-warnings ./tests"
+    "test": "mocha --timeout 1200000 --no-warnings ./tests"
   },
   "repository": {
     "type": "git",
