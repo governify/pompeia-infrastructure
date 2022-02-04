@@ -2,6 +2,7 @@ server {
     listen 443 ssl;
 
     server_name director${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX};
+    access_log /var/log/nginx/director.access.log main;
     ssl_certificate /etc/letsencrypt/live/director${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/director${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX}/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
@@ -16,6 +17,7 @@ server {
 server {
     listen 80;
     server_name director${BLUEJAY_SERVICES_PREFIX}${BLUEJAY_DNS_SUFFIX};
+    access_log /var/log/nginx/director.access.log main;
     location / {
         return 301 https://$host$request_uri;
     }    

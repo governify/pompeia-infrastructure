@@ -1,5 +1,17 @@
 version: '2.2'
 services:
+  # Exporter (exporters defined here are external to Bluejay infrastructure)
+  bluejay-nginx-exporter:
+    container_name: bluejay-nginx-exporter
+    image: quay.io/martinhelmich/prometheus-nginxlog-exporter:v1
+    depends_on:
+      - bluejay-nginx
+    volumes:
+      - '../logs/bouncer-nginx:/mnt/nginxlogs'
+      - '../configurations/exporter/nginx-exporter.hcl:/etc/nginx-exporter.hcl'
+    command: '-config-file /etc/nginx-exporter.hcl'
+    networks:
+      - governify-bluejay
 ############### NGINX/CERTIFICATES ###############
   certbot:
     image: certbot/certbot
