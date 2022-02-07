@@ -185,7 +185,7 @@ services:
 # ================================================
   bluejay-scope-manager:
     container_name: bluejay-scope-manager
-    image: governify/scope-manager:v1.6.0
+    image: governify/scope-manager:v1.7.0
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
       - NODE_ENV=production
