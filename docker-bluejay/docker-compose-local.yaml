@@ -1,6 +1,6 @@
 version: '2.2'
 services:
-############### MICROSERVICES ############### 
+  ############### MICROSERVICES ############### 
   bluejay-render:
     container_name: bluejay-render
     image: governify/render:develop
@@ -22,7 +22,7 @@ services:
       - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-assets-manager:
     container_name: bluejay-assets-manager
     image: 'governify/assets-manager:develop'
@@ -41,7 +41,7 @@ services:
       - '5200:80'
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-reporter:
     container_name: bluejay-reporter
     image: governify/reporter:develop
@@ -59,7 +59,7 @@ services:
       - bluejay-assets-manager
       - bluejay-mongo-registry
       - bluejay-influx-reporter
-# ================================================
+  # ================================================
   bluejay-registry:
     container_name: bluejay-registry
     image: 'governify/registry:develop'
@@ -77,7 +77,7 @@ services:
       - bluejay-mongo-registry
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-collector-events:
     container_name: bluejay-collector-events
     image: 'governify/collector-events:develop'
@@ -99,7 +99,7 @@ services:
       - bluejay-redis-ec
     mem_limit: 700m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-dashboard:
     container_name: bluejay-dashboard
     image: governify/dashboard:develop
@@ -116,7 +116,7 @@ services:
       - bluejay-reporter
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-director:
     container_name: bluejay-director
     image: 'governify/director:develop'
@@ -124,6 +124,7 @@ services:
       - INFLUXDB_BIND_ADDRESS=:8088
       - NODE_ENV=production
       - PORT=80
+      - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     ports:
       - '5800:80'
@@ -131,7 +132,7 @@ services:
       - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-scope-manager:
     container_name: bluejay-scope-manager
     image: 'governify/scope-manager:develop'
@@ -151,7 +152,7 @@ services:
       - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-join:
     container_name: bluejay-join
     image: 'governify/join-bluejay:develop'
@@ -164,7 +165,7 @@ services:
       - '6001:80'
     mem_limit: 400m
     restart: 'unless-stopped'
-############### DATABASES ###############
+  ############### DATABASES ###############
   bluejay-influx-reporter:
     image: 'influxdb:1.8.4-alpine'
     container_name: bluejay-influx-reporter
@@ -178,7 +179,7 @@ services:
       - "8088:8088"
     mem_limit: 1200m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-mongo-registry:
     container_name: bluejay-mongo-registry
     image: mongo
@@ -188,7 +189,7 @@ services:
       - "5001:27017"
     mem_limit: 2000m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-redis-ec:
     container_name: bluejay-redis-ec
     image: redis

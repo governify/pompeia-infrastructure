@@ -12,7 +12,7 @@ services:
     command: '-config-file /etc/nginx-exporter.hcl'
     networks:
       - governify-bluejay
-############### NGINX/CERTIFICATES ###############
+  ############### NGINX/CERTIFICATES ###############
   certbot:
     image: certbot/certbot
     restart: unless-stopped
@@ -20,7 +20,7 @@ services:
       - ../configurations/nginx/data/certbot/conf:/etc/letsencrypt
       - ../configurations/nginx/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-# ================================================
+  # ================================================
   bluejay-nginx:
     container_name: bluejay-nginx
     image: nginx
@@ -47,7 +47,7 @@ services:
       - governify-bluejay
     mem_limit: 100m
     restart: 'on-failure:5'
-############### MICROSERVICES ############### 
+  ############### MICROSERVICES ############### 
   bluejay-render:
     container_name: bluejay-render
     image: governify/render:v2.2.0
@@ -69,7 +69,7 @@ services:
       - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-assets-manager:
     container_name: bluejay-assets-manager
     image: governify/assets-manager:v1.4.1
@@ -89,7 +89,7 @@ services:
       - '../assets:/home/project'
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-reporter:
     container_name: bluejay-reporter
     image: governify/reporter:v2.2.0
@@ -108,7 +108,7 @@ services:
       - bluejay-assets-manager
       - bluejay-mongo-registry
       - bluejay-influx-reporter
-# ================================================
+  # ================================================
   bluejay-registry:
     container_name: bluejay-registry
     image: governify/registry:v3.4.0
@@ -127,7 +127,7 @@ services:
       - bluejay-mongo-registry
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-collector-events:
     container_name: bluejay-collector-events
     image: governify/collector-events:v1.11.0
@@ -150,7 +150,7 @@ services:
       - bluejay-redis-ec
     mem_limit: 700m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-dashboard:
     container_name: bluejay-dashboard
     image: governify/dashboard:latest
@@ -167,13 +167,14 @@ services:
       - bluejay-reporter
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-director:
     container_name: bluejay-director
     image: governify/director:v1.4.0
     environment:
       - NODE_ENV=production
       - PORT=80
+      - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
       - INFLUXDB_BIND_ADDRESS=:8088
     networks:
@@ -182,7 +183,7 @@ services:
       - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-scope-manager:
     container_name: bluejay-scope-manager
     image: governify/scope-manager:v1.7.0
@@ -202,7 +203,7 @@ services:
       - bluejay-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-join:
     container_name: bluejay-join
     image: governify/join-bluejay:v1.3.0
@@ -215,7 +216,7 @@ services:
       - governify-bluejay
     mem_limit: 400m
     restart: 'unless-stopped'
-############### DATABASES ###############
+  ############### DATABASES ###############
   bluejay-influx-reporter:
     container_name: bluejay-influx-reporter
     image: 'influxdb:1.8.4-alpine'
@@ -226,7 +227,7 @@ services:
       - '../configurations/influxdb:/etc/influxdb'
     mem_limit: 1200m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-mongo-registry:
     container_name: bluejay-mongo-registry
     image: mongo
@@ -236,7 +237,7 @@ services:
       - 'bluejay-mongo-registry-volume:/data/db'
     mem_limit: 2000m
     restart: 'unless-stopped'
-# ================================================
+  # ================================================
   bluejay-redis-ec:
     container_name: bluejay-redis-ec
     image: redis
