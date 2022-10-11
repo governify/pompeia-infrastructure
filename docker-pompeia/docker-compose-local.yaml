@@ -1,8 +1,8 @@
 version: '2.2'
 services:
   ############### MICROSERVICES ############### 
-  bluejay-render:
-    container_name: bluejay-render
+  pompeia-render:
+    container_name: pompeia-render
     image: governify/render:develop
     environment:
       - NODE_ENV=production
@@ -19,12 +19,12 @@ services:
     ports:
       - '5100:80'
     depends_on:
-      - bluejay-assets-manager
+      - pompeia-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-assets-manager:
-    container_name: bluejay-assets-manager
+  pompeia-assets-manager:
+    container_name: pompeia-assets-manager
     image: 'governify/assets-manager:develop'
     environment:
       - NODE_ENV=production
@@ -33,7 +33,7 @@ services:
       - LOGIN_PASSWORD=${PASS_ASSETS:?}
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
       - GOV_INFRASTRUCTURE=/home/project/public/infrastructure-local.yaml
-      - ASSETS_REPOSITORY=https://github.com/governify/assets-bluejay
+      - ASSETS_REPOSITORY=https://github.com/governify/assets-pompeia
       - ASSETS_REPOSITORY_BRANCH=${ASSETS_REPOSITORY_BRANCH:?}
     volumes:
       - '../assets:/home/project'
@@ -42,26 +42,26 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-reporter:
-    container_name: bluejay-reporter
+  pompeia-reporter:
+    container_name: pompeia-reporter
     image: governify/reporter:develop
     environment:
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     volumes:
-      - '../logs/bluejay-reporter:/opt/app/logs'
+      - '../logs/pompeia-reporter:/opt/app/logs'
     ports:
       - '5300:80'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-mongo-registry
-      - bluejay-influx-reporter
+      - pompeia-assets-manager
+      - pompeia-mongo-registry
+      - pompeia-influx-reporter
   # ================================================
-  bluejay-registry:
-    container_name: bluejay-registry
+  pompeia-registry:
+    container_name: pompeia-registry
     image: 'governify/registry:develop'
     environment:
       - NODE_ENV=production
@@ -73,13 +73,13 @@ services:
     ports:
       - '5400:80'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-mongo-registry
+      - pompeia-assets-manager
+      - pompeia-mongo-registry
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-collector-events:
-    container_name: bluejay-collector-events
+  pompeia-collector-events:
+    container_name: pompeia-collector-events
     image: 'governify/collector-events:develop'
     environment:
       - NODE_ENV=production
@@ -95,30 +95,30 @@ services:
     ports:
       - '5500:80'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-redis-ec
+      - pompeia-assets-manager
+      - pompeia-redis-ec
     mem_limit: 700m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-dashboard:
-    container_name: bluejay-dashboard
+  pompeia-dashboard:
+    container_name: pompeia-dashboard
     image: governify/dashboard:develop
     environment:
       - NODE_ENV=production
       - INFLUX_URL=http://host.docker.internal:5002
       - GF_PATHS_PLUGINS=/usr/share/grafana/plugins
     volumes:
-      - 'bluejay-dashboard-volume:/var/lib/grafana'
+      - 'pompeia-dashboard-volume:/var/lib/grafana'
     ports:
       - '5600:3000'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-reporter
+      - pompeia-assets-manager
+      - pompeia-reporter
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-director:
-    container_name: bluejay-director
+  pompeia-director:
+    container_name: pompeia-director
     image: 'governify/director:develop'
     environment:
       - INFLUXDB_BIND_ADDRESS=:8088
@@ -129,12 +129,12 @@ services:
     ports:
       - '5800:80'
     depends_on:
-      - bluejay-assets-manager
+      - pompeia-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-scope-manager:
-    container_name: bluejay-scope-manager
+  pompeia-scope-manager:
+    container_name: pompeia-scope-manager
     image: 'governify/scope-manager:develop'
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
@@ -149,12 +149,12 @@ services:
     ports:
       - '5700:80'
     depends_on:
-      - bluejay-assets-manager
+      - pompeia-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-join:
-    container_name: bluejay-join
+  pompeia-join:
+    container_name: pompeia-join
     image: 'governify/join-bluejay:develop'
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
@@ -166,13 +166,13 @@ services:
     mem_limit: 400m
     restart: 'unless-stopped'
   ############### DATABASES ###############
-  bluejay-influx-reporter:
+  pompeia-influx-reporter:
     image: 'influxdb:1.8.4-alpine'
-    container_name: bluejay-influx-reporter
+    container_name: pompeia-influx-reporter
     environment:
       - INFLUXDB_BIND_ADDRESS=:8088
     volumes:
-      - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
+      - 'pompeia-influx-reporter-volume:/var/lib/influxdb'
       - '../configurations/influxdb:/etc/influxdb'
     ports:
       - "5002:8086"
@@ -180,27 +180,27 @@ services:
     mem_limit: 1200m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-mongo-registry:
-    container_name: bluejay-mongo-registry
+  pompeia-mongo-registry:
+    container_name: pompeia-mongo-registry
     image: mongo
     volumes:
-      - 'bluejay-mongo-registry-volume:/data/db'
+      - 'pompeia-mongo-registry-volume:/data/db'
     ports:
       - "5001:27017"
     mem_limit: 2000m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-redis-ec:
-    container_name: bluejay-redis-ec
+  pompeia-redis-ec:
+    container_name: pompeia-redis-ec
     image: redis
     volumes:
-      - 'bluejay-redis-ec-volume:/data'
+      - 'pompeia-redis-ec-volume:/data'
     ports:
       - "5003:6379"
     mem_limit: 1200m
     restart: 'unless-stopped'
 volumes:
-  bluejay-influx-reporter-volume: null
-  bluejay-mongo-registry-volume: null
-  bluejay-dashboard-volume: null
-  bluejay-redis-ec-volume: null
+  pompeia-influx-reporter-volume: null
+  pompeia-mongo-registry-volume: null
+  pompeia-dashboard-volume: null
+  pompeia-redis-ec-volume: null

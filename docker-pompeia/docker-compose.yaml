@@ -1,17 +1,17 @@
 version: '2.2'
 services:
-  # Exporter (exporters defined here are external to Bluejay infrastructure)
-  bluejay-nginx-exporter:
-    container_name: bluejay-nginx-exporter
+  # Exporter (exporters defined here are external to pompeia infrastructure)
+  pompeia-nginx-exporter:
+    container_name: pompeia-nginx-exporter
     image: quay.io/martinhelmich/prometheus-nginxlog-exporter:v1
     depends_on:
-      - bluejay-nginx
+      - pompeia-nginx
     volumes:
       - '../logs/bouncer-nginx:/mnt/nginxlogs'
       - '../configurations/exporter/nginx-exporter.hcl:/etc/nginx-exporter.hcl'
     command: '-config-file /etc/nginx-exporter.hcl'
     networks:
-      - governify-bluejay
+      - governify-pompeia
   ############### NGINX/CERTIFICATES ###############
   certbot:
     image: certbot/certbot
@@ -21,12 +21,12 @@ services:
       - ../configurations/nginx/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   # ================================================
-  bluejay-nginx:
-    container_name: bluejay-nginx
+  pompeia-nginx:
+    container_name: pompeia-nginx
     image: nginx
     environment:
-      - BLUEJAY_SERVICES_PREFIX=${SERVICES_PREFIX:?}
-      - BLUEJAY_DNS_SUFFIX=${DNS_SUFFIX:?}
+      - POMPEIA_SERVICES_PREFIX=${SERVICES_PREFIX:?}
+      - POMPEIA_DNS_SUFFIX=${DNS_SUFFIX:?}
     ports:
       - '443:443'
       - '80:80'
@@ -44,12 +44,12 @@ services:
       - '../configurations/nginx/data/certbot/www:/var/www/certbot'
       - '../logs/bouncer-nginx:/var/log/nginx'
     networks:
-      - governify-bluejay
+      - governify-pompeia
     mem_limit: 100m
     restart: 'on-failure:5'
   ############### MICROSERVICES ############### 
-  bluejay-render:
-    container_name: bluejay-render
+  pompeia-render:
+    container_name: pompeia-render
     image: governify/render:v2.2.0
     environment:
       - NODE_ENV=production
@@ -57,21 +57,21 @@ services:
       - LAYOUT=bootstrap5.html
       - LOGIN_USER=${USER_RENDER:?}
       - LOGIN_PASSWORD=${PASS_RENDER:?}
-      - DEFAULT_VIEW=http://bluejay-assets-manager/api/v1/public/renders/index/view.html
-      - DEFAULT_CONTROLLER=http://bluejay-assets-manager/api/v1/public/renders/index/controller.js
-      - DEFAULT_MODEL=http://bluejay-assets-manager/api/v1/public/renders/index/model.json
+      - DEFAULT_VIEW=http://pompeia-assets-manager/api/v1/public/renders/index/view.html
+      - DEFAULT_CONTROLLER=http://pompeia-assets-manager/api/v1/public/renders/index/controller.js
+      - DEFAULT_MODEL=http://pompeia-assets-manager/api/v1/public/renders/index/model.json
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
       - '../logs/render:/opt/app/logs'
     depends_on:
-      - bluejay-assets-manager
+      - pompeia-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-assets-manager:
-    container_name: bluejay-assets-manager
+  pompeia-assets-manager:
+    container_name: pompeia-assets-manager
     image: governify/assets-manager:v1.4.1
     environment:
       - NODE_ENV=production
@@ -81,17 +81,17 @@ services:
       - PRIVATE_KEY=${KEY_ASSETS_MANAGER_PRIVATE:?}
       - SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - DNS_SUFFIX=${DNS_SUFFIX:?}
-      - ASSETS_REPOSITORY=https://github.com/governify/assets-bluejay
+      - ASSETS_REPOSITORY=https://github.com/governify/assets-pompeia
       - ASSETS_REPOSITORY_BRANCH=${ASSETS_REPOSITORY_BRANCH:?}
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
       - '../assets:/home/project'
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-reporter:
-    container_name: bluejay-reporter
+  pompeia-reporter:
+    container_name: pompeia-reporter
     image: governify/reporter:v2.3.2
     environment:
       - DB_HOST=influxdb
@@ -99,23 +99,23 @@ services:
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
-      - '../logs/bluejay-reporter:/opt/app/logs'
+      - '../logs/pompeia-reporter:/opt/app/logs'
     mem_limit: 400m
     restart: 'unless-stopped'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-mongo-registry
-      - bluejay-influx-reporter
+      - pompeia-assets-manager
+      - pompeia-mongo-registry
+      - pompeia-influx-reporter
   # ================================================
-  bluejay-registry:
-    container_name: bluejay-registry
+  pompeia-registry:
+    container_name: pompeia-registry
     image: governify/registry:v3.5.0
     networks:
-      - governify-bluejay
+      - governify-pompeia
     environment:
-      - DB_HOST=bluejay-mongo-registry
+      - DB_HOST=pompeia-mongo-registry
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
@@ -123,18 +123,18 @@ services:
       - '../logs/registry:/opt/app/logs'
       - '../static:/opt/app/public/static'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-mongo-registry
+      - pompeia-assets-manager
+      - pompeia-mongo-registry
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-collector-events:
-    container_name: bluejay-collector-events
+  pompeia-collector-events:
+    container_name: pompeia-collector-events
     image: governify/collector-events:v1.11.0
     environment:
       - NODE_ENV=production
       - PORT=80
-      - REDIS_HOSTNAME=bluejay-redis-ec
+      - REDIS_HOSTNAME=pompeia-redis-ec
       - KEY_SCOPE_MANAGER=${KEY_SCOPE_MANAGER}
       - KEY_GITHUB=${KEY_GITHUB}
       - KEY_PIVOTAL=${KEY_PIVOTAL}
@@ -144,32 +144,32 @@ services:
       - KEY_CODECLIMATE=${KEY_CODECLIMATE}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     networks:
-      - governify-bluejay
+      - governify-pompeia
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-redis-ec
+      - pompeia-assets-manager
+      - pompeia-redis-ec
     mem_limit: 700m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-dashboard:
-    container_name: bluejay-dashboard
+  pompeia-dashboard:
+    container_name: pompeia-dashboard
     image: governify/dashboard:latest
     environment:
       - NODE_ENV=production
-      - INFLUX_URL=http://bluejay-influx-reporter:8086
+      - INFLUX_URL=http://pompeia-influx-reporter:8086
       - GF_PATHS_PLUGINS=/usr/share/grafana/plugins
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
-      - 'bluejay-dashboard-volume:/var/lib/grafana'
+      - 'pompeia-dashboard-volume:/var/lib/grafana'
     depends_on:
-      - bluejay-assets-manager
-      - bluejay-reporter
+      - pompeia-assets-manager
+      - pompeia-reporter
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-director:
-    container_name: bluejay-director
+  pompeia-director:
+    container_name: pompeia-director
     image: governify/director:v1.4.0
     environment:
       - NODE_ENV=production
@@ -178,14 +178,14 @@ services:
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
       - INFLUXDB_BIND_ADDRESS=:8088
     networks:
-      - governify-bluejay
+      - governify-pompeia
     depends_on:
-      - bluejay-assets-manager
+      - pompeia-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-scope-manager:
-    container_name: bluejay-scope-manager
+  pompeia-scope-manager:
+    container_name: pompeia-scope-manager
     image: governify/scope-manager:v1.7.1
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
@@ -198,14 +198,14 @@ services:
       - KEY_GITHUB=${KEY_GITHUB}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
     networks:
-      - governify-bluejay
+      - governify-pompeia
     depends_on:
-      - bluejay-assets-manager
+      - pompeia-assets-manager
     mem_limit: 400m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-join:
-    container_name: bluejay-join
+  pompeia-join:
+    container_name: pompeia-join
     image: governify/join-bluejay:v1.3.0
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
@@ -213,45 +213,45 @@ services:
       - NODE_ENV=production
       - PORT=80
     networks:
-      - governify-bluejay
+      - governify-pompeia
     mem_limit: 400m
     restart: 'unless-stopped'
   ############### DATABASES ###############
-  bluejay-influx-reporter:
-    container_name: bluejay-influx-reporter
+  pompeia-influx-reporter:
+    container_name: pompeia-influx-reporter
     image: 'influxdb:1.8.4-alpine'
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
-      - 'bluejay-influx-reporter-volume:/var/lib/influxdb'
+      - 'pompeia-influx-reporter-volume:/var/lib/influxdb'
       - '../configurations/influxdb:/etc/influxdb'
     mem_limit: 1200m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-mongo-registry:
-    container_name: bluejay-mongo-registry
+  pompeia-mongo-registry:
+    container_name: pompeia-mongo-registry
     image: mongo
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
-      - 'bluejay-mongo-registry-volume:/data/db'
+      - 'pompeia-mongo-registry-volume:/data/db'
     mem_limit: 2000m
     restart: 'unless-stopped'
   # ================================================
-  bluejay-redis-ec:
-    container_name: bluejay-redis-ec
+  pompeia-redis-ec:
+    container_name: pompeia-redis-ec
     image: redis
     networks:
-      - governify-bluejay
+      - governify-pompeia
     volumes:
-      - 'bluejay-redis-ec-volume:/data'
+      - 'pompeia-redis-ec-volume:/data'
     mem_limit: 1200m
     restart: 'unless-stopped'
 volumes:
-  bluejay-dashboard-volume: null
-  bluejay-influx-reporter-volume: null
-  bluejay-mongo-registry-volume: null
-  bluejay-redis-ec-volume: null
+  pompeia-dashboard-volume: null
+  pompeia-influx-reporter-volume: null
+  pompeia-mongo-registry-volume: null
+  pompeia-redis-ec-volume: null
 networks:
-  governify-bluejay:
+  governify-pompeia:
     external: true

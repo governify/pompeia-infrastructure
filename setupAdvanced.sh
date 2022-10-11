@@ -9,7 +9,7 @@ do
     clear
     # Menu 1 - Header and options
     declare -a menu1Options=("Configure and deploy the system" "About" "Quit setup" );
-    generateDialog "options" "Bluejay Setup Menu" "${menu1Options[@]}"
+    generateDialog "options" "Pompeia Setup Menu" "${menu1Options[@]}"
     # Reader
     echo -n "Select an option please: "
     read choice1
@@ -129,7 +129,7 @@ do
     then
         clear
         echo ""
-        echo "Bluejay ecosystem based in Governify (https://github.com/governify). Developed by ISA Group (https://www.isa.us.es). "
+        echo "Pompeia ecosystem based in Governify (https://github.com/governify). Developed by ISA Group (https://www.isa.us.es). "
         # Stop
         echo -n "Press enter to continue."
         read nothing
