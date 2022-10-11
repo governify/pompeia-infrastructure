@@ -13,10 +13,10 @@ export $(grep -v '^#' .env | xargs)
 mkdir -p -m 777 assets
 
 # Create bouncer network
-docker network create governify-bluejay
+docker network create governify-pompeia
 
 # Docker compose
-docker-compose -f docker-bluejay/docker-compose.yaml --env-file ./.env up -d
+docker-compose -f docker-pompeia/docker-compose.yaml --env-file ./.env up -d
 
 # Create dummy certificates
 ./utils/init-letsencrypt.sh 1 1

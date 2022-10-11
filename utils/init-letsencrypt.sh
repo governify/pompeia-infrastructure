@@ -30,7 +30,7 @@ for domain in "${domains[@]}"; do
   echo "### Creating dummy certificate for $domain ..."
   path="/etc/letsencrypt/live/$domain"
   mkdir -p "$data_path/conf/live/$domain"
-  docker-compose -f ./docker-bluejay/docker-compose.yaml run --rm --entrypoint "\
+  docker-compose -f ./docker-pompeia/docker-compose.yaml run --rm --entrypoint "\
     openssl req -x509 -nodes -newkey rsa:4096 -days 1\
       -keyout '$path/privkey.pem' \
       -out '$path/fullchain.pem' \
@@ -39,14 +39,14 @@ for domain in "${domains[@]}"; do
 done
 
 echo "### Starting nginx ..."
-docker-compose -f ./docker-bluejay/docker-compose.yaml up --force-recreate -d bluejay-nginx
+docker-compose -f ./docker-pompeia/docker-compose.yaml up --force-recreate -d pompeia-nginx
 echo
 
 if [ $dummy != 1 ]
 then
   for domain in "${domains[@]}"; do
     echo "### Deleting dummy certificate for $domain ..."
-    docker-compose -f ./docker-bluejay/docker-compose.yaml run --rm --entrypoint "\
+    docker-compose -f ./docker-pompeia/docker-compose.yaml run --rm --entrypoint "\
       rm -Rf /etc/letsencrypt/live/$domain && \
       rm -Rf /etc/letsencrypt/archive/$domain && \
       rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
@@ -68,7 +68,7 @@ then
   for domain in "${domains[@]}"; do
     domain_args="$domain_args -d $domain"
 
-    docker-compose -f ./docker-bluejay/docker-compose.yaml run --rm --entrypoint "\
+    docker-compose -f ./docker-pompeia/docker-compose.yaml run --rm --entrypoint "\
       certbot certonly --webroot -w /var/www/certbot \
         $staging_arg \
         $email_arg \
@@ -81,5 +81,5 @@ then
   done
 
   echo "### Reloading nginx ..."
-  docker-compose -f ./docker-bluejay/docker-compose.yaml exec bluejay-nginx nginx -s reload
+  docker-compose -f ./docker-pompeia/docker-compose.yaml exec pompeia-nginx nginx -s reload
 fi
