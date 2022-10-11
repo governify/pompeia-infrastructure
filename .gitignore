@@ -1,6 +1,13 @@
 node_modules
-/logs/
+logs
+static
+backups
+assets
 tests/e2e-volumes
-/tests/logs
-/tests/static
-
+tests/logs
+tests/static
+!tests/configurations/assets/private
+!tests/configurations/assets/public/testTemplate.json
+.env
+.env-local
+docker-local

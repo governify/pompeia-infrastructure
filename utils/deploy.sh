@@ -9,11 +9,14 @@ sed -i "s/{{RANDOM_KEY2}}/$RANDOM_KEY2/g" ./.env
 # Export .env variables
 export $(grep -v '^#' .env | xargs)
 
+# Create assets dir with permissions if it does not exist
+mkdir -p -m 777 assets
+
 # Create bouncer network
 docker network create governify-bluejay
 
 # Docker compose
-docker-compose -f docker-compose.yaml --env-file ./.env up -d
+docker-compose -f docker-bluejay/docker-compose.yaml --env-file ./.env up -d
 
 # Create dummy certificates
 ./utils/init-letsencrypt.sh 1 1

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bluejay-influx-reporter
+  name: bluejay-influx-reporter
+  namespace: governify
+spec:
+  {{- if eq .Values.node_env "development" }}
+  type: NodePort
+  {{- end }}
+  ports:
+    - name: bluejay-influx-reporter
+      {{- if eq .Values.node_env "development" }}
+      nodePort: 5002
+      {{- end }}
+      port: 8086
+      protocol: TCP
+      targetPort: 8086
+  selector:
+    app: bluejay-influx-reporter
