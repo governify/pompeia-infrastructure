@@ -130,7 +130,7 @@ services:
   # ================================================
   pompeia-collector-events:
     container_name: pompeia-collector-events
-    image: governify/collector-events:v1.11.0
+    image: governify/collector-events:v1.12.0
     environment:
       - NODE_ENV=production
       - PORT=80
