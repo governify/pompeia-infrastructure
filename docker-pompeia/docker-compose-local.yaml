@@ -1,5 +1,14 @@
 version: '2.2'
 services:
+  governify-states-exporter:
+    container_name: governify-states-exporter
+    image: alesancor1/governify-states-exporter
+    environment:
+      - MONGO_URL=mongodb://pompeia-mongo-registry:27017
+      - NODE_ENV=production
+      - PORT=80
+    ports:
+      - '5900:80'
   ############### MICROSERVICES ############### 
   pompeia-render:
     container_name: pompeia-render

@@ -1,5 +1,15 @@
 version: '2.2'
 services:
+  pompeia-governify-states-exporter:
+    container_name: pompeia-governify-states-exporter
+    image: alesancor1/governify-states-exporter
+    environment:
+      - MONGO_URL=mongodb://pompeia-mongo-registry:27017
+      - NODE_ENV=production
+      - PORT=80
+    networks:
+      - governify-pompeia
+
   # Exporter (exporters defined here are external to pompeia infrastructure)
   pompeia-nginx-exporter:
     container_name: pompeia-nginx-exporter
@@ -27,9 +37,9 @@ services:
     environment:
       - POMPEIA_SERVICES_PREFIX=${SERVICES_PREFIX:?}
       - POMPEIA_DNS_SUFFIX=${DNS_SUFFIX:?}
-    ports:
-      - '443:443'
-      - '80:80'
+    # ports:
+    #   - '443:443'
+    #   - '80:80'
     ulimits:
       nproc: 10240
       nofile:
@@ -130,7 +140,7 @@ services:
   # ================================================
   pompeia-collector-events:
     container_name: pompeia-collector-events
-    image: governify/collector-events:v1.12.0
+    image: governify/collector-events:v1.13.0
     environment:
       - NODE_ENV=production
       - PORT=80

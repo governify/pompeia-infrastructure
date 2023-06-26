@@ -11,3 +11,4 @@ tests/static
 .env
 .env-local
 docker-local
+**/data/certbot/conf
