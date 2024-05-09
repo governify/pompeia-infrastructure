@@ -130,7 +130,7 @@ describe('Create agreement, calculate guarantees and delete agreement: ', () => 
         setTimeout(() => {
           influx.queryRaw('SELECT "guaranteeValue" FROM "autogen"."metrics_values" WHERE "agreement" = \'' + testAgreement.id + '\'').then(result => {
             assert.deepStrictEqual(result.results,
-              [{ "statement_id": 0, "series": [{ "name": "metrics_values", "columns": ["time", "guaranteeValue"], "values": [["2020-04-27T23:59:00Z", 33.33333333333333]] }] }],
+              [{ "statement_id": 0, "series": [{ "name": "metrics_values", "columns": ["time", "guaranteeValue"], "values": [["2020-04-27T23:59:59Z", 33.33333333333333]] }] }],
               'The data in influx must be correct');
 
             // Delete influx inserted points
