@@ -208,6 +208,21 @@ services:
       - "5003:6379"
     mem_limit: 1200m
     restart: 'unless-stopped'
+  # ================================================
+  pompeia-tpa-designer:
+    container_name: pompeia-tpa-designer
+    image: 'governify/tpa-designer'
+    environment:
+      - NODE_ENV=production
+      # - PORT=80
+      - ASSETS_MANAGER_URL=${ASSETS_MANAGER_URL}
+      - REGISTRY_URL=${REGISTRY_URL}
+      - SCOPE_MANAGER_URL=${SCOPE_MANAGER_URL}
+      - COLLECTOR_EVENTS_URL=${COLLECTOR_EVENTS_URL}
+    ports:
+      - '5173:5173'
+    mem_limit: 700m
+    restart: 'unless-stopped'
 volumes:
   pompeia-influx-reporter-volume: null
   pompeia-mongo-registry-volume: null

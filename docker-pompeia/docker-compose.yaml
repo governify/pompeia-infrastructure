@@ -60,7 +60,7 @@ services:
   ############### MICROSERVICES ############### 
   pompeia-render:
     container_name: pompeia-render
-    image: governify/render:v2.2.0
+    image: governify/render:v2.3.0
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -71,6 +71,8 @@ services:
       - DEFAULT_CONTROLLER=http://pompeia-assets-manager/api/v1/public/renders/index/controller.js
       - DEFAULT_MODEL=http://pompeia-assets-manager/api/v1/public/renders/index/model.json
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - NEW_RELIC_APP_NAME="Pompeia-Render"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     volumes:
@@ -82,7 +84,7 @@ services:
   # ================================================
   pompeia-assets-manager:
     container_name: pompeia-assets-manager
-    image: governify/assets-manager:v1.4.1
+    image: governify/assets-manager:v1.5.0
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -93,6 +95,8 @@ services:
       - DNS_SUFFIX=${DNS_SUFFIX:?}
       - ASSETS_REPOSITORY=https://github.com/governify/assets-pompeia
       - ASSETS_REPOSITORY_BRANCH=${ASSETS_REPOSITORY_BRANCH:?}
+      - NEW_RELIC_APP_NAME="Pompeia-Assets-Manager"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     volumes:
@@ -102,12 +106,14 @@ services:
   # ================================================
   pompeia-reporter:
     container_name: pompeia-reporter
-    image: governify/reporter:v2.3.2
+    image: governify/reporter:v2.5.0
     environment:
       - DB_HOST=influxdb
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - NEW_RELIC_APP_NAME="Pompeia-Reporter"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     volumes:
@@ -121,7 +127,7 @@ services:
   # ================================================
   pompeia-registry:
     container_name: pompeia-registry
-    image: governify/registry:v3.5.0
+    image: governify/registry:v3.7.0
     networks:
       - governify-pompeia
     environment:
@@ -129,6 +135,8 @@ services:
       - NODE_ENV=production
       - PORT=80
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - NEW_RELIC_APP_NAME="Pompeia-Registry"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     volumes:
       - '../logs/registry:/opt/app/logs'
       - '../static:/opt/app/public/static'
@@ -140,7 +148,7 @@ services:
   # ================================================
   pompeia-collector-events:
     container_name: pompeia-collector-events
-    image: governify/collector-events:v1.13.0
+    image: governify/collector-events:v1.16.0
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -153,12 +161,14 @@ services:
       - KEY_HEROKU=${KEY_HEROKU}
       - KEY_CODECLIMATE=${KEY_CODECLIMATE}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - NEW_RELIC_APP_NAME="Pompeia-Collector-Events"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     depends_on:
       - pompeia-assets-manager
       - pompeia-redis-ec
-    mem_limit: 700m
+    # mem_limit: 700m
     restart: 'unless-stopped'
   # ================================================
   pompeia-dashboard:
@@ -180,13 +190,15 @@ services:
   # ================================================
   pompeia-director:
     container_name: pompeia-director
-    image: governify/director:v1.4.0
+    image: governify/director:v1.5.0
     environment:
       - NODE_ENV=production
       - PORT=80
       - KEY_ASSETS_MANAGER_PRIVATE=${KEY_ASSETS_MANAGER_PRIVATE}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
       - INFLUXDB_BIND_ADDRESS=:8088
+      - NEW_RELIC_APP_NAME="Pompeia-Director"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     depends_on:
@@ -196,7 +208,7 @@ services:
   # ================================================
   pompeia-scope-manager:
     container_name: pompeia-scope-manager
-    image: governify/scope-manager:v1.7.1
+    image: governify/scope-manager:v1.8.0
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
       - NODE_ENV=production
@@ -207,6 +219,8 @@ services:
       - KEY_PIVOTAL=${KEY_PIVOTAL}
       - KEY_GITHUB=${KEY_GITHUB}
       - GOV_INFRASTRUCTURE=${GOV_INFRASTRUCTURE:?}
+      - NEW_RELIC_APP_NAME="Pompeia-Scope-Manager"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     depends_on:
@@ -216,12 +230,14 @@ services:
   # ================================================
   pompeia-join:
     container_name: pompeia-join
-    image: governify/join-bluejay:v1.3.0
+    image: governify/join-bluejay:v1.5.0
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
       - KEY_GITHUB=${KEY_GITHUB}
       - NODE_ENV=production
       - PORT=80
+      - NEW_RELIC_APP_NAME="Pompeia-Join"
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     networks:
       - governify-pompeia
     mem_limit: 400m
@@ -240,7 +256,7 @@ services:
   # ================================================
   pompeia-mongo-registry:
     container_name: pompeia-mongo-registry
-    image: mongo
+    image: mongo:6.0
     networks:
       - governify-pompeia
     volumes:
@@ -256,6 +272,21 @@ services:
     volumes:
       - 'pompeia-redis-ec-volume:/data'
     mem_limit: 1200m
+    restart: 'unless-stopped'
+  # ================================================
+  pompeia-tpa-designer:
+    container_name: pompeia-tpa-designer
+    image: 'governify/tpa-designer:1.0.0'
+    environment:
+      - NODE_ENV=production
+      # - PORT=80
+      - ASSETS_MANAGER_URL=${ASSETS_MANAGER_URL}
+      - REGISTRY_URL=${REGISTRY_URL}
+      - SCOPE_MANAGER_URL=${SCOPE_MANAGER_URL}
+      - COLLECTOR_EVENTS_URL=${COLLECTOR_EVENTS_URL}
+    ports:
+      - '5173:5173'
+    mem_limit: 700m
     restart: 'unless-stopped'
 volumes:
   pompeia-dashboard-volume: null
