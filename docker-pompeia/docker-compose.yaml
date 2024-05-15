@@ -106,7 +106,7 @@ services:
   # ================================================
   pompeia-reporter:
     container_name: pompeia-reporter
-    image: governify/reporter:v2.5.0
+    image: governify/reporter:v2.9.1
     environment:
       - DB_HOST=influxdb
       - NODE_ENV=production
@@ -127,7 +127,7 @@ services:
   # ================================================
   pompeia-registry:
     container_name: pompeia-registry
-    image: governify/registry:v3.7.0
+    image: governify/registry:v3.8.0
     networks:
       - governify-pompeia
     environment:
@@ -148,7 +148,7 @@ services:
   # ================================================
   pompeia-collector-events:
     container_name: pompeia-collector-events
-    image: governify/collector-events:v1.16.0
+    image: governify/collector-events:v1.20.0
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -230,7 +230,7 @@ services:
   # ================================================
   pompeia-join:
     container_name: pompeia-join
-    image: governify/join-bluejay:v1.5.0
+    image: governify/join-bluejay:v1.9.1
     environment:
       - PRIVATE_KEY=${PRIVATE_KEY}
       - KEY_GITHUB=${KEY_GITHUB}
