@@ -1,0 +1,27 @@
+server {
+    listen 443 ssl;
+
+    server_name jira${POMPEIA_SERVICES_PREFIX}${POMPEIA_DNS_SUFFIX};
+    access_log /var/log/nginx/jira.access.log main;
+    ssl_certificate /etc/letsencrypt/live/jira${POMPEIA_SERVICES_PREFIX}${POMPEIA_DNS_SUFFIX}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/jira${POMPEIA_SERVICES_PREFIX}${POMPEIA_DNS_SUFFIX}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass http://pompeia-jira:8080;
+    }
+
+}
+
+server {
+    listen 80;
+    server_name jira${POMPEIA_SERVICES_PREFIX}${POMPEIA_DNS_SUFFIX};
+    access_log /var/log/nginx/jira.access.log main;
+    location / {
+        return 301 https://$host$request_uri;
+    }    
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+}

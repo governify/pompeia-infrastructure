@@ -288,11 +288,33 @@ services:
       - '5173:5173'
     mem_limit: 700m
     restart: 'unless-stopped'
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: pompeia-gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'https://gitlab.pompeia.governify.io'
+    volumes:
+      - './gldata/config:/etc/gitlab'
+      - './gldata/logs:/var/log/gitlab'
+      - './gldata/data:/var/opt/gitlab'
+    shm_size: '256m'
+    networks:
+      - governify-pompeia
+  jira:
+    container_name: pompeia-jira
+    image: atlassian/jira-software:latest
+    volumes:
+      - 'pompeia-jira:/var/atlassian/application-data/jira'
+    networks:
+      - governify-pompeia
 volumes:
   pompeia-dashboard-volume: null
   pompeia-influx-reporter-volume: null
   pompeia-mongo-registry-volume: null
   pompeia-redis-ec-volume: null
+  pompeia-jira: null
 networks:
   governify-pompeia:
     external: true
