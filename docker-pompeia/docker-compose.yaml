@@ -148,7 +148,7 @@ services:
   # ================================================
   pompeia-collector-events:
     container_name: pompeia-collector-events
-    image: governify/collector-events:v1.20.0
+    image: governify/collector-events:pompeia
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -304,7 +304,12 @@ services:
       - governify-pompeia
   jira:
     container_name: pompeia-jira
-    image: atlassian/jira-software:latest
+    image: atlassian/jira-software:9.17
+    environment:
+      - ATL_PROXY_NAME=jira.pompeia.governify.io
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_TOMCAT_SECURE=true
     volumes:
       - 'pompeia-jira:/var/atlassian/application-data/jira'
     networks:
