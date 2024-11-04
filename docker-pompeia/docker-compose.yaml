@@ -148,7 +148,7 @@ services:
   # ================================================
   pompeia-collector-events:
     container_name: pompeia-collector-events
-    image: governify/collector-events:pompeia
+    image: governify/collector-events:develop
     environment:
       - NODE_ENV=production
       - PORT=80
@@ -312,6 +312,13 @@ services:
       - ATL_TOMCAT_SECURE=true
     volumes:
       - 'pompeia-jira:/var/atlassian/application-data/jira'
+    networks:
+      - governify-pompeia
+  pompeia-tp-tester:
+    container_name: pompeia-tp-tester
+    image: governify/tp-tester:v1.0.0
+    environment:
+      - TESTER_ACCESS_KEY=${TESTER_ACCESS_KEY}
     networks:
       - governify-pompeia
 volumes:
