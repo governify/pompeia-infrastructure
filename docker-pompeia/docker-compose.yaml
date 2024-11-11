@@ -316,7 +316,7 @@ services:
       - governify-pompeia
   pompeia-tp-tester:
     container_name: pompeia-tp-tester
-    image: governify/tp-tester:v1.0.0
+    image: governify/tp-tester:v1.0.2
     environment:
       - TESTER_ACCESS_KEY=${TESTER_ACCESS_KEY}
     networks:
